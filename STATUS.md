@@ -60,3 +60,28 @@
 - 追加 §21.5：ScarletNX `misc.swipc:184-243` 的 NFC 命令逐行核对结果（`nfp:user`→IUser 29 命令 + 结构体宽度），并据此把"虚拟 Amiibo 无需逆向 NFC 协议"写成硬依据
 - 取证副本已随产物归档：`evidence/input/`（51 文件 / 2.8MB，含三家输入侧源码、SDL3 驱动与 controller_list、GyroDSU 全仓关键文件、Ryujinx NFC 数据模型、DSU 协议头、三个 SDL issue JSON）
 - WeKnora：finish 记录 `339836eb-306d-4d9f-8c81-d460a04bdec3`（已回读正文）；knowledge_id 勘误 `a5393bd5-7bde-449a-85dc-af617ba2f4bd`（我误把 8 位前缀补全成不存在的 ID，已追加勘误而非覆盖）
+
+---
+
+## 第 11 轮追加（2026-10-25，挂账期内，未触碰 Deck）
+
+仓库元数据加固 + 全链路一致性复核（仅 GitLab 侧配置与本地说明文件，未改任何调研结论）：
+
+| 项 | 复核方式 | 结果 |
+|---|---|---|
+| 仓库存在性 | GitLab API `GET /projects?search=nativedeck` | id=16 · private · default=main ✓ |
+| 本地↔远端 SHA | `git rev-parse HEAD` vs `git ls-remote origin main` | 双向 MATCH（`646cb2c8a369`）✓ |
+| 远端树文件数 | `git ls-tree -r origin/main` | 86 = 本地 tracked 86 ✓ |
+| 提交身份 | `git log -1` | `Codex Agent <codex-agent@example.local>` ✓ |
+| 分支保护 | API `protected_branches` | main：push/merge 均 Maintainers ✓ |
+| 敏感信息 | `git grep -i` 凭据/私钥/token 样式 | 无凭据命中（仅上游源码里的 `CancellationTokenSource` 等语义同名标识符）✓ |
+| 版权红线 | 镜像后缀扫描 `.xci/.nsp/.nca/.xcz` | 零命中 ✓ |
+| 大文件 | 按体积排序 | 最大 1.6M（`evidence/input/ryu-tree.json`），`.git` 940K ✓ |
+| NUL 字节 | `deckprobe/*.txt` 抽检 | 含 tty 残留 NUL，已由 `.gitattributes` 标 `binary` 规避换行转换 |
+| GitHub 镜像 | 双托管规则核对 | 仅 moonlight 系列适用，本仓不推 GitHub ✓ |
+
+GitLab 侧新增：`topics=aarch64,native-recompilation,steam-deck,static-rewriting,switch,x86-64,nativedeck-20261024`，描述中显式写入「只读调研已闭合 / V1-V7 待解除挂账 / hardware_validated=false」，避免日后误读为已完成。
+
+回滚：`git revert HEAD` 或 `curl -X PUT .../projects/16` 清空 topics/description。
+
+遗留待裁决（不在本轮擅自执行）：仓库目前位于用户命名空间 `codex/`，而 moonlight、yulidan、iphone8plus 已各自使用独立 group。若要与既有惯例统一，可请我把本仓 transfer 到新建 group `nativedeck`；transfer 会保留 project id 并重定向旧 URL。

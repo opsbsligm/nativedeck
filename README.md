@@ -5,6 +5,8 @@
 - **task_id**：`nativedeck-20261024` · **scene**：homelab
 - **当前阶段**：只读调研已闭合，真机实测待挂账解除
 - **hardware_validated**：`false`（Deck 上尚未实跑任何上游发布物或重编译产物）
+- **仓库**：<https://gitlab.example.com:8445/codex/nativedeck>（private · 默认分支 `main` 受保护）
+  克隆：`git clone https://gitlab.example.com:8445/codex/nativedeck.git`
 
 ## 一句话结论
 
@@ -43,3 +45,5 @@
 ## 恢复推进
 
 挂账解除后按 `作战计划.md` 顺序执行 V1 → V1.5 → V2 → V3 → V4 → V5-V7，每次只推进一项。
+
+本仓只承载调研与取证产物，不含游戏数据；Git 历史与 `STATUS.md` 轮次日志为追加式，构成可核对的进度事实源。
