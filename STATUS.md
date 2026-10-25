@@ -178,3 +178,40 @@ compatdata / SteamLinuxRuntime* / .var/app / .steam）→ **全部为空，Steam
 2. **M5 授权**：是否允许写 `shortcuts.vdf` 做 Gaming Mode 入库（唯一会触碰 Steam 区的动作）。
 3. **仓库归属**：本仓仍在用户命名空间 `codex/nativedeck`（project id 16）。
    若要按 moonlight/yulidan 惯例统一为独立 group，需授权 transfer（保留 project id 与重定向）。
+
+---
+
+## 第 19 轮追加（2026-10-26 06:08 ~ ，b5 产物归档 + TOTK 资产穷尽取证）
+
+### 里程碑状态变化
+
+M0/M1/M2 结论不变（已验证）。本轮两项新增事实：
+
+1. **新增依赖最干净的产物**：`scarletnx-gui`（b5，22,398,112 B，
+   SHA `46747b9188f5b54c…`）`ldd` 依赖树只有 `linux-vdso / libm / libstdc++ / libgcc_s / libc`，
+   **零 LLVM 动态依赖、零兼容层**，全部是 SteamOS 自带运行库 → 原生性判据②的最强证据。
+   详见 `deckprobe/env25.md`。
+2. **GUI 启动器 `--help` 在 SSH 下零输出（rc=0）**。源码定位为设计行为：
+   `src/gui/process_posix.c` 用 `dup2` 把子进程 stdout/stderr 接管进自身管道，
+   启动器把提示写进 UI `app->message` 缓冲区而非 stdout。**不是显示面缺陷，不影响 M0**
+   （M0 成立依据是 AOT 客户机 `recompiled2/hbmenu/hbmenu` 的 swapchain 内回读帧）。
+   分级：已验证（行为）+ 推断（源码归因，未逐行核对参数解析路径）。
+
+### TOTK 资产：本轮穷尽结论（M3 仍 blocked）
+
+| 取证面 | 方法 | 结果 |
+|---|---|---|
+| TF 镜像 exFAT 活跃+已删除目录项 | 自写解析器（类型按低 4 位判别，兼容 InUse 清零）遍历根目录 / `Nintendo/Contents/registered`(256) / `placehld`(168) / `SXOS/titles`(117) | **无 TOTK**（已验证） |
+| Mac 侧 Share 游戏目录 | `find` 文件名匹配 totk/zelda/tears/王国之泪/塞尔达/title id | **无**（已验证） |
+| Deck 全盘 | 无 TOTK 资产（第 13~18 轮已确认） | **无**（已验证） |
+| TF 镜像 raw 全流暴力搜索 | `zstd -dq -T6 \| rg -a -b -o -F`，ASCII 大小写两形态，覆盖全部 256.1 GiB 解压流 | **零命中**，耗时 20m17s（已验证） |
+| 同上 · UTF-16LE + 二进制 LE/BE | 4 形态合并单遍重扫 | 进行中 |
+
+`0100F2C0115B6000` 在整个 TF 备份的**任意字节位置**都不存在（ASCII 形态），
+结合目录项穷举 → **TOTK 从未安装到这张 TF 卡**（推断，待 UTF-16 遍完成后升级）。
+即 M3 的唯一前置条件确实是"用户提供资产"，不是"从备份里找回"。
+
+### 红线合规
+
+本轮 Deck 侧全部只读（`ls`/`sha256sum`/`ldd`/`df`/`free`/`pgrep`/`grep`/`tr`）
++ 一次 20 s 超时的 GUI 二进制运行；未写 Deck、未改权限、未 sudo、未碰 Steam 区。
