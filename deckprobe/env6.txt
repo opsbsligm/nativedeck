@@ -1,0 +1,82 @@
+== squashfs module ==
+squashfs.ko.zst
+9p
+affs
+afs
+befs
+cachefiles
+ceph
+coda
+cramfs
+dlm
+ecryptfs
+erofs
+exfat
+f2fs
+fat
+fuse
+gfs2
+hfs
+hfsplus
+isofs
+jffs2
+== loop devices ==
+/dev/loop-control
+/dev/loop-control
+== steam dir layout ==
+total 28
+drwxr-xr-x  2 deck deck 4096 Oct 24 14:27 .
+drwx------ 31 deck deck 4096 Oct 24 14:43 ..
+lrwxrwxrwx  1 deck deck   23 Oct 24 12:16 bin -> /home/deck/.steam/bin32
+lrwxrwxrwx  1 deck deck   41 Oct 24 12:16 bin32 -> /home/deck/.local/share/Steam/ubuntu12_32
+lrwxrwxrwx  1 deck deck   41 Oct 24 12:16 bin64 -> /home/deck/.local/share/Steam/ubuntu12_64
+-rwxr-xr-x  1 deck deck   28 Oct 24 12:16 exportedsettings.json
+-rwxr-xr-x  1 deck deck  688 Oct 24 14:27 registry.vdf
+/home/deck/.steam/steam/config/DialogConfig.vdf
+/home/deck/.steam/steam/config/FXAA23715696_gyro.vdf
+/home/deck/.steam/steam/config/SteamAppData.vdf
+/home/deck/.steam/steam/config/config.vdf
+/home/deck/.steam/steam/config/libraryfolders.vdf
+/home/deck/.steam/steam/config/loginusers.vdf
+/home/deck/.steam/steam/config/remoteclients.vdf
+== libraryfolders ==
+		"path"		"/home/deck/.local/share/Steam"
+== non-steam shortcut presence ==
+ls: cannot access '/home/deck/.steam/steam/config/shortcuts.vdf': No such file or directory
+-rwxr-xr-x 1 deck deck 163634 Oct 24 15:19 /home/deck/.steam/steam/userdata/404491794/config/localconfig.vdf
+== steamapps ==
+appmanifest_1070560.acf
+appmanifest_1391110.acf
+appmanifest_1493710.acf
+appmanifest_1628350.acf
+appmanifest_2180100.acf
+appmanifest_228980.acf
+appmanifest_230410.acf
+appmanifest_2805730.acf
+appmanifest_3658110.acf
+appmanifest_4183110.acf
+appmanifest_4628710.acf
+appmanifest_993090.acf
+== pacman local count ==
+1209
+== steamos repos installed keys ==
+0
+== gamescope version ==
+[gamescope] [[0;34mInfo[0m]  [0;37mconsole:[0m gamescope version 3.16.30.1+ (gcc 16.1.1)
+== gamemode ==
+active
+== user units ==
+  at-spi-dbus-bus.service                         loaded active running Accessibility services bus
+  cecd.service                                    loaded active running Consumer Electronics Control (CEC) Daemon
+  dbus-:1.1-org.freedesktop.portal.IBus@0.service loaded active running dbus-:1.1-org.freedesktop.portal.IBus@0.service
+  dbus-:1.34-org.a11y.atspi.Registry@0.service    loaded active running dbus-:1.34-org.a11y.atspi.Registry@0.service
+  dbus-broker.service                             loaded active running D-Bus User Message Bus
+  dmemcg-booster-user.service                     loaded active running Service for enabling and controlling dmem cgroup limits for boosting foreground games, user-level
+  filter-chain.service                            loaded active running PipeWire filter chain daemon
+  gamemoded.service                               loaded active running gamemoded
+== cpu governor/power ==
+powersave
+== gpu mem vendor ==
+1073741824
+8589934592
+== power profile ==

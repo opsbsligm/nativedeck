@@ -1,0 +1,35 @@
+== DMI ==
+product_name Jupiter
+board_name   Jupiter
+sys_vendor   Valve
+bios_version F7A0133
+== ostree present? ==
+/usr/bin/ostree
+ls: cannot access '/sysroot': No such file or directory
+== root listing ==
+bin boot dev efi esp etc home lib lib64 mnt nix opt proc root run sbin srv sys tmp usr var 
+== /usr persistent? ==
+2026-10-24 05:10:34.217239394 +0800 1783022215
+/dev/nvme0n1p4
+== readonly state file ==
+/var/lib/steamos-atomupd:
+total 2368
+drwxr-xr-x  3 root root    1024 Oct 24 12:15 .
+drwxr-xr-x 41 root root    1024 Oct 24 12:15 ..
+drwxr-xr-x  2 root root    1024 Oct 24 11:26 etc_backup
+lrwxrwxrwx  1 root root      30 Oct 24 11:22 rootfs -> /dev/disk/by-partsets/B/rootfs
+== pacman db dir exists ==
+ls: cannot access '/var/lib/pacman': No such file or directory
+ls: cannot access '/var/lib/pacman/sync': No such file or directory
+== last pacman log ==
+[2025-11-15T01:24:20+0800] [PACMAN] Running 'pacman -Sy'
+[2025-11-15T01:24:20+0800] [PACMAN] synchronizing package lists
+[2025-11-15T01:35:20+0800] [PACMAN] Running 'pacman -Syu --noconfirm'
+[2025-11-15T01:35:20+0800] [PACMAN] synchronizing package lists
+[2026-10-24T15:17:49+0800] [PACMAN] Running 'pacman -S --noconfirm xorg-x11-apps python-xlib'
+[2026-10-24T15:17:57+0800] [PACMAN] Running 'pacman -S --noconfirm xorg-x11-apps python-xlib'
+== overlord: polkit ==
+/usr/bin/pkexec
+== custompkgs dir ==
+ls: cannot access '/home/custompkgs': No such file or directory
+== steam client version ==

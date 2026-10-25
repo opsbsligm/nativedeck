@@ -1,0 +1,41 @@
+== lscpu ==
+Architecture:                            x86_64
+CPU(s):                                  8
+Model name:                              AMD Custom APU 0405
+Thread(s) per core:                      2
+Core(s) per socket:                      4
+Socket(s):                               1
+CPU(s) scaling MHz:                      69%
+CPU max MHz:                             3501.2500
+CPU min MHz:                             411.9120
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca sev sev_es
+== topology ==
+0-1
+0
+== hidraw perms (steam-devices) ==
+crw-rw----+ 1 root root 244, 0 Oct 24 12:15 /dev/hidraw0
+crw-rw----+ 1 root root 244, 1 Oct 24 12:15 /dev/hidraw1
+crw-rw----+ 1 root root 244, 2 Oct 24 12:15 /dev/hidraw2
+60-steam-input.rules
+60-steam-vr.rules
+70-steam-jupiter-input.rules
+70-steam-jupiter-leds.rules
+70-steamos-power-button.rules
+== deck groups vs udev ==
+crw-rw----+ 1 root root 10, 223 Oct 24 12:15 /dev/uinput
+== powertool profile ==
+ls: cannot access '/usr/bin/powerstate*': No such file or directory
+ls: cannot access '/usr/bin/powerconfig': No such file or directory
+== appimage magic check tool ==
+file-5.48
+== can exec from /home (noexec?) ==
+rw,relatime
+== steam-devices pkg ==
+error: package 'steam-devices' was not found
+== gamescope layer for steam overlay ==
+MangoHud.x86.json
+MangoHud.x86_64.json
+VkLayer_FROG_gamescope_wsi.x86.json
+VkLayer_FROG_gamescope_wsi.x86_64.json
+VkLayer_MESA_anti_lag.json
+VkLayer_MESA_device_select.json

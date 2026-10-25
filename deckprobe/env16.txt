@@ -1,0 +1,20 @@
+== were today's pacman installs successful? ==
+error: package 'xorg-x11-apps' was not found
+error: package 'python-xlib' was not found
+ls: cannot access '/usr/lib/python3.13/site-packages/Xlib/__init__.py': No such file or directory
+-rwxr-xr-x 1 root root 67776 Apr 26 14:59 /usr/bin/xrandr
+== pacman log full context ==
+[2026-10-24T15:17:57+0800] [PACMAN] Running 'pacman -S --noconfirm xorg-x11-apps python-xlib'
+== installed count by date ==
+0
+== readonly flag file ==
+total 8
+drwxr-xr-x 1 root root     48 Oct 24 05:10 .
+drwxr-xr-x 1 root root 186830 Oct 24 05:10 ..
+== /usr writability evidence: any local pkg installs ==
+== rootfs free ==
+ 837M
+== distrobox home capacity ==
+ 544G
+== podman storage ==
+/home/deck/.local/share/containers/storage /run/user/1000/containers

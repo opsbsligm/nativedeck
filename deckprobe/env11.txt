@@ -1,0 +1,32 @@
+== full df ==
+Filesystem      Size  Used Avail Use% Mounted on
+dev             7.2G     0  7.2G   0% /dev
+efivarfs        148K   10K  134K   7% /sys/firmware/efi/efivars
+/dev/nvme0n1p4  5.0G  3.6G  837M  82% /
+/dev/nvme0n1p6  230M   38M  176M  18% /var
+/dev/nvme0n1p8  939G  396G  544G  43% /home
+== loop nodes ==
+1
+== memlock for gamescope session ==
+== gamemode limits drop-in ==
+/etc/systemd/system.conf:#DefaultLimitMEMLOCK=8M
+/etc/systemd/user.conf:#DefaultLimitMEMLOCK=
+== env of gamescope for SDL/VK ==
+== steam env from steamwebhelper ==
+LD_LIBRARY_PATH=/usr/lib/pressure-vessel/overrides/lib/x86_64-linux-gnu:/usr/lib/pressure-vessel/overrides/lib/x86_64-linux-gnu/aliases:/usr/lib/pressure-vessel/overrides/lib/i386-linux-gnu:/usr/lib/pressure-vessel/overrides/lib/i386-linux-gnu/aliases
+== steam runtime libSDL3 ==
+-rwxr-xr-x 1 deck deck 4018728 Oct 15 01:49 /home/deck/.local/share/Steam/steamrt64/libSDL3.so.0
+69
+== steamrt libs ==
+libSDL3.so.0
+libSDL3_image.so.0
+libSDL3_ttf.so.0
+steamoverlayvulkanlayer.so
+vulkandriverquery
+== gamescope layer dirs ==
+MangoHud.x86.json
+MangoHud.x86_64.json
+VkLayer_FROG_gamescope_wsi.x86.json
+VkLayer_FROG_gamescope_wsi.x86_64.json
+VkLayer_MESA_anti_lag.json
+VkLayer_MESA_device_select.json

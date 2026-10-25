@@ -1,0 +1,128 @@
+Warning: Permanently added '192.168.1.105' (ED25519) to the list of known hosts.
+== os ==
+NAME="SteamOS"
+VERSION_ID=3.9.5
+BUILD_ID=20261023.100
+== vk icd json ==
+intel_icd.i686.json
+intel_icd.x86_64.json
+nouveau_icd.i686.json
+nouveau_icd.x86_64.json
+radeon_icd.i686.json
+radeon_icd.x86_64.json
+virtio_icd.i686.json
+virtio_icd.x86_64.json
+== layer json ==
+ls: cannot access '/usr/share/vulkan/explicit_layer.d/': No such file or directory
+== ffmpeg ==
+	libswscale.so.9 (libc6,x86-64) => /usr/lib/libswscale.so.9
+	libswscale.so (libc6,x86-64) => /usr/lib/libswscale.so
+	libswresample.so.6 (libc6,x86-64) => /usr/lib/libswresample.so.6
+	libswresample.so (libc6,x86-64) => /usr/lib/libswresample.so
+	libavutil.so.60 (libc6,x86-64) => /usr/lib/libavutil.so.60
+	libavutil.so (libc6,x86-64) => /usr/lib/libavutil.so
+	libavformat.so.62 (libc6,x86-64) => /usr/lib/libavformat.so.62
+	libavformat.so (libc6,x86-64) => /usr/lib/libavformat.so
+	libavcodec.so.62 (libc6,x86-64) => /usr/lib/libavcodec.so.62
+	libavcodec.so (libc6,x86-64) => /usr/lib/libavcodec.so
+== lz4 zstd ==
+	libzstd.so.1 (libc6,x86-64) => /usr/lib/libzstd.so.1
+	libzstd.so.1 (libc6) => /usr/lib32/libzstd.so.1
+	libzstd.so (libc6,x86-64) => /usr/lib/libzstd.so
+	libzstd.so (libc6) => /usr/lib32/libzstd.so
+	libvpx.so.12 (libc6,x86-64) => /usr/lib/libvpx.so.12
+	libvpx.so (libc6,x86-64) => /usr/lib/libvpx.so
+	liblz4.so.1 (libc6,x86-64) => /usr/lib/liblz4.so.1
+	liblz4.so (libc6,x86-64) => /usr/lib/liblz4.so
+== podman images ==
+REPOSITORY  TAG         IMAGE ID    CREATED     SIZE
+== distrobox list ==
+ID           | NAME                 | STATUS             | IMAGE                         
+== flatpak apps ==
+Protontricks	1.15.0
+Microsoft Edge	156.0.4314.42-1
+Moonlight	6.2.0
+Parsec	3.9.9
+ProtonUp-Qt	2.16.0
+== flatpak remotes ==
+flathub	system
+flathub-beta	system,no-enumerate
+== shortcuts.vdf ==
+ls: cannot access '/home/deck/.steam/config/shortcuts.vdf': No such file or directory
+ls: cannot access '/home/deck/.local/share/Steam/config/shortcuts.vdf': No such file or directory
+== tools ==
+gamescope          /usr/bin/gamescope
+mangohud           /usr/bin/mangohud
+gamemoderun        /usr/bin/gamemoderun
+decky-loader       -
+steamos-readonly   /usr/bin/steamos-readonly
+pacman             /usr/bin/pacman
+flatpak            /usr/bin/flatpak
+podman             /usr/bin/podman
+distrobox          /usr/bin/distrobox
+appimagetool       -
+unsquashfs         /usr/bin/unsquashfs
+fuse3              -
+fusermount3        /usr/bin/fusermount3
+clang              -
+gcc                -
+cmake              -
+ninja              -
+cargo              -
+rustc              -
+== rootfs rw ==
+/dev/nvme0n1p4 btrfs rw,relatime,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/
+rw,relatime
+== mem ==
+               total        used        free      shared  buff/cache   available
+Mem:              14           2           0           0          11          11
+== home free ==
+/dev/nvme0n1p8  939G  396G  544G  43% /home
+== sdl3 ==
+lrwxrwxrwx 1 root root      12 Jul  3 03:56 /usr/lib/libSDL3.so -> libSDL3.so.0
+lrwxrwxrwx 1 root root      17 Jul  3 03:56 /usr/lib/libSDL3.so.0 -> libSDL3.so.0.4.12
+-rwxr-xr-x 1 root root 3299416 Jul  3 03:56 /usr/lib/libSDL3.so.0.4.12
+-rw-r--r-- 1 root root  203620 Jul  3 03:56 /usr/lib/libSDL3_test.a
+lrwxrwxrwx 1 root root      16 Dec 18  2025 /usr/lib/libSDL3_ttf.so -> libSDL3_ttf.so.0
+lrwxrwxrwx 1 root root      20 Dec 18  2025 /usr/lib/libSDL3_ttf.so.0 -> libSDL3_ttf.so.0.2.2
+-rwxr-xr-x 1 root root  120864 Dec 18  2025 /usr/lib/libSDL3_ttf.so.0.2.2
+sdl3 3.4.12-1
+== existing recomp artifacts ==
+ls: cannot access '/home/deck/totk*': No such file or directory
+ls: cannot access '/home/deck/*recomp*': No such file or directory
+ls: cannot access '/home/deck/ScarletNX*': No such file or directory
+ls: cannot access '/home/deck/LAS*': No such file or directory
+ls: cannot access '/home/deck/.local/share/totk-recomp': No such file or directory
+ls: cannot access '/home/deck/.local/share/lasrecomp': No such file or directory
+ls: cannot access '/home/deck/.local/share/scarletnx': No such file or directory
+== home dirs ==
+Bluetooth-correct.zip
+Bluetooth-main.zip
+Decky-Framegen-correct.zip
+Decky-Framegen-main.zip
+Desktop
+Documents
+Downloads
+LutheringLavesLauncher
+Music
+Pictures
+Projects
+Public
+SDH-CssLoader-correct.zip
+SDH-CssLoader-main.zip
+SDH-CssLoader-zh-CN.json
+Templates
+Videos
+bin
+change_sources.sh
+copy_translation_files.sh
+decky-autoflatpaks-zh-CN.json
+decky_network_setup.sh
+decky_proxy_setup.sh
+decky_upgrade_solution.md
+dl
+download_pluginloader.sh
+download_with_mirror.sh
+final_decky_fix.sh
+fix_decky_complete.sh
+fix_decky_store.sh

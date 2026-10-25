@@ -1,0 +1,38 @@
+== lsmod squash loop ==
+(not loaded)
+== module deps ok ==
+/lib/modules/7.2.7-valve2-2-neptune-72-g31504582a073/kernel/fs/squashfs/squashfs.ko.zst
+== readonly status ==
+enabled
+BOOT_IMAGE=/boot/vmlinuz-linux-neptune-72 console=tty1 rd.luks=0 rd.lvm=0 rd.md=0 rd.dm=0 rd.systemd.gpt_auto=no log_buf_len=4M amd_iommu=off amdgpu.lockup_timeout=5000,10000,10000,5000 ttm.pages_min=2097152 amdgpu.sched_hw_submission=4 amdgpu.dcdebugmask=0x20000 audit=0 fsck.mode=auto fsck.repair=preen loglevel=3 splash quiet plymouth.ignore-serial-consoles fbcon=vc:4-6 steamos.efi=PARTUUID=f32e6017-c3b4-7941-9923-449b5de03935
+== pacman sync dbs (holo dbpath) ==
+core-3.9.db
+extra-3.9.db
+holo-3.9.db
+jupiter-3.9.db
+multilib-3.9.db
+== pacman db age ==
+-rw-r--r-- 1 root root   234452 Aug 25 05:30 /usr/lib/holo/pacmandb/sync/core-3.9.db
+-rw-r--r-- 1 root root 11598372 Aug 25 05:30 /usr/lib/holo/pacmandb/sync/extra-3.9.db
+-rw-r--r-- 1 root root   145180 Oct 24 04:46 /usr/lib/holo/pacmandb/sync/holo-3.9.db
+-rw-r--r-- 1 root root   121964 Oct 24 05:03 /usr/lib/holo/pacmandb/sync/jupiter-3.9.db
+-rw-r--r-- 1 root root   214082 Aug 25 05:30 /usr/lib/holo/pacmandb/sync/multilib-3.9.db
+== pacman cache ==
+0
+== steamos-update dry ==
+/usr/bin/steamos-update
+Usage: $0 [check]"
+== free space for 45G build ==
+Mounted on 1G-blocks  Used Avail
+/home            939   396   544
+/                  5     4     1
+== appimage-ish helpers ==
+appimagectl  -
+runtime-zsync -
+patchelf     -
+== udev loop ==
+== deck user groups ==
+deck steamos-log-submitter wheel xdroid xdroid4 xdroid3 xdroid2
+== cpu freq caps ==
+3501250
+1702569

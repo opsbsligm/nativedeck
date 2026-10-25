@@ -1,0 +1,22 @@
+== steamos-readonly status ==
+not-found
+inactive
+== rootfs writable test (stat only) ==
+btrfs ro=ec9e39ed8cb2f16b
+/dev/nvme0n1p4 on / type btrfs (rw,relatime,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/)
+== pacman sync dbs ==
+1
+== pacman cache pkgs count ==
+0
+== decky ==
+inactive
+ls: cannot access '/home/deck/.local/share/hhd': No such file or directory
+ls: cannot access '/home/deck/.steam/root/config/uio': No such file or directory
+== steam running ==
+1058 /usr/lib/steamos-manager -r
+1608 /usr/lib/steamos-manager
+1612 /usr/lib/hwsupport/steamos-powerbuttond
+1524 /bin/sh /usr/bin/start-gamescope-session
+1743 gamescope --generate-drm-mode fixed --xwayland-count 2 -w 1280 -h 800 --default-touch-mode 4 --hide-cursor-delay 3000 --max-scale 2 --fade-out-duration 200 -e -R /run/user/1000/gamescope.oOmNJI5/startup.socket -T /run/user/1000/gamescope.oOmNJI5/stats.pipe -O *,eDP-1
+== env session ==
+/tmp/ndprobe3.sh: line 8: XDG_CURRENT_DESKTOP: unbound variable

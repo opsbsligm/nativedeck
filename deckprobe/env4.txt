@@ -1,0 +1,62 @@
+== kernel ==
+7.2.7-valve2-2-neptune-72-g31504582a073
+== swap ==
+NAME           TYPE      SIZE USED PRIO
+/dev/zram0     partition 7.2G   0B  100
+/home/swapfile file       16G   0B   -1
+== cpu cores/avx512 ==
+8
+(none above = no avx512)
+== pacman sync db ==
+ls: cannot access '/var/lib/pacman/sync/': No such file or directory
+== pacman.conf enabled dbs ==
+[options]
+SigLevel    = Required DatabaseOptional
+LocalFileSigLevel = Optional
+#RemoteFileSigLevel = Required
+#       Server = ServerName
+[jupiter-3.9]
+[holo-3.9]
+[core-3.9]
+[extra-3.9]
+[multilib-3.9]
+#SigLevel = Optional TrustAll
+#Server = file:///home/custompkgs
+== mirrorlist? ==
+total 9
+drwxr-xr-x 1 root root 1024 Oct 24 05:10 .
+drwxr-xr-x 1 root root 1024 Oct 24 12:16 ..
+drwxr-xr-x 1 root root 1024 Oct 24 12:15 gnupg
+-rw-r--r-- 1 root root   82 Oct 24 05:08 mirrorlist
+== radeon icd ==
+{
+    "ICD": {
+        "api_version": "1.4.350",
+        "library_arch": "64",
+        "library_path": "/usr/lib/libvulkan_radeon.so"
+    },
+    "file_format_version": "1.0.1"
+}== gpu resource ==
+aer
+ari_enabled
+broken_parity_status
+class
+config
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+== gmem/cma ==
+MemTotal:       15153384 kB
+HardwareCorrupted:     0 kB
+CmaTotal:              0 kB
+== cma reserved ==
+== ostree deployed ==
+ls: cannot access '/ostree/deploy/SteamOS/deploy/': No such file or directory
+== pacman db type of the 1 file ==
+stat: cannot statx '/var/lib/pacman/sync/*': No such file or directory
+/var/lib/pacman/sync/* :  bytes

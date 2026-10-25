@@ -1,0 +1,32 @@
+== ostree booted ==
+ls: cannot access '/run/ostree-booted': No such file or directory
+ls: cannot access '/ostree': No such file or directory
+== mount opts key paths ==
+/      rw,relatime,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/ btrfs
+/usr   rw,relatime,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/ btrfs
+/etc   rw,relatime,lowerdir=/new_root/etc,upperdir=/new_root/var/lib/overlays/etc/upper,workdir=/new_root/var/lib/overlays/etc/work,index=off overlay
+/var   rw,relatime ext4
+/home  rw,relatime ext4
+== mirrorlist content ==
+Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/$repo/os/$arch
+== fusermount3 setuid ==
+-rwsr-xr-x 1 root root 39016 Mar 20  2026 /usr/bin/fusermount3
+crw-rw-rw- 1 root root 10, 229 Oct 24 12:15 /dev/fuse
+== squashfs kernel ==
+0
+	fuseblk
+nodev	fuse
+nodev	fusectl
+== curl to github ==
+HTTP/2 200 
+== curl to holo mirror ==
+== ulimit/mmap ==
+unlimited
+0
+59067
+== userns ==
+cat: /proc/sys/kernel/unprivileged_userns_clone: No such file or directory
+max_map_count=2147483642
+== steam compat tools dir ==
+/home/deck/.steam/steam
+== steam library dirs ==

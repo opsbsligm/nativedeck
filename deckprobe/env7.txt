@@ -1,0 +1,67 @@
+== fuse2 ==
+-rwsr-xr-x 1 root root 34944 Jul 12  2024 /usr/bin/fusermount
+lrwxrwxrwx 1 root root 16 Jul 12  2024 /usr/lib/libfuse.so.2 -> libfuse.so.2.9.9
+-rwxr-xr-x 1 root root 264296 Mar 20  2026 /usr/lib/libfuse3.so.3.18.2
+== pacman include ==
+9:[options]
+62:#       Server = ServerName
+63:#       Include = IncludePath
+70:# repo name header and Include lines. You can add preferred servers immediately
+74:#Include = /etc/pacman.d/mirrorlist
+76:[jupiter-3.9]
+77:Include = /etc/pacman.d/mirrorlist
+79:[holo-3.9]
+80:Include = /etc/pacman.d/mirrorlist
+82:[core-3.9]
+83:Include = /etc/pacman.d/mirrorlist
+85:[extra-3.9]
+86:Include = /etc/pacman.d/mirrorlist
+88:[multilib-3.9]
+89:Include = /etc/pacman.d/mirrorlist
+95:#Server = file:///home/custompkgs
+== repo db reachable (HEAD) ==
+holo-3.9   404
+core-3.9   200
+== hactool/7zip/aria2 ==
+hactool    -
+7z         /usr/bin/7z
+7za        /usr/bin/7za
+zstd       /usr/bin/zstd
+xz         /usr/bin/xz
+aria2c     -
+python3    /usr/bin/python3
+git        /usr/bin/git
+curl       /usr/bin/curl
+wget       /usr/bin/wget
+make       -
+== gfx runtime libs ==
+	libwayland-client.so.0 (libc6,x86-64) => /usr/lib/libwayland-client.so.0
+	libwayland-client.so.0 (libc6) => /usr/lib32/libwayland-client.so.0
+	libwayland-client.so (libc6,x86-64) => /usr/lib/libwayland-client.so
+	libwayland-client.so (libc6) => /usr/lib32/libwayland-client.so
+	libpulse.so.0 (libc6,x86-64) => /usr/lib/libpulse.so.0
+	libpulse.so.0 (libc6) => /usr/lib32/libpulse.so.0
+	libpulse.so (libc6,x86-64) => /usr/lib/libpulse.so
+	libpulse.so (libc6) => /usr/lib32/libpulse.so
+	libpipewire-0.3.so.0 (libc6,x86-64) => /usr/lib/libpipewire-0.3.so.0
+	libpipewire-0.3.so.0 (libc6) => /usr/lib32/libpipewire-0.3.so.0
+	libpipewire-0.3.so (libc6,x86-64) => /usr/lib/libpipewire-0.3.so
+	libpipewire-0.3.so (libc6) => /usr/lib32/libpipewire-0.3.so
+== libunwind/llvm runtime ==
+	libunwind.so.8 (libc6,x86-64) => /usr/lib/libunwind.so.8
+	libunwind.so (libc6,x86-64) => /usr/lib/libunwind.so
+	libunwind-x86_64.so.8 (libc6,x86-64) => /usr/lib/libunwind-x86_64.so.8
+	libunwind-x86_64.so (libc6,x86-64) => /usr/lib/libunwind-x86_64.so
+== fonts (LAS bundles) ==
+Adwaita
+TTF
+cantarell
+encodings
+noto
+noto-cjk
+== ulimit memlock ==
+8192
+== zram/swap now ==
+               total        used        free      shared  buff/cache   available
+Mem:           14798        2834         483         206       12028       11963
+Swap:          23782           0       23782

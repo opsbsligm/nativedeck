@@ -1,0 +1,18 @@
+== hidraw acl ==
+# file: /dev/hidraw0
+# owner: root
+# group: root
+user::rw-
+user:deck:rw-
+group::rw-
+== udev jupiter rules snippet ==
+== root avail now ==
+/dev/nvme0n1p4  5.0G  3.6G  837M  82% /
+== pkg sizes for a native toolchain (no install) ==
+clang        https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.9/os/x86_64/clang-libs-22.1.8-1.1-x86_64.pkg.tar.zst 41735787
+lld          https://steamdeck-packages.steamos.cloud/archlinux-mirror/extra-3.9/os/x86_64/lld-22.1.8-1-x86_64.pkg.tar.zst 2168467
+cmake        https://steamdeck-packages.steamos.cloud/archlinux-mirror/extra-3.9/os/x86_64/cppdap-1.58.0-3-x86_64.pkg.tar.zst 345375
+ninja        https://steamdeck-packages.steamos.cloud/archlinux-mirror/extra-3.9/os/x86_64/ninja-1.13.2-3-x86_64.pkg.tar.zst 177532
+base-devel   https://steamdeck-packages.steamos.cloud/archlinux-mirror/core-3.9/os/x86_64/m4-1.4.21-2-x86_64.pkg.tar.zst 281037
+== distrobox image candidates ==
+(none)

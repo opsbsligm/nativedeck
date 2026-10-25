@@ -1,0 +1,550 @@
+{
+  "sha": "ca9e9c64dbc0ce22e058520d9aa8f7af87872b63",
+  "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/ca9e9c64dbc0ce22e058520d9aa8f7af87872b63",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff48851b37041d6b4e2eec8b4360423d08c761c2",
+      "size": 354,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/ff48851b37041d6b4e2eec8b4360423d08c761c2"
+    },
+    {
+      "path": ".vscode",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dd61a6e03305547c0ecc9bf4729e49bb71f91794",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/dd61a6e03305547c0ecc9bf4729e49bb71f91794"
+    },
+    {
+      "path": ".vscode/c_cpp_properties.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81185b858ff9bad0bafbe573314e25a1cf044d4f",
+      "size": 504,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/81185b858ff9bad0bafbe573314e25a1cf044d4f"
+    },
+    {
+      "path": ".vscode/launch.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ec68ec0a152ed7eead2e5eb762f6c89ae4d2df1",
+      "size": 711,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/0ec68ec0a152ed7eead2e5eb762f6c89ae4d2df1"
+    },
+    {
+      "path": ".vscode/settings.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "73ee386d30bf2a880a1d86b5c0ddc839710fe084",
+      "size": 2033,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/73ee386d30bf2a880a1d86b5c0ddc839710fe084"
+    },
+    {
+      "path": ".vscode/tasks.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3010f4f85cd939e6ac2de746c7d4dcb3aa37ca5",
+      "size": 654,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/e3010f4f85cd939e6ac2de746c7d4dcb3aa37ca5"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b195b98cbe8ec337a55ef27b2c77f31bfb680f6",
+      "size": 1063,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/9b195b98cbe8ec337a55ef27b2c77f31bfb680f6"
+    },
+    {
+      "path": "Makefile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7494ceb8a70174e412b3d08a5891ef269c4d21a5",
+      "size": 13982,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/7494ceb8a70174e412b3d08a5891ef269c4d21a5"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6448ce9d56cc2bd609a5090652125f324d31a02",
+      "size": 1905,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/b6448ce9d56cc2bd609a5090652125f324d31a02"
+    },
+    {
+      "path": "inc",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1883e3d555731683c0ed34abb0a5668a0bd0cfd7",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/1883e3d555731683c0ed34abb0a5668a0bd0cfd7"
+    },
+    {
+      "path": "inc/cemuhook",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "05295dbaefeb2cf25f86560c97932f219c459ef6",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/05295dbaefeb2cf25f86560c97932f219c459ef6"
+    },
+    {
+      "path": "inc/cemuhook/cemuhookprotocol.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ddd7b4556fef408689cd879074d1b2872fbfac04",
+      "size": 2574,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/ddd7b4556fef408689cd879074d1b2872fbfac04"
+    },
+    {
+      "path": "inc/cemuhook/cemuhookserver.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd86e7e67e1aac709f85f090cc3a78a4447a3bab",
+      "size": 1930,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/dd86e7e67e1aac709f85f090cc3a78a4447a3bab"
+    },
+    {
+      "path": "inc/hiddev",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "89bb8407c0a6c5c433e43798ff0ad1a016412421",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/89bb8407c0a6c5c433e43798ff0ad1a016412421"
+    },
+    {
+      "path": "inc/hiddev/hidapidev.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3314e6fb365d7754433af164e36714077723fa06",
+      "size": 796,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/3314e6fb365d7754433af164e36714077723fa06"
+    },
+    {
+      "path": "inc/hiddev/hiddevfile.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5f290af35578e70aab10163d0cf5a0c178b00aaa",
+      "size": 601,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/5f290af35578e70aab10163d0cf5a0c178b00aaa"
+    },
+    {
+      "path": "inc/hiddev/hiddevfinder.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a9e4a4815360daafdca4567ef79802125a3db39",
+      "size": 251,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/0a9e4a4815360daafdca4567ef79802125a3db39"
+    },
+    {
+      "path": "inc/hiddev/hiddevreader.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "025bd8232d8b846f921d94c4bc2438684a8f255a",
+      "size": 6602,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/025bd8232d8b846f921d94c4bc2438684a8f255a"
+    },
+    {
+      "path": "inc/log",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a213d259e448aa0a1abbbaaf778f0e3625ee1ad7",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/a213d259e448aa0a1abbbaaf778f0e3625ee1ad7"
+    },
+    {
+      "path": "inc/log/log.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "169b82b59aa229214b5cf1de3877753ea0692faf",
+      "size": 1160,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/169b82b59aa229214b5cf1de3877753ea0692faf"
+    },
+    {
+      "path": "inc/pipeline",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7a6e831093724d5c921df2855ea9a868a8a1464c",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/7a6e831093724d5c921df2855ea9a868a8a1464c"
+    },
+    {
+      "path": "inc/pipeline/pipeout.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c16f9bf9c6ca7b51e01ed01c3e7d8393cd38865",
+      "size": 2311,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/2c16f9bf9c6ca7b51e01ed01c3e7d8393cd38865"
+    },
+    {
+      "path": "inc/pipeline/pipeout.hpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d3c359b543a2a1c297a5d2a29187634807d59390",
+      "size": 2393,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/d3c359b543a2a1c297a5d2a29187634807d59390"
+    },
+    {
+      "path": "inc/pipeline/serve.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8192574cf1947c67cf7f91f64cd7f7a846e88310",
+      "size": 1865,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/8192574cf1947c67cf7f91f64cd7f7a846e88310"
+    },
+    {
+      "path": "inc/pipeline/serve.hpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d9ca5143edef14b1bc601a9730d77281eed07595",
+      "size": 2599,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/d9ca5143edef14b1bc601a9730d77281eed07595"
+    },
+    {
+      "path": "inc/pipeline/signalout.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "022bab8ed8d5f666fd950a1aeebda9f5eb791958",
+      "size": 880,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/022bab8ed8d5f666fd950a1aeebda9f5eb791958"
+    },
+    {
+      "path": "inc/pipeline/thread.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78678ddb95725d951ed6ca551be7343751f4dbf2",
+      "size": 1678,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/78678ddb95725d951ed6ca551be7343751f4dbf2"
+    },
+    {
+      "path": "inc/pipeline/thread.hpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0ecf35efa5a068b48c46e563a4bed3a110f371a",
+      "size": 586,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/f0ecf35efa5a068b48c46e563a4bed3a110f371a"
+    },
+    {
+      "path": "inc/sdgyrodsu",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "684cec5ba5240319e4745581560567793bba2c71",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/684cec5ba5240319e4745581560567793bba2c71"
+    },
+    {
+      "path": "inc/sdgyrodsu/cemuhookadapter.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a10015d30ed33d9e971dcd05fe291878c5f9259",
+      "size": 1627,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/8a10015d30ed33d9e971dcd05fe291878c5f9259"
+    },
+    {
+      "path": "inc/sdgyrodsu/gyrovaldetermine.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e96f87b75284d6fbc0d9903f63cfd11ece76b89",
+      "size": 549,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/8e96f87b75284d6fbc0d9903f63cfd11ece76b89"
+    },
+    {
+      "path": "inc/sdgyrodsu/presenter.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9bf1ff584691b103d3b1b702a197259410731466",
+      "size": 328,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/9bf1ff584691b103d3b1b702a197259410731466"
+    },
+    {
+      "path": "inc/sdgyrodsu/sdhidframe.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0748a0a94968f8780710cd265c9daaff22dbdd7",
+      "size": 2225,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/d0748a0a94968f8780710cd265c9daaff22dbdd7"
+    },
+    {
+      "path": "inc/shell",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cadf1a919379c5e229e79924987c90656e6298aa",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/cadf1a919379c5e229e79924987c90656e6298aa"
+    },
+    {
+      "path": "inc/shell/shell.h",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "463b4e89a4d066189464a0b4b7befd6993d831f2",
+      "size": 265,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/463b4e89a4d066189464a0b4b7befd6993d831f2"
+    },
+    {
+      "path": "pkg",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3b62cd941ddb986e0b5a94f33dad33ed9984066d",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/3b62cd941ddb986e0b5a94f33dad33ed9984066d"
+    },
+    {
+      "path": "pkg/install.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "f4fab5f150f5627261921cc74d4df1e8d0648fef",
+      "size": 2197,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/f4fab5f150f5627261921cc74d4df1e8d0648fef"
+    },
+    {
+      "path": "pkg/logcurrentrun.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "029f7b8dd66c9c7031ad4c2b63da7cce09e20901",
+      "size": 162,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/029f7b8dd66c9c7031ad4c2b63da7cce09e20901"
+    },
+    {
+      "path": "pkg/sdgyrodsu.service",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "632480b7960ee697f7cf68015acfc84b46ea7fbd",
+      "size": 211,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/632480b7960ee697f7cf68015acfc84b46ea7fbd"
+    },
+    {
+      "path": "pkg/uninstall-sdgyrodsu.desktop",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "382acb0647480f2ff7eac2437e72b2fae9fd4db1",
+      "size": 162,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/382acb0647480f2ff7eac2437e72b2fae9fd4db1"
+    },
+    {
+      "path": "pkg/uninstall.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "487d6a1943f076fd65f06fb88c6064da6278fbaf",
+      "size": 683,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/487d6a1943f076fd65f06fb88c6064da6278fbaf"
+    },
+    {
+      "path": "pkg/update-sdgyrodsu.desktop",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2c9a77b23d1cc26f503223eb0c9aeddc2f107d9b",
+      "size": 243,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/2c9a77b23d1cc26f503223eb0c9aeddc2f107d9b"
+    },
+    {
+      "path": "pkg/update.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7c6923fbda55a714e66cbb8180cd6e3208367fa5",
+      "size": 734,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/7c6923fbda55a714e66cbb8180cd6e3208367fa5"
+    },
+    {
+      "path": "pkg/v1cleanup.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "1d0c5ece1b4360e229e452d6db836eee7e3836c7",
+      "size": 462,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/1d0c5ece1b4360e229e452d6db836eee7e3836c7"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a0873e92bf41e7b5949eb92249aba71d3ae2d246",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/a0873e92bf41e7b5949eb92249aba71d3ae2d246"
+    },
+    {
+      "path": "src/cemuhook",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3b701873a30ab6b4a3de330529ea8d47e74b623d",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/3b701873a30ab6b4a3de330529ea8d47e74b623d"
+    },
+    {
+      "path": "src/cemuhook/cemuhookserver.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d34625e7366ecab989e92aaf8abafa19d655629",
+      "size": 15901,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/6d34625e7366ecab989e92aaf8abafa19d655629"
+    },
+    {
+      "path": "src/hiddev",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b8fbedfa9e262bec56e88e7848552449c3a7d03b",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/b8fbedfa9e262bec56e88e7848552449c3a7d03b"
+    },
+    {
+      "path": "src/hiddev/hidapidev.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb576e51886caeeca728bc61e32570c756262fbe",
+      "size": 3221,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/cb576e51886caeeca728bc61e32570c756262fbe"
+    },
+    {
+      "path": "src/hiddev/hiddevfile.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5d023509f7b2993eb580b559e219ede2f35517a",
+      "size": 1539,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/e5d023509f7b2993eb580b559e219ede2f35517a"
+    },
+    {
+      "path": "src/hiddev/hiddevfinder.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5d117453789c67617acc20523c35a06cfb246100",
+      "size": 2500,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/5d117453789c67617acc20523c35a06cfb246100"
+    },
+    {
+      "path": "src/hiddev/hiddevreader.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "187dd0abf6852cf78c675a755e224f6311627279",
+      "size": 5323,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/187dd0abf6852cf78c675a755e224f6311627279"
+    },
+    {
+      "path": "src/hiddev/hiddevreader",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "20f1e953065bb04f98fc3ac5c63ae6eaa65257b9",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/20f1e953065bb04f98fc3ac5c63ae6eaa65257b9"
+    },
+    {
+      "path": "src/hiddev/hiddevreader/processdata.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56b4a7ece6626fd61624981ee9c41fd93417ff64",
+      "size": 2066,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/56b4a7ece6626fd61624981ee9c41fd93417ff64"
+    },
+    {
+      "path": "src/hiddev/hiddevreader/readdata.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3cc04737396a92bc98877b6f78849854d9daa9b6",
+      "size": 687,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/3cc04737396a92bc98877b6f78849854d9daa9b6"
+    },
+    {
+      "path": "src/hiddev/hiddevreader/readdataapi.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19607dcb65dff4fc55a73ad2dc6daeeab7671f79",
+      "size": 2273,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/19607dcb65dff4fc55a73ad2dc6daeeab7671f79"
+    },
+    {
+      "path": "src/hiddev/hiddevreader/readdatafile.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7cc3da931a0e033656ccbee8ff83f298988be2f",
+      "size": 3829,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/a7cc3da931a0e033656ccbee8ff83f298988be2f"
+    },
+    {
+      "path": "src/hiddev/hiddevreader/serveframe.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f036e36da2507128c1e9710f3565545f256dadfa",
+      "size": 3853,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/f036e36da2507128c1e9710f3565545f256dadfa"
+    },
+    {
+      "path": "src/log",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bd90457a4f5cdfe7bce3190c0a11d57745820be1",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/bd90457a4f5cdfe7bce3190c0a11d57745820be1"
+    },
+    {
+      "path": "src/log/log.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e16bb75b59e797062fb2e24ab05709fd8d6e861",
+      "size": 796,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/1e16bb75b59e797062fb2e24ab05709fd8d6e861"
+    },
+    {
+      "path": "src/main.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7103b2f31e689778e409bf5e79dbdb28fa139abe",
+      "size": 3839,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/7103b2f31e689778e409bf5e79dbdb28fa139abe"
+    },
+    {
+      "path": "src/pipeline",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1c5690ed79702ab59031029ab27ac16f8c6626a2",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/1c5690ed79702ab59031029ab27ac16f8c6626a2"
+    },
+    {
+      "path": "src/pipeline/signalout.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a830f2e0ed072d54ac25a23b2ae9a25fa9ccaf98",
+      "size": 975,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/a830f2e0ed072d54ac25a23b2ae9a25fa9ccaf98"
+    },
+    {
+      "path": "src/pipeline/thread.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6771fb09a754c58052064523310e55666a02816",
+      "size": 1774,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/a6771fb09a754c58052064523310e55666a02816"
+    },
+    {
+      "path": "src/sdgyrodsu",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bd551f588c4c3d6d6dc88b71020331f79b291306",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/bd551f588c4c3d6d6dc88b71020331f79b291306"
+    },
+    {
+      "path": "src/sdgyrodsu/cemuhookadapter.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cafc9f137d03c208ae9a982a0bbcf338832d81d",
+      "size": 7578,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/6cafc9f137d03c208ae9a982a0bbcf338832d81d"
+    },
+    {
+      "path": "src/sdgyrodsu/presenter.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec464b730072642f182242ad4167811cb2d600fa",
+      "size": 2336,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/ec464b730072642f182242ad4167811cb2d600fa"
+    },
+    {
+      "path": "src/sdgyrodsu/sdhidframe.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80203858e49e663b61ee988bea97f102b1377485",
+      "size": 200,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/80203858e49e663b61ee988bea97f102b1377485"
+    },
+    {
+      "path": "src/shell",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "201f887383d9a50b7a60726f7fa0a11321b88c46",
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/trees/201f887383d9a50b7a60726f7fa0a11321b88c46"
+    },
+    {
+      "path": "src/shell/shell.cpp",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e4ad9079580a363c4aff1f9f2248f30acf8aeb2",
+      "size": 992,
+      "url": "https://api.github.com/repos/kmicki/SteamDeckGyroDSU/git/blobs/2e4ad9079580a363c4aff1f9f2248f30acf8aeb2"
+    }
+  ],
+  "truncated": false
+}

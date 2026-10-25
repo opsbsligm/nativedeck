@@ -1,0 +1,5 @@
+--- BAR size via lspci ---
+	Region 0: Memory at f8e0000000 (64-bit, prefetchable) [size=256M]
+	Region 2: Memory at f8f0000000 (64-bit, prefetchable) [size=2M]
+	Region 4: I/O ports at 1000 [size=256]
+	Region 5: Memory at 80300000 (32-bit, non-prefetchable) [size=512K]
