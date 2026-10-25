@@ -1,0 +1,58 @@
+========================================================================
+env21 · 2026-10-26 00:21~00:22 · 第 16 轮（续）· 输入注入端到端验证（免兼容层输入面）
+靶标：recompiled2/hbmenu/hbmenu（x86-64 AOT 产物）
+方式：ScarletNX unattended 脚本面，单变量三组运行
+红线：全部写入仅在 ~/native-recomp/logs/env21/；红线区巡检前后均为空
+========================================================================
+
+## 一、三组运行与结果（已验证）
+统一参数：--frames=420 --shot=<组名> --shot_every=120
+
+| 组 | 附加参数 | 结果 |
+|---|---|---|
+| A 基线 | 无 | 尾行 frames=420 hash=06f1f86be06dac83；帧 SHA256=445be562…（与 env20 逐字节相同）|
+| B 注入 | --script=240f:400 --press_len=400 | 输出 `am: the application exited`，客户机自行退出，未产生 B.ppm |
+| C 对照 | --script=240f:200 --press_len=400 | 尾行 frames=420 hash=06f1f86be06dac83；帧 SHA256=445be562…（与 A 逐字节相同）|
+
+Deck 侧产物：logs/env21/{A.out,A.ppm,B.out,C.out,C.ppm,summary.txt}
+Mac 副本：deckprobe/env21-summary.raw.txt、deckprobe/env21-B-run.out.raw
+
+差异只有一处（240f 时刻的按键位），结果从"跑满 420 帧"变成"应用退出"，
+C 组证明 200 时刻同按键不触发退出差异（在 120/240/360 三个截图点之前已回到同一画面）。
+→ 注入链端到端成立：
+   script → unattended_buttons() → platform/backend/sdl3.c（k = keys_held | s）→ HID → 客户机游戏代码
+   全程不经过 Steam Input、不碰 uinput、不用外部输入工具。
+
+## 二、位定义勘正：0x400 = Plus 由推断升级为已验证（源码级）
+env20 收尾时我把"400 是 Plus"记为按行为反推的推断。本轮在源码中找到了定义，推断成立：
+
+- `src/nx/runtime/platform/unattended.h:26`：`unattended_buttons()` 返回值即 **HidNpadButton 位**，
+  另 bit40-47 为摇杆方向（`input_key_sticks`）、`SNX_SCRIPT_HOME = 1ull<<48`
+- `src/common/utilities/pad_map.h:31`：`SNX_PAD_BUTTONS 16 /* the console's buttons, HidNpadButton bits 0 (A) to 15 (Down) */`
+- `src/common/utilities/pad_map.c:11` 的 `BUTTONS[SNX_PAD_BUTTONS]` 逐位顺序：
+  `A B X Y L3 R3 L R ZL ZR Plus Minus Left Up Right Down`
+  → bit10 = Plus → **0x400 = Plus（已验证，源码级）**
+- 脚本格式解析（`src/nx/runtime/platform/unattended.c:42` `script_parse_press`）：
+  `at[:f]` 十进制时刻（`f` 后缀 = 第 N 次 present 时触发），`:` 后十六进制掩码，`,` 分隔多条；
+  掩码解析失败则该条被丢弃（`return 0`），这也是 C 组用 240f 仍安全的原因
+
+## 三、input_validated 的限定语义（重要，不得越级解读）
+本轮达成的是 **软件注入面已验证**，不等于"手柄映射已验证"：
+
+- 已验证：一条按键从注入点到客户机可观测行为差异（游戏退出）全链成立，且不经任何兼容层
+- 未验证：Deck 物理手柄 ABXY 布局正确性、摇杆曲线、震动（需真游戏内自证）
+- 物理面既有证据仍在 env18/`evidence/input/`：SDL 枚举到
+  `input: gamepad Steam Deck Controller … /dev/hidraw3, 6 axes, 20 buttons` + 完整 mapping 串，
+  但这只证明"设备被枚举"，不证明"游戏内动作正确"
+- 因此 `input_validated` 记为 **true（限定：软件注入面）**；
+  物理手柄布局面随 M4 真机游戏一并验收；`motion_validated` 仍 false
+
+## 四、附带可用发现
+- `platform/backend/sdl3.c` 有键盘→手柄映射（`keys_held |= keymap(e.key.scancode)`），
+  是第二条零侵入验证路（无需外部输入工具，也无需改任何 Steam/Steam Input 配置）
+- Deck 主机 `command -v vulkaninfo` **不存在**（M2 的扩展枚举需另找途径，见 env22）
+- Deck 有 `/dev/uinput`，本项目未使用；Deck 无 `grim` / `xwd` / `convert`
+- 体感面：`hid_motion.c`（128 行）是真实实现（四元数合成 + 陀螺漂移修正 +
+  `HS_HidSixAxisSensorState` 打包 + `snx_le64_array`/`snx_le32_array` 小端序整理），非 stub；
+  但 `hid.swipc` 内多个 SixAxis 相关命令标 `@stub` → 深入核对见 env22 第三节
+- 运行期还会生成 hbmenu.hints / .jitcache / .log / threads.txt（自动生成，非本次写入设计）

@@ -1,0 +1,55 @@
+# M0 现场验证 2026-10-25 22:55~23:07（授权后首次真机写入）
+## 写入动作（全部在白名单 ~/native-recomp/ 与 ~/.local/share/lasrecomp/）
+1. mkdir logs/ runtmp/（本项目自建）
+2. chmod +x LAS.AppImage（原 644，本项目此前推送的文件）；ScarletNX.AppImage 已 755
+3. 运行期由 LAS 自动写 ~/.local/share/lasrecomp/（白名单第 4 行）
+4. SHA-256 写前写后一致：LAS=5a5df7a4623d... ScarletNX=ecda0da7628f...（仅改权限，未改内容）
+
+## 护栏实测
+ACAD=1 / BAT1=100% / edge 55.0C / available 10GiB / /home 余 264G / 无游戏前台
+
+## 结论 A：显示通道定位（排除"投递全失败"风险）
+- /tmp/.X11-unix/{X0,X1} 存在；DISPLAY=:0 免 xauth 可读（xdpyinfo → X.Org 24.1.14）
+- 根窗口 1920x1080（gamescope --max-scale 2，逻辑 1280x800）
+- DISPLAY=:0 启动 LAS 后 X0 窗口树出现 "LAS Recomp" + "lasrecomp"
+  xwininfo -id 52428847 → Map State: IsViewable, 1920x1080 @ (320,180)
+  → GUI 窗口真实建立并可显示（不再是 10-24 的 SDL_Init FATAL）
+
+## 结论 B：LAS 原生 Vulkan 栈在 Deck 完整跑通（LAS 自身日志）
+LAS Recomp beta_5.1 / SteamOS 3.9.5 / 7.2.7-valve2-2-neptune-72 / AMD Custom APU 0405 4C8T / 14.5GB
+[vk] gpu 0: AMD Custom GPU 0405 (RADV VANGOGH) (api 1.4.350)
+[vk] driver radv Mesa 26.2.0-devel (git-5c65d4fc31); graphics pipeline library: yes
+[vk] swapchain 1920x1080, 4 images, mailbox
+[vk] pipeline cache: loaded 2124 bytes
+[launcher] update available: beta_5.2（此构建 beta_5.1）
+对照 10-24 16:55 同机日志：FATAL: SDL_Init: No available video device
+→ 唯一变量 = DISPLAY；V1 的 GUI 面由 blocked 转为已建立
+
+## 结论 C：原生性判据②③（启动器阶段已满足）
+- LAS 子进程 /proc/<pid>/maps 兼容层关键词命中 = 0（wine/box64/fex/dxvk/proton/qemu）
+- ScarletNX 载荷 ELF：file = "ELF 64-bit LSB executable, x86-64 ... statically linked"
+  readelf -h: Class ELF64 / Type EXEC / Machine: Advanced Micro Devices X86-64
+  ldd → "not a dynamic executable" → 判据②静态天然成立
+- ScarletNX CLI 在 Deck 可运行：--help 输出含 -r 重编译 / -O 优化级 / --headless / NRO
+
+## 未闭合（诚实标记 v1_gui_launch 仍 false）
+- x11grab 抓 :0 根窗口 = 纯黑（4 张 SHA 完全相同）；根因 gamescope 走 DRM/KMS 合成，X 根不持像素
+- xwd -id <LID> 返回 0 字节；rootfs 无 grim/grimshot；/dev/dri/card0 属 root:video 不可读
+- Deck 无 Sunshine 服务端（Moonlight 6.2.0 flatpak 仅客户端），装服务端违反红线 2
+- → 取像素方案：distrobox 内 weston headless（安全基线第 4 节第 3 路）或用户目视一次
+
+## M1/M3 关键约束（来自 totk-recomp 官方 README，官方声明级）
+- 仅支持 TOTK 1.0.0（main build ID 082CE09B06E33A12），title 0100F2C0115B6000，prod.keys mkey rev 0x0E
+- 需 AVX2（Deck 具备）；峰值磁盘 45GB、RAM 16GB、Deck 上预计构建 1~1.5h
+- Deck 实测性能：作者测试约 60fps（一次行走 62-64fps）；首次启动需着色器预热约 4.5min
+- 构建入口 build_from_xci.sh 从「carve NCA」起步 → 无 ROM 无法产出 totk-recomp 的 dist/
+- 工具链：clang>=17 + lld + ninja + cmake + make + gcc + python3 venv + capstone 恰 5.0.9 + libzstd +
+  Vulkan headers/libvulkan + libshaderc_combined.a + glslang-dev + spirv-tools + libvpx.a + SDL3 依赖
+- rootfs 无 gcc/clang/cmake/make；podman 6.0.2 + distrobox 1.8.2.5 已内置；已有 ubuntu:24.04 镜像（80.7MB）
+- github.com 出口 200；ghcr.io 返回 405（需镜像源）
+- Deck 与 Mac 均无 .xci/.nsp/.nsz/.nso/prod.keys，~/.switch 不存在 → M3 仍 blocked
+
+## M1 破局线索（本轮新发现，待验证）
+ScarletNX --help 明示 INPUT 接受 NRO，且 -x/-r 支持 NRO 重编译与 --dump-modules。
+NRO 是 Switch homebrew 自由软件格式 → 可用合法自有 NRO 走通「AArch64→x86-64 重编译」全管道，
+在不触碰任何版权内容的前提下满足 M1 的「产出原生 x86-64 且无兼容层」判据。

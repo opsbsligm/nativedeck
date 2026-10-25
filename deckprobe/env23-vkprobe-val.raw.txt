@@ -1,0 +1,300 @@
+=== host vkprobe with validation layer ===
+instance: loader exposes 25 extensions
+physical devices: 1
+
+=== [0] AMD Custom GPU 0405 (RADV VANGOGH)
+api 0x0040415e driver 0x06801063 vendor 0x1002 deviceID 0x163f
+driverName=radv driverInfo=Mesa 26.2.0-devel (git-5c65d4fc31) driverID=3
+device extensions: 225
+EXT VK_AMD_buffer_marker
+EXT VK_AMD_device_coherent_memory
+EXT VK_AMD_draw_indirect_count
+EXT VK_AMD_gcn_shader
+EXT VK_AMD_gpu_shader_half_float
+EXT VK_AMD_gpu_shader_int16
+EXT VK_AMD_memory_overallocation_behavior
+EXT VK_AMD_mixed_attachment_samples
+EXT VK_AMD_shader_ballot
+EXT VK_AMD_shader_core_properties
+EXT VK_AMD_shader_core_properties2
+EXT VK_AMD_shader_early_and_late_fragment_tests
+EXT VK_AMD_shader_explicit_vertex_parameter
+EXT VK_AMD_shader_fragment_mask
+EXT VK_AMD_shader_image_load_store_lod
+EXT VK_AMD_shader_trinary_minmax
+EXT VK_AMD_texture_gather_bias_lod
+EXT VK_EXT_4444_formats
+EXT VK_EXT_attachment_feedback_loop_dynamic_state
+EXT VK_EXT_attachment_feedback_loop_layout
+EXT VK_EXT_border_color_swizzle
+EXT VK_EXT_buffer_device_address
+EXT VK_EXT_calibrated_timestamps
+EXT VK_EXT_color_write_enable
+EXT VK_EXT_conditional_rendering
+EXT VK_EXT_conservative_rasterization
+EXT VK_EXT_custom_border_color
+EXT VK_EXT_custom_resolve
+EXT VK_EXT_depth_bias_control
+EXT VK_EXT_depth_clamp_control
+EXT VK_EXT_depth_clamp_zero_one
+EXT VK_EXT_depth_clip_control
+EXT VK_EXT_depth_clip_enable
+EXT VK_EXT_depth_range_unrestricted
+EXT VK_EXT_descriptor_buffer
+EXT VK_EXT_descriptor_indexing
+EXT VK_EXT_device_address_binding_report
+EXT VK_EXT_device_fault
+EXT VK_EXT_device_generated_commands
+EXT VK_EXT_device_memory_report
+EXT VK_EXT_discard_rectangles
+EXT VK_EXT_display_control
+EXT VK_EXT_dynamic_rendering_unused_attachments
+EXT VK_EXT_extended_dynamic_state
+EXT VK_EXT_extended_dynamic_state2
+EXT VK_EXT_extended_dynamic_state3
+EXT VK_EXT_external_memory_acquire_unmodified
+EXT VK_EXT_external_memory_dma_buf
+EXT VK_EXT_external_memory_host
+EXT VK_EXT_fragment_shader_interlock
+EXT VK_EXT_global_priority
+EXT VK_EXT_global_priority_query
+EXT VK_EXT_graphics_pipeline_library
+EXT VK_EXT_hdr_metadata
+EXT VK_EXT_host_image_copy
+EXT VK_EXT_host_query_reset
+EXT VK_EXT_image_2d_view_of_3d
+EXT VK_EXT_image_compression_control
+EXT VK_EXT_image_drm_format_modifier
+EXT VK_EXT_image_robustness
+EXT VK_EXT_image_sliced_view_of_3d
+EXT VK_EXT_image_view_min_lod
+EXT VK_EXT_index_type_uint8
+EXT VK_EXT_inline_uniform_block
+EXT VK_EXT_legacy_vertex_attributes
+EXT VK_EXT_line_rasterization
+EXT VK_EXT_load_store_op_none
+EXT VK_EXT_map_memory_placed
+EXT VK_EXT_memory_budget
+EXT VK_EXT_memory_priority
+EXT VK_EXT_mesh_shader
+EXT VK_EXT_multi_draw
+EXT VK_EXT_mutable_descriptor_type
+EXT VK_EXT_nested_command_buffer
+EXT VK_EXT_non_seamless_cube_map
+EXT VK_EXT_pageable_device_local_memory
+EXT VK_EXT_pci_bus_info
+EXT VK_EXT_physical_device_drm
+EXT VK_EXT_pipeline_creation_cache_control
+EXT VK_EXT_pipeline_creation_feedback
+EXT VK_EXT_pipeline_library_group_handles
+EXT VK_EXT_pipeline_robustness
+EXT VK_EXT_post_depth_coverage
+EXT VK_EXT_present_timing
+EXT VK_EXT_primitive_restart_index
+EXT VK_EXT_primitive_topology_list_restart
+EXT VK_EXT_primitives_generated_query
+EXT VK_EXT_private_data
+EXT VK_EXT_provoking_vertex
+EXT VK_EXT_queue_family_foreign
+EXT VK_EXT_robustness2
+EXT VK_EXT_sample_locations
+EXT VK_EXT_sampler_filter_minmax
+EXT VK_EXT_scalar_block_layout
+EXT VK_EXT_separate_stencil_usage
+EXT VK_EXT_shader_atomic_float
+EXT VK_EXT_shader_atomic_float2
+EXT VK_EXT_shader_demote_to_helper_invocation
+EXT VK_EXT_shader_image_atomic_int64
+EXT VK_EXT_shader_module_identifier
+EXT VK_EXT_shader_object
+EXT VK_EXT_shader_replicated_composites
+EXT VK_EXT_shader_stencil_export
+EXT VK_EXT_shader_subgroup_ballot
+EXT VK_EXT_shader_subgroup_vote
+EXT VK_EXT_shader_uniform_buffer_unsized_array
+EXT VK_EXT_shader_viewport_index_layer
+EXT VK_EXT_subgroup_size_control
+EXT VK_EXT_swapchain_maintenance1
+EXT VK_EXT_texel_buffer_alignment
+EXT VK_EXT_tooling_info
+EXT VK_EXT_transform_feedback
+EXT VK_EXT_vertex_attribute_divisor
+EXT VK_EXT_vertex_input_dynamic_state
+EXT VK_EXT_ycbcr_2plane_444_formats
+EXT VK_EXT_ycbcr_image_arrays
+EXT VK_EXT_zero_initialize_device_memory
+EXT VK_GOOGLE_decorate_string
+EXT VK_GOOGLE_hlsl_functionality1
+EXT VK_GOOGLE_user_type
+EXT VK_INTEL_shader_integer_functions2
+EXT VK_KHR_16bit_storage
+EXT VK_KHR_8bit_storage
+EXT VK_KHR_acceleration_structure
+EXT VK_KHR_bind_memory2
+EXT VK_KHR_buffer_device_address
+EXT VK_KHR_calibrated_timestamps
+EXT VK_KHR_compute_shader_derivatives
+EXT VK_KHR_copy_commands2
+EXT VK_KHR_copy_memory_indirect
+EXT VK_KHR_create_renderpass2
+EXT VK_KHR_dedicated_allocation
+EXT VK_KHR_deferred_host_operations
+EXT VK_KHR_depth_clamp_zero_one
+EXT VK_KHR_depth_stencil_resolve
+EXT VK_KHR_descriptor_update_template
+EXT VK_KHR_device_address_commands
+EXT VK_KHR_device_group
+EXT VK_KHR_draw_indirect_count
+EXT VK_KHR_driver_properties
+EXT VK_KHR_dynamic_rendering
+EXT VK_KHR_dynamic_rendering_local_read
+EXT VK_KHR_external_fence
+EXT VK_KHR_external_fence_fd
+EXT VK_KHR_external_memory
+EXT VK_KHR_external_memory_fd
+EXT VK_KHR_external_semaphore
+EXT VK_KHR_external_semaphore_fd
+EXT VK_KHR_format_feature_flags2
+EXT VK_KHR_fragment_shader_barycentric
+EXT VK_KHR_fragment_shading_rate
+EXT VK_KHR_get_memory_requirements2
+EXT VK_KHR_global_priority
+EXT VK_KHR_image_format_list
+EXT VK_KHR_imageless_framebuffer
+EXT VK_KHR_incremental_present
+EXT VK_KHR_index_type_uint8
+EXT VK_KHR_internally_synchronized_queues
+EXT VK_KHR_line_rasterization
+EXT VK_KHR_load_store_op_none
+EXT VK_KHR_maintenance1
+EXT VK_KHR_maintenance10
+EXT VK_KHR_maintenance2
+EXT VK_KHR_maintenance3
+EXT VK_KHR_maintenance4
+EXT VK_KHR_maintenance5
+EXT VK_KHR_maintenance6
+EXT VK_KHR_maintenance7
+EXT VK_KHR_maintenance8
+EXT VK_KHR_maintenance9
+EXT VK_KHR_map_memory2
+EXT VK_KHR_multiview
+EXT VK_KHR_performance_query
+EXT VK_KHR_pipeline_binary
+EXT VK_KHR_pipeline_executable_properties
+EXT VK_KHR_pipeline_library
+EXT VK_KHR_present_id
+EXT VK_KHR_present_id2
+EXT VK_KHR_present_wait
+EXT VK_KHR_present_wait2
+EXT VK_KHR_push_descriptor
+EXT VK_KHR_ray_query
+EXT VK_KHR_ray_tracing_maintenance1
+EXT VK_KHR_ray_tracing_pipeline
+EXT VK_KHR_ray_tracing_position_fetch
+EXT VK_KHR_relaxed_block_layout
+EXT VK_KHR_robustness2
+EXT VK_KHR_sampler_mirror_clamp_to_edge
+EXT VK_KHR_sampler_ycbcr_conversion
+EXT VK_KHR_separate_depth_stencil_layouts
+EXT VK_KHR_shader_atomic_int64
+EXT VK_KHR_shader_clock
+EXT VK_KHR_shader_constant_data
+EXT VK_KHR_shader_draw_parameters
+EXT VK_KHR_shader_expect_assume
+EXT VK_KHR_shader_float16_int8
+EXT VK_KHR_shader_float_controls
+EXT VK_KHR_shader_float_controls2
+EXT VK_KHR_shader_integer_dot_product
+EXT VK_KHR_shader_maximal_reconvergence
+EXT VK_KHR_shader_non_semantic_info
+EXT VK_KHR_shader_quad_control
+EXT VK_KHR_shader_relaxed_extended_instruction
+EXT VK_KHR_shader_subgroup_extended_types
+EXT VK_KHR_shader_subgroup_rotate
+EXT VK_KHR_shader_subgroup_uniform_control_flow
+EXT VK_KHR_shader_terminate_invocation
+EXT VK_KHR_shader_untyped_pointers
+EXT VK_KHR_spirv_1_4
+EXT VK_KHR_storage_buffer_storage_class
+EXT VK_KHR_swapchain
+EXT VK_KHR_swapchain_maintenance1
+EXT VK_KHR_swapchain_mutable_format
+EXT VK_KHR_synchronization2
+EXT VK_KHR_timeline_semaphore
+EXT VK_KHR_uniform_buffer_standard_layout
+EXT VK_KHR_variable_pointers
+EXT VK_KHR_vertex_attribute_divisor
+EXT VK_KHR_vulkan_memory_model
+EXT VK_KHR_workgroup_memory_explicit_layout
+EXT VK_KHR_zero_initialize_workgroup_memory
+EXT VK_MESA_image_alignment_control
+EXT VK_NV_compute_shader_derivatives
+EXT VK_VALVE_mutable_descriptor_type
+EXT VK_VALVE_shader_mixed_float_dot_product
+WANT-MATRIX
+WANT YES VK_KHR_swapchain
+WANT YES VK_EXT_vertex_attribute_divisor
+WANT YES VK_EXT_transform_feedback
+WANT YES VK_EXT_custom_border_color
+WANT YES VK_KHR_shader_clock
+WANT YES VK_KHR_shader_maximal_reconvergence
+WANT YES VK_EXT_attachment_feedback_loop_layout
+WANT YES VK_EXT_attachment_feedback_loop_dynamic_state
+WANT YES VK_KHR_dynamic_rendering_local_read
+WANT YES VK_EXT_conditional_rendering
+WANT YES VK_EXT_provoking_vertex
+WANT YES VK_EXT_pipeline_robustness
+WANT YES VK_EXT_robustness2
+WANT YES VK_EXT_memory_budget
+WANT YES VK_EXT_calibrated_timestamps
+WANT YES VK_EXT_external_memory_host
+WANT YES VK_EXT_index_type_uint8
+WANT NO  VK_EXT_rasterization_order_attachment_access
+WANT NO  VK_KHR_portability_subset
+WANT NO  VK_KHR_video_queue
+WANT NO  VK_KHR_video_decode_queue
+WANT NO  VK_KHR_video_decode_h264
+WANT NO  VK_KHR_video_decode_h265
+WANT NO  VK_KHR_video_encode_h264
+WANT NO  VK_NV_shader_sm_builtins
+WANT NO  VK_EXT_shader_image_int64
+WANT NO  VK_EXT_64_bit_index
+WANT YES VK_EXT_shader_atomic_float
+WANT NO  VK_EXT_nested_command_buffer_usage
+WANT YES VK_EXT_device_address_binding_report
+WANT YES VK_EXT_map_memory_placed
+WANT YES VK_EXT_pageable_device_local_memory
+WANT YES VK_EXT_memory_priority
+WANT YES VK_EXT_descriptor_buffer
+WANT YES VK_EXT_shader_object
+WANT YES VK_EXT_graphics_pipeline_library
+WANT NO  VK_EXT_pipeline_binary_cache
+WANT YES VK_KHR_dynamic_rendering
+WANT NO  VK_EXT_full_screen_exclusive
+WANT YES VK_KHR_present_wait
+WANT YES VK_KHR_present_id
+WANT YES VK_EXT_swapchain_maintenance1
+WANT NO  VK_EXT_debug_utils
+FEAT textureCompressionASTC_LDR 0
+FEAT textureCompressionBC 1
+FEAT textureCompressionETC2 0
+FEAT geometryShader 1 tessellationShader 1 sparseBinding 1 multiDrawIndirect 1
+FEAT occlusionQueryPrecise 1 pipelineStatisticsQuery 1 depthClamp 1
+F12 descriptorIndexing 1 scalarLayout 1 timelineSemaphore 1 bufferDeviceAddress 1 shaderFloat16 1 separateDepthStencil 1 hostQueryReset 2151600
+F13 dynamicRendering 1 synchronization2 1 pipelineCreationCacheControl 1 shaderTerminateInvocation 1 inlineUniformPlacement 1
+QUEUE 0 flags 0xf count 1
+QUEUE 1 flags 0xe count 4
+QUEUE 2 flags 0x8 count 1
+FMT ASTC_4x4_SRGB optimal 0x0 sampled_image NO
+FMT ASTC_6x6_SRGB optimal 0x0 sampled_image NO
+FMT ASTC_8x8_SRGB optimal 0x0 sampled_image NO
+FMT BC7_UNORM optimal 0x1d401 sampled_image OK
+FMT ETC2_RGBA8_SRGB optimal 0x0 sampled_image NO
+HEAP 0 size 3072 MB flags 0x0
+HEAP 1 size 6144 MB flags 0x1
+
+rc=0
+=== loader version ===
+=== layer present? ===
+instance: loader exposes 25 extensions
+EXT VK_EXT_shader_viewport_index_layer

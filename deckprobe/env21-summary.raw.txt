@@ -1,0 +1,15 @@
+## A rc=0 extra= 00:21:57
+frames=420 hash=06f1f86be06dac83
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/A_0000.ppm
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/A_0001.ppm
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/A_0002.ppm
+## B rc=0 extra=--script=240f:400 --press_len=400 00:22:03
+am: the application exited
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/B_0000.ppm
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/B_0001.ppm
+## C rc=0 extra=--script=240f:200 --press_len=400 00:22:11
+frames=420 hash=06f1f86be06dac83
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/C_0000.ppm
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/C_0001.ppm
+445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876  /home/deck/native-recomp/logs/env21/C_0002.ppm
+ALLDONE 00:22:11

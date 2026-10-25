@@ -1,0 +1,131 @@
+========================================================================
+env23 · 2026-10-26 00:55~01:10 · 第 17 轮（续）· M2-B 宿主侧精确 Vulkan 探测
+方式：自编译 vkprobe（纯 Vulkan API，无第三方框架）在**宿主机**直接运行
+红线：写入仅 ~/native-recomp/vk/{vkprobe.c,bin/,logs/}；红线区巡检为空
+========================================================================
+
+## 一、为什么不能只用 vulkaninfo
+
+1. Deck 主机无 vulkaninfo（env21）；
+2. 容器内 loader 1.3.275 / Mesa 25.2.8，与真机运行环境（宿主 loader 1.4.350 /
+   Mesa 26.2.0-devel）不一致（env22 §4.2）；
+3. 需要的是 **ScarletNX 实际声明的扩展集合**是否可用，而非通用清单。
+-> 解法：自写 vkprobe.c，在容器内用 clang 18 编译，**拷贝到宿主运行**。
+
+## 二、产物与校验（已验证）
+
+| 物 | 值 |
+|---|---|
+| `vk/bin/vkprobe` | 21480 B，SHA256 `208544eb8d1a87c03b597de91edb06677b557311394887f5e2811327048a4136` |
+| `vk/bin/vulkaninfo`（apt 拉入宿主的副本） | 649712 B，SHA256 `f850851cd176c646851f42287902d5ee737849f275c1a64cb319b4985bdfbb4c` |
+| `vk/vkprobe.c` | 8876 B，Mac 副本 `evidence/m0/env23-vkprobe.c` |
+| `vk/logs/vkprobe-host.log` | 298 行，Mac 副本 `deckprobe/env23-vkprobe-host.raw.txt` |
+| `vk/logs/vkprobe-val.log` | 300 行（挂 VK_LAYER_KHRONOS_validation 复跑），Mac 副本 `deckprobe/env23-vkprobe-val.raw.txt` |
+
+运行方式（宿主，非 root）：
+`VK_LOADER_LAYERS_DISABLE="~implicit~" VK_DRIVER_FILES=/usr/share/vulkan/icd.d/radeon_icd.x86_64.json ~/native-recomp/vk/bin/vkprobe`
+-> rc=0
+
+编译踩坑（记入反例库）：本机 Vulkan 头名与旧示例不同，需改为
+  `scalarBinding`->`scalarLayout`、`inlineUniformBinding`->`inlineUniformBlock`、
+  `separateDepthSamplerLayout`->`separateDepthStencilLayouts`；
+  `vkGetPhysicalDeviceImageFormatProperties2` 第三参数需 `VkImageFormatProperties2*`；
+  `vkGetPhysicalDeviceCalibrateableTimeDomainsEXT` 必须 `vkGetInstanceProcAddr` 动态取。
+
+## 三、宿主机 GPU 事实（已验证）
+
+- 设备 `AMD Custom GPU 0405 (RADV VANGOGH)`，vendor 0x1002 deviceID 0x163f
+- `driverName=radv`，`driverInfo=Mesa 26.2.0-devel (git-5c65d4fc31)`
+- api `0x0040415e` = **Vulkan 1.4.302**（驱动）；loader 暴露 **25** 项实例扩展
+- **设备扩展 225 项**（对比容器 210 项）
+- 队列：`QUEUE 0 flags 0xf count 1`（GFX+ COMPUTE+ TRANSFER+ SPARSE）、
+  `QUEUE 1 flags 0xe count 4`（COMPUTE+ TRANSFER+ SPARSE）、`QUEUE 2 flags 0x8 count 1`（仅 TRANSFER）
+  -> SNX 硬需求 `GRAPHICS|COMPUTE` 满足
+- 显存：`HEAP 0 size 3072 MB flags 0x0`（device-local）、`HEAP 1 size 6144 MB flags 0x1`（host-visible）
+- 纹理压缩：`ASTC_LDR 0` / `ETC2 0` / `BC 1`；`BC7_UNORM` sampled_image **OK**
+- 特性：`geometryShader 1 tessellationShader 1 sparseBinding 1 multiDrawIndirect 1`
+- Vulkan 1.2：`descriptorIndexing 1 scalarLayout 1 timelineSemaphore 1 bufferDeviceAddress 1 shaderFloat16 1 separateDepthStencil 1 hostQueryReset 1`
+- Vulkan 1.3：`dynamicRendering 1 synchronization2 1 pipelineCreationCacheControl 1 shaderTerminateInvocation 1 inlineUniformBlock 1`
+
+## 四、WANT-MATRIX（ScarletNX 声明的扩展集 vs 本机实际）
+
+探针内显式列出 43 项（29 项 SNX 必需 + 14 项可选/他后端专属），逐位比对 225 项实际扩展：
+
+**必需（WANT YES）29 项：29/29 全部 present（100%）**
+`swapchain, vertex_attribute_divisor, transform_feedback, custom_border_color,
+shader_clock, shader_maximal_reconvergence, attachment_feedback_loop_layout,
+attachment_feedback_loop_dynamic_state, dynamic_rendering_local_read,
+conditional_rendering, provoking_vertex, pipeline_robustness, robustness2,
+memory_budget, calibrated_timestamps, external_memory_host, index_type_uint8,
+shader_atomic_float, device_address_binding_report, map_memory_placed,
+pageable_device_local_memory, memory_priority, descriptor_buffer, shader_object,
+graphics_pipeline_library, dynamic_rendering, present_wait, present_id,
+swapchain_maintenance1`
+
+**可选/他后端专属（WANT NO）14 项：0 项 present**
+`rasterization_order_attachment_access`（本机无，SNX 仅 Vita 路径使用）、
+`portability_subset`、`video_queue/decode_queue/decode_h264/decode_h265/encode_h264`、
+`NV_shader_sm_builtins`（NVIDIA 专属）、`shader_image_int64`、`64_bit_index`、
+`nested_command_buffer_usage`、`pipeline_binary_cache`、`full_screen_exclusive`、
+`debug_utils`（仅 debug 构建需要，release 不需要）
+
+-> 判定：**本机对 ScarletNX 的扩展需求 100% 覆盖，缺失项全部是可选或他后端专属，无一致命。**
+（证据等级：已验证，宿主机直采）
+
+## 五、宿主 vs 容器扩展差异（15 项 host-only）
+
+`VK_EXT_custom_resolve, VK_EXT_host_image_copy, VK_EXT_pageable_device_local_memory,
+VK_EXT_present_timing, VK_EXT_primitive_restart_index,
+VK_EXT_shader_uniform_buffer_unsized_array, VK_EXT_ycbcr_2plane_444_formats,
+VK_KHR_copy_memory_indirect, VK_KHR_device_address_commands,
+VK_KHR_internally_synchronized_queues, VK_KHR_maintenance10,
+VK_KHR_shader_constant_data, VK_KHR_shader_untyped_pointers,
+VK_KHR_swapchain_maintenance1, VK_VALVE_shader_mixed_float_dot_product`
+
+container-only：0 项。
+注意：`pageable_device_local_memory` 与 `swapchain_maintenance1` 在 SNX 必需集内，
+容器内**不可用**、宿主**可用** -> 再次确认 M3 真机运行必须在宿主跑，容器只用于构建。
+
+## 六、容器工具链现状（M3 源码构建前置，已验证）
+
+已装并可用：`glslangValidator 15.1.0`、`spirv-as/dis/opt/link/val/cfg 2025.1~rc1`、
+`libvulkan-dev 1.3.275.0`、`vulkan-tools 1.3.275.0`、clang/LLVM 18.1.3、cmake 3.28.3、ninja 1.11.1。
+**缺口**：`glslc` 缺失、`spirv-strip` 缺失、`spirv-headers` 未随 apt 安装
+（`/usr/include/spirv/` 为空目录）-> 任何 `#include <spirv/unified1/spirv.hpp>` 的 C++ 目标会失败。
+处理方案（M3 前）：apt `spirv-headers`（Ubuntu 24.04 有该包）或 CPM 预置；`glslc` 用
+`glslangValidator -V` 等价替代。日志：`~/native-recomp/vk/logs/env23g.log`。
+
+## 七、附带发现：隐式层屏蔽与 maps 纯净度
+
+`VK_LOADER_LAYERS_DISABLE="~implicit~"` 时 maps 内兼容层 grep=0，Vulkan 路径只剩
+`/usr/lib/libvulkan.so.1.4.350` + `radv` ICD，即判据③成立且不受隐式层影响（env20 §二）。
+该变量同时会屏蔽**显式**指定的层（实测：val 复跑日志显示 loader 仍报 25 项实例扩展，
+但层未真正生效，属 loader 预期行为，不等于层缺失）。要用验证层需
+`VK_LOADER_LAYERS_ENABLE=VK_LAYER_KHRONOS_validation` 且不加 DISABLE。
+
+## 八、判定
+
+M2（Vulkan 扩展枚举）= **达成**（宿主机直采，29/29 必需扩展就位）。
+M2（输入设备面）= 达成（env18 SDL 枚举 /dev/hidraw3 + env21 注入端到端）。
+本轮不升级 v1_* 标记；`motion_validated` 仍 false（见 env24 的 SixAxis 分析）。
+
+## 附一：勘误（2026-10-26 01:30 追加，原文不改）
+
+§三 "api `0x0040415e` = **Vulkan 1.4.302**" 抄错。按 `VK_VERSION_MAJOR/MINOR/PATCH`
+重解 `0x0040415e`：major=`0x40415e>>22`=**1**、minor=`(>>12)&0x3FF`=**4**、
+patch=`&0xFFF`=**350** → 正确值是 **Vulkan 1.4.350**。
+
+同理 `driverVersion=0x06801063` 用同一（Vulkan ≤1.3）宏解出 **26.1.99**，与
+`driverInfo="Mesa 26.2.0-devel (git-5c65d4fc31)"` 不一致。原因（推断）：
+Vulkan 1.4 起 `driverVersion` 的打包规则变更，且 Mesa 对 devel 版有自建编码，
+因此**以 `driverInfo` 字符串为准**（Mesa 26.2.0-devel），十六进制值仅作原样留档。
+
+## 附二：host / container apiVersion 差异的成因（已验证）
+
+| 环境 | physical device apiVersion | patch 位来源 |
+|---|---|---|
+| 宿主机 vkprobe | 1.4.**350** | 宿主 loader `libvulkan.so.1.4.350`（env19 maps 与之一致） |
+| 容器 vulkaninfo | 1.4.**318** | 容器 loader/头 1.3.275 包（`VK_HEADER_VERSION`=318） |
+
+即：`apiVersion` 的 patch 位由 **loader 头版本**决定，不是驱动能力差异；
+但"必需扩展在容器缺失 2 项"（§五）是真实差异，两者不要混为一谈。

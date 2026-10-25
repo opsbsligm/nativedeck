@@ -1,0 +1,53 @@
+### nativedeck 基线刷新 2026-10-25 22:44 (只读, 未写入)
+== uname ==
+Linux steamdeck 7.2.7-valve2-2-neptune-72-g31504582a073 #1 SMP PREEMPT_DYNAMIC Fri, 23 Oct 2026 20:44:20 +0000 x86_64 GNU/Linux
+== os-release ==
+/etc/os-release:PRETTY_NAME="SteamOS"
+/etc/os-release:BUILD_ID=20261023.100
+== readonly ==
+/usr/bin/steamos-readonly
+status: (需 sudo，见 STATUS 第12轮)
+== 内核/显示 ==
+X0
+X1
+/run/user/1000/gamescope-0
+== 电源/温度 ==
+100
+edge:         +54.0 C  
+Tctl:         +54.6 C  
+== 内存/swap ==
+               total        used        free      shared  buff/cache   available
+Mem:            14Gi       4.2Gi       7.4Gi       118Mi       3.3Gi        10Gi
+Swap:           23Gi       1.4Gi        21Gi
+zram0         7.2G [SWAP]
+== 磁盘 ==
+/dev/nvme0n1p8  939G  675G  264G  72% /home
+== AppImage 校验 ==
+112179704 LAS.AppImage 5a5df7a4623d3713
+47292590 ScarletNX.AppImage ecda0da7628f4eec
+== LAS 运行史 ==
+drwxr-xr-x  2 deck deck 4096 Oct 24 16:51 cache
+-rw-r--r--  1 deck deck  948 Oct 24 16:51 lasrecomp-backup-20261024-165136-26345.log
+-rw-r--r--  1 deck deck  948 Oct 24 16:52 lasrecomp-backup-20261024-165250-26535.log
+-rw-r--r--  1 deck deck  948 Oct 24 16:52 lasrecomp-backup-20261024-165253-26587.log
+-rw-r--r--  1 deck deck  948 Oct 24 16:54 lasrecomp-backup-20261024-165409-26708.log
+-rw-r--r--  1 deck deck  948 Oct 24 16:54 lasrecomp-backup-20261024-165409-26737.log
+-rw-r--r--  1 deck deck  948 Oct 24 16:55 lasrecomp.log
+== CPU 特性 ==
+avx2 bmi2 f16c fma 
+== glibc/SDL3 ==
+ldd (GNU libc) 2.43
+/usr/lib/libSDL3.so.0.4.12
+== 游戏资产搜索 ==
+(空=无)
+
+## 补记 2026-10-25 22:55（授权解除后的首次现场复核，全程只读）
+- 电源：ACAD Mains online=1，BAT1=100%（原 ADP0 路径不存在，实际节点名 ACAD）
+- 温度：edge 55.0C / Tctl 55.0C（远低于 90C 护栏）
+- 内存：available 10Gi（>2GiB 护栏）；/home 余 264G（>40G 护栏）
+- 前台：gamescope 会话在跑（pid 1594），无游戏进程 >20% CPU，Steam 无 Launching 记录 → 判定设备空闲
+- Decky 插件在跑（Loader/Clash/LSFG-VK/Framegen/Memory Deck/ProtonDB Badges/SteamGridDB/CSS Loader）→ 红线 2 生效，只读不碰
+- 残留僵尸：sd_festival / sd_openjtalk <defunct>（ppid 1568 = Decky TTS 插件），非本项目产物，不处理
+- 变更（非本项目所为）：~/native-recomp/LAS.AppImage 权限 644（不可执行）
+- 变更（非本项目所为）：~/native-recomp/ScarletNX.AppImage 权限已是 755；且 ~/ScarletNX.AppImage 出现同尺寸副本 47292590 字节
+- 结论：M0 前置护栏全部满足；AppImage 执行位需由本项目按白名单 chmod 自建文件，不涉及系统目录

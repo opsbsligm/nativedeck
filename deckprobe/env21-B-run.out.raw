@@ -1,0 +1,54 @@
+ScarletNX - nx-hbmenu
+build: ScarletNX main e22589f (clang 23.1.3, Linux x86_64)
+system: SteamOS (Linux 7.2.7-valve2-2-neptune-72-g31504582a073), AMD Custom APU 0405, 8 threads, 14 GB RAM
+fs: 2 RomFS/ExeFS files mapped for the whole run
+memory: 4 KiB host pages, views share their source's pages (alias pool)
+Loaded main at 0x8000000
+symbols: 0 functions named
+jit: the AOT module has no runtime code variants; the JIT handles the misses and writes a cache
+jit: 4 compile threads, 7 pcs of earlier runs queued
+acc: 1 user, playing as user 1
+time: the time zone is Etc/GMT-8 (UTC+08)
+game: 0100000000001000, version 3.6.1
+RomFS: image (0.0 MB)
+input: gamepad Steam Deck Controller (id 2, GUID 0300f617de2800000512000000036800, steam)
+input: device path /dev/hidraw3, 6 axes, 20 buttons, mapping 0300f617de2800000512000000036800,Steam Deck Controller,a:b0,b:b1,back:b4,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b5,leftshoulder:b9,leftstick:b7,lefttrigger:a4,leftx:a0,lefty:a1,misc1:b11,paddle1:b12,paddle2:b13,paddle3:b14,paddle4:b15,touchpad:b17,misc2:b16,misc3:b19,misc4:b18,rightshoulder:b10,rightstick:b8,righttrigger:a5,rightx:a2,righty:a3,start:b6,x:b2,y:b3,platform:Linux,
+input: enabled accelerometer sensor on Steam Deck Controller
+input: enabled gyroscope sensor on Steam Deck Controller
+video: SDL 3.4.18 on x11
+vulkan: native ASTC textures were asked for, but the GPU can't sample ASTC: they are decoded to RGBA8
+vulkan: native ETC2 textures were asked for, but the GPU can't sample ETC2: they are decoded
+vulkan: allocations of at most 256 MiB, bigger images in pieces (sparse binding)
+vulkan: AMD Custom GPU 0405 (RADV VANGOGH), Vulkan 1.4.350, driver 06801063, graphics queue family 0, compute 1 (separate family)
+vulkan: draws sample the color targets they render to in place (attachment feedback loops, enabled by dynamic state, ordered by barriers within the pass)
+vulkan: swapchain 1920x1080, 5 images, fifo
+vulkan: pipeline cache loaded (14 KB)
+memory: GPU engines keep their results, guest memory is trapped until the CPU needs it
+renderer: Vulkan
+vulkan: 0 shaders and 0 pipelines of earlier runs loaded from /home/deck/native-recomp/recompiled2/hbmenu/shader_cache/hbmenu.vkshaders in 0 ms, the pipelines to be made in the background; 0 shaders of the game's own programs in /home/deck/native-recomp/recompiled2/hbmenu/shader_cache/hbmenu.vkshipped
+vulkan: The game's files were already checked by an earlier run
+vulkan: the game's own shaders: 0 translated new, 0 in /home/deck/native-recomp/recompiled2/hbmenu/shader_cache/hbmenu.vkshipped, in 0 ms
+prepare: 16 ms before the game started (0 shaders translated from its files, 0 of 0 pipelines of earlier runs made), not shown, as it was quick
+main thread: entry 8000000, stack 1300001000 (1024 KiB), priority 44, core 0
+kernel: core 0 runs on host CPUs 0 4
+heap: 3278 MB requested (result 0)
+  [undeclared] nn::psm::IPsmSession cmd 2 -> ok
+  [undeclared] nn::psm::IPsmSession cmd 3 -> ok
+  [undeclared] nn::psm::IPsmSession cmd 4 -> ok
+kernel: core 3 runs on host CPUs 3 7
+sm: ts is not implemented, its commands answer without doing anything
+nvdrv: open /dev/nvmap -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: ioctl c0080101 on device 1 (command 1), buffers 8/8/0
+nvdrv: ioctl c0200104 on device 1 (command 1), buffers 20/20/0
+nvdrv: ioctl c008010e on device 1 (command 1), buffers 8/8/0
+vi: swap interval 1
+vulkan: the on-screen controls' atlas is 1024x1776
+cheats: none (no cheats/D9CBE9217B0F6104.txt in the data folder)
+  [undeclared] ts cmd 1 -> ok
+nvdrv: ioctl c0180105 on device 1 (command 1), buffers 18/18/0
+  [undeclared] nn::psm::IPsmSession cmd 1 -> ok
+am: the application exited
+jit: 0 AOT variants, 0 leaders, 0 hits, 0 misses, 1 images
+jit: 0 batches compiled 0 pcs (0 failed, 0 still queued, 0 batches dropped by memory changes), 0 functions, 0 instructions, 26 KiB of code, 0.00 s compiling, 7 units loaded from /home/deck/native-recomp/recompiled2/hbmenu/hbmenu.jitcache
+Exit.

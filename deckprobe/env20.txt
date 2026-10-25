@@ -1,0 +1,66 @@
+========================================================================
+env20 · 2026-10-26 00:14~00:20 (Asia/Shanghai)
+两个目标：① 判据③的"纯净 Vulkan 层"复现（排除 Decky LSFG 观感污染）
+          ② M0 像素级自证（不再依赖抓屏，改用运行时自带的帧回读）
+授权状态：沿用用户 2026-10-25 授权（仅开发验证、不碰 Steam 相关组件）
+写入动作：仅 ~/native-recomp/logs/env20/（白名单内，纯新增）
+          运行脚本 logs/env20.sh；未写 rootfs / 未用 root / 未 systemctl / 未重启
+          红线区（compatibilitytools.d、Methodica、compatdata）find -newermt 巡检为空
+========================================================================
+
+## 一、方法变更（关键，决定 M0 能否闭合）
+10-25 的失败路（x11grab 抓 :0 纯黑、xwd -id 0 字节、无 grim、card0 不可读）根因是
+"从显示服务器抓"，而 Deck 的显示由 gamescope 做 DRM/KMS 合成，X 根窗口本身不是像素源。
+本轮改为从**渲染进程自己**取帧：ScarletNX 自带 unattended 截图面
+（src/nx/runtime/settings.txt 的 `shot` / `shot_every`，实现在
+ src/nx/gpu/vk/renderer.c 的 vkr_screenshot→surf_save：把最后一张 present 的 surface
+ blit 成 RGBA8 后 vkMapMemory 回读，写 P6 PPM，并给出 FNV-1a 像素哈希）。
+→ 这条链不经过 X/gamescope，取到的就是 Vulkan 提交给 swapchain 的真实帧，
+  对"原生渲染证据"比抓屏更强（抓屏还可能混入合成器与桌面包）。
+
+## 二、判据③ 纯净复现（已验证）
+本次显式设 `VK_LOADER_LAYERS_DISABLE=~implicit~`、清空 `VK_INSTANCE_LAYERS`：
+  载荷进程 pgrep -x scarletnx = 43722（外壳 43703）
+  fd: 30 -> /dev/dri/renderD128 / 31 -> /dev/dri/renderD128     ← 直持 GPU render 节点
+  grep -icE "wine|proton|dxvk|box32|box64|qemu|fex|steamruntime|lsfg|VkLayer" maps = 0
+  maps 内所有 vulkan 相关 file-backed 项：
+    /usr/lib/libvulkan.so.1.4.350          ← 系统 Vulkan loader（rootfs 只读使用）
+    /usr/lib/libvulkan_radeon.so           ← RADV 驱动，真机 GPU
+    （另 intel/nouveau/virtio 为 ICD 枚举一并加载，非使用）
+  上一轮的 ~/.local/lib/liblsfg-vk-layer.so 与 libVkLayer_MESA_device_select.so 均已消失
+  → 观感污染解释成立：那是隐式层，与本项目无关；禁用后不影响运行
+  maps 454 行；进程环境仅 DISPLAY=:0 / XDG_RUNTIME_DIR=/run/user/1000 / VK_LOADER_LAYERS_DISABLE
+→ 判据③ 在"零隐式层"条件下复现成立（比 env19 更强）。
+
+## 三、M0 像素级自证：达成（已验证）
+运行：./recompiled2/hbmenu/hbmenu --seconds=16 --shot=logs/env20/frame --shot_every=180
+产物：frame.ppm 及 frame_0000..0004.ppm，各 2764816 B（P6 / 1280x720 / 255）
+      5 帧 SHA256 全同 = 445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876
+      运行结束打印 frames=960 hash=06f1f86be06dac83；perf: 60.0 / 60.0 / 59.7 fps over 5 s 窗口
+像素统计（Mac 侧 python 解析）：非全黑，2 种颜色，主色 #000000 + 前景 #c6c3c6
+人眼可读内容（已转 PNG 查看）：左上两行等宽字体
+    "Error: launchInit() failed."
+    "Press the + button to exit."
+→ 这是 nx-hbmenu 自身的文本经 AOT 后的 x86-64 代码 + RADV 光栅化的结果：
+  文字布局/字形来自客户机（含 hbmenu 内嵌字体的纹理/顶点路径），
+  不是宿主 UI，也不是抓屏二次采样。
+→ M0 = 达成；v1_gui_launch 由 false 升级为 true（像素级，非仅窗口存在性）
+证据副本：evidence/m0/env20-hbmenu-frame_0002.ppm（445be562…）
+          evidence/m0/env20-hbmenu-frame_0002.png（1a30824b…）
+注：截图分辨率 1280x720 = 客户机内部渲染分辨率；swapchain 仍是 1920x1080 fifo，两者关系为
+    运行时自行缩放，说明帧来自游戏渲染面而非窗口管理器。
+
+## 四、附带运行期事实（已验证）
+- nvdrv: ioctl c0080101 / c0200104 / c008010e on device 1 → 客户机仍在打 nvdrv 模拟层 ioctl（GPU 命令提交路径）
+- vi: swap interval 1；swapchain 1920x1080 5 images fifo
+- cheats: none（无 D9CBE9217B0F6104.txt，说明按 title id 走数据目录）
+- 显存 heap0 64/2824 MB（ours 64）、heap1 224/5745 MB（ours 64）
+- jit: 7 units 从 hbmenu.jitcache 载入，0 编译 0 miss → AOT 覆盖完整，本轮无 JIT 兜底参与
+- 护栏复测：Tctl 48.5 °C；/home 余 261G；~/native-recomp 1.2G；containers 85M
+
+## 五、判定
+M0 = 达成（像素级自证完成）
+判据③ = 纯净条件下复现成立
+v1_gui_launch = true（本轮升级）
+v1_binary_loads = true / v1_native_run = true（既有）
+hardware_validated 仍 false（TOTK 真机画面未看过）；input_validated 见 env21

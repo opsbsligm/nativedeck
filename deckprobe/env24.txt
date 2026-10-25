@@ -1,0 +1,91 @@
+========================================================================
+env24 · 2026-10-26 01:12~01:32 · 第 18 轮 · M2 收尾审计（八要件）+ SixAxis 阻断性分析
+红线：本轮对 Deck **全程只读**（未写入任何文件）；红线区巡检再次为空
+========================================================================
+
+## 一、八要件逐项交付（本轮审计结论）
+
+| # | 要件 | 结论 | 证据位置 |
+|---|---|---|---|
+| 1 | 产物是 x86-64 ELF | 已验证 | env19 判据①：`readelf -h` = `Machine: Advanced Micro Devices X86-64`；`hbmenu` SHA `ecda0da7628f…` |
+| 2 | 依赖树无兼容层 | 已验证 | env19 判据②：`ldd` 全树无 wine/proton/dxvk/box64/qemu/fex |
+| 3 | 运行期 maps 纯净且直持 Vulkan | 已验证 | env19 判据③ + env20 §二（`VK_LOADER_LAYERS_DISABLE=~implicit~` 复现，maps 454 行，仅 libvulkan + radeon ICD） |
+| 4 | 像素级 UI 自证 | 已验证 | `evidence/m0/env20-hbmenu-frame_0002.ppm`（`445be562…`，P6 1280×720，人眼可读 hbmenu 文本） |
+| 5 | 输入注入端到端 | 已验证（限定） | env21 A/B/C 单变量三组；`0x400=Plus` 源码级确认（`pad_map.c:11`） |
+| 6 | GPU 能力覆盖 SNX 需求 | 已验证 | env23 WANT-MATRIX：必需 29/29 present |
+| 7 | AOT 覆盖完整（无 JIT 兜底） | 已验证 | env20 §四：`jit: 7 units 从 hbmenu.jitcache 载入，0 编译 0 miss` |
+| 8 | 性能基线 | 已验证（仅 hbmenu 量级） | env20 §四：三个 5 s 窗口 60.0 / 60.0 / 59.7 fps；**TOTK 量级未测** |
+
+未达成项（明确不写成已完成）：M3（TOTK 真机运行）、M4（陀螺仪游戏内实测）、
+M5（Gaming Mode 入库，未授权）。
+
+## 二、SixAxis @stub 是否阻断 M3/M4：源码级分析（本轮新增）
+
+事实（已验证，源码核对）：
+- `src/nx/hle/services/hid_motion.c`（128 行）是**真实实现**：四元数合成、陀螺漂移修正、
+  `HidSixAxisSensorState` 小端打包（`snx_le64_array` / `snx_le32_array`）→ **状态读取路径不是 stub**
+- `hid.swipc` 中 `StartSixAxisSensor` / `SetAccelerometerParameters` / `GetAccelerometerParameters`
+  等**激活与标定命令**标 `@stub`
+- `@stub` 的生成语义（`tools/swipc/swipc.c:653,667`）：产生
+  `c->out_size = 0x…; return 0;` → **结果码 0（成功）+ 全零输出缓冲**
+
+推断（标注为推断，未实测）：
+- 因为 @stub 返回**成功码**，游戏不会收到错误、不会走错误分支、不会崩；
+  但它可能据此认为六轴已就绪并开始轮询状态，而状态源需要真实传感器喂入
+- 后果分两种，M3 期间分别观察：
+  (a) 游戏对"四元数长期不变"有容错（判为静止）-> 仅体感瞄准失效，可用摇杆替代 -> **不阻断通关**
+  (b) 游戏把"检测到晃动"作为过场/解谜硬前置 -> **局部阻断**，需补实激活命令
+- 补实成本（推断，低）：激活命令本质是状态位翻转 + 参数记录，返回结构全零即可，
+  属于在 `hid.swipc` 生成物上打补丁的量级，不需要重写服务
+
+-> M4 的验证动作可在 M3 期间顺带完成：进 TOTK 后看 `hid_motion` 相关日志 +
+  观察瞄准是否跟随设备姿态。**不提前盲改**，避免在无真游戏时改错方向。
+
+## 三、env20 第三节勘误（只追加，不改原文）
+
+env20 §三写"5 帧 SHA256 全同"。本轮 Deck 本机现场复核（`sha256sum`，2026-10-26 01:14，已验证）：
+  `frame.ppm`      = `445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876`
+  `frame_0002.ppm` = `445be5621f69a1cc3728290472e3f32d7c3d1517fa4068dcd0f097a409c37876`
+目录实际存在 `frame.ppm` + `frame_0000..0004.ppm` 共 **6 份** 2764816 B 文件，
+外加 `run.out` / `listing.txt` / `prologue.txt` / `forensics.txt`。
+原表述"5 帧"未把 `frame.ppm` 计入，以本清单为准；结论（帧哈希全同、像素自证成立）不受影响。
+
+同时确认 `logs/env21/`（A.out/A.ppm/B.out/C.out/C.ppm/summary.txt）与
+`logs/env22/`（vulkaninfo.json / vulkaninfo.txt / vulkaninfo.err / a.out）均在位，
+与 Mac 侧副本字节数一致（env22 §二）。
+
+## 四、红线区巡检（本轮，只读，已验证）
+
+`find ~/.config/Methodica ~/.local/share/Steam/compatibilitytools.d
+ ~/.local/share/Steam/steamapps/compatdata ~/.local/share/Steam/SteamLinuxRuntime*
+ ~/.var/app ~/.steam -newermt "2026-10-26 00:00"` -> **输出为空**（零改动）
+`ls -l ~/.steam/steam/shortcuts.vdf` -> 该路径不存在（Deck 上 shortcuts 实际归属
+`~/.local/share/Steam/`，M5 时再精确定位），本轮未写入。
+
+## 五、资源护栏复测（已验证）
+
+| 项 | 值 | 基线/阈值 |
+|---|---|---|
+| `/home` 余量 | 261G（总 939G，用 678G，73%） | 下限 40G -> 安全 |
+| `~/native-recomp` | 1.2G | 本项目总占用 |
+| `~/.local/share/containers` | 85M | distrobox/podman |
+| 温度 | Tctl 54.0 °C（`thermal_zone0/temp`=54000） | 阈值 92 °C -> 安全 |
+| 电源 | ACAD 在线 | 要求 ACAD -> 满足 |
+
+## 六、本轮 SSH 事实补记（反例）
+
+本轮出现 1 次 `ssh_dispatch_run_fatal: Connection to 192.168.1.105 port 22: Operation timed out`
+（会话内约 30 s 后中断，已执行完的部分输出丢失），改用 `/tmp/dk.sh`（3 次重试）后成功。
+与 10-25 记录的间歇超时根因一致（未闭合）。对策仍为「短命令 + 重试 + 证据落盘」。
+未触发《安全基线.md》§6.4 中止条件（要求连续 2 次掉线）。
+
+## 七、判定与标记状态
+
+M0 达成 / M1 达成 / **M2 达成（本轮闭合）**。
+M3 **blocked**：Deck 与 Mac（Downloads / Documents / Share）均无 TOTK 资产，
+需用户提供 1.0.0（main build ID `082CE09B06E33A12`、title `0100F2C0115B6000`、
+`prod.keys` mkey rev `0x0E`，可选 `title.keys`）。绝不自行获取、不入库、不外传。
+M4 未开始（前置分析见本文第二节）。M5 未授权。
+
+标记：`v1_binary_loads=true`、`v1_native_run=true`、`v1_gui_launch=true`（像素级）、
+`input_validated=true`（限定：软件注入面）、`motion_validated=false`、`hardware_validated=false`。
