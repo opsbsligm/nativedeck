@@ -1,0 +1,63 @@
+===== swr/run.sh (fixed) =====
+#!/bin/bash
+# Savage Wind (BOTW 1.9.0) native x86-64 launcher for Steam Deck.
+# Add THIS FILE to Steam as a non-Steam game.
+# Game files: put extracted/ (exefs + romfs) in ~/.local/share/savagewind/extracted/
+# or set SAVAGEWIND_DATA_ROOT=/path/to/folder
+set -u
+here="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+export LD_LIBRARY_PATH="$here/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$here/usr/bin/savagewind" "$@"
+
+===== swr layout =====
+/home/deck/native-recomp/swr/usr/bin:
+FiraSans-Medium.ttf
+FiraSans-OFL.txt
+FiraSans-SemiBold.ttf
+LICENSE
+NotoSansThai-Medium.ttf
+NotoSansThai-OFL.txt
+README.md
+gamelib-src
+icon.png
+savagewind
+swgen
+zig
+
+/home/deck/native-recomp/swr/usr/lib:
+libSDL3.so.0
+libavcodec.so.63
+libavformat.so.63
+libavutil.so.61
+libshaderc_shared.so.1
+libswscale.so.10
+
+===== readelf exe =====
+  Class:                             ELF64
+  Machine:                           Advanced Micro Devices X86-64
+
+===== RUNPATH =====
+ 0x000000000000001d (RUNPATH)            Library runpath: [$ORIGIN/../lib]
+
+===== ldd (self lib) =====
+0
+
+===== runtime three-criteria (PID 339997, captured 23:21) =====
+(stdout empty - setup UI window)
+===== savagewind.log (setup window opened on Deck) =====
+[window] display 1: desktop 1920x1080 (density 1.00, 59.96 Hz), 28 fullscreen sizes; offered: 1920x1080 1280x720 1280x800 1680x1050 640x480 800x600 1024x768 1280x1024
+[window] window 1280x720
+[vk] gpu 0: AMD Custom GPU 0405 (RADV VANGOGH) (api 1.4.350)
+[vk] using AMD Custom GPU 0405 (RADV VANGOGH)
+[vk] maintenance5 on (unwritten point size is 1.0)
+[vk] graphics pipeline libraries on (shaders compiled apart from the fixed state)
+[vk] attachment feedback loops on (feedback loop layout)
+[vk] pipeline cache: starts empty (cache/vk_pipelines.bin: no file yet)
+[vk] precompiled shaders: none (cache/vk_precompiled.bin: no file yet)
+[vk] swapchain 1280x720, 4 images, present mode mailbox (VSync mailbox; surface has immediate, mailbox, fifo, fifo relaxed), window, display 59.96 Hz
+[pso] pipeline list: starts empty (cache/vk_pipelines.list: no file yet)
+[vk] presents on the calling thread
+
+===== rootfs before/after cleanup =====
+/dev/nvme0n1p4  5.0G  3.6G  833M  82% /
+712M	/home/deck/native-recomp/tmp-cleanup-20261026

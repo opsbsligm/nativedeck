@@ -160,3 +160,18 @@ WeKnora 收尾记录 knowledge_id：`8b8ed092-6bd3-4014-90db-a9ca24317892`（HOM
 2. **陀螺仪是本项目在 Deck 上唯一的输入侧硬风险，但有成熟规避**：SDL3 **已内置** Deck 内置 IMU 驱动（`SDL_hidapi_steamdeck.c` 解析 `sGyro*/sAccel*`，±2000 dps / ±2 g），但 Steam Input 生效时设备退化为 `28de:11ff` 虚拟手柄 → 传感器丢失（SDL #9148 已被"unplanned"关闭、#12997/#15201 仍 open）。可用规避：Steam Input 陀螺仪设 None 透传，或跑 `SteamDeckGyroDSU`（cemuhook DSU / UDP 26760，纯 home 目录 user systemd 安装，无 root）；SDL PR **#14353** 正在给 SDL3 加 **DSU 客户端驱动**（里程碑 3.6.0），届时"recomp 侧零代码"即可拿到体感。三家实现里 ScarletNX 与 totk-recomp 的六轴 HLE **已完整**（四元数/Mahony 融合），**LAS Recomp 完全没有体感**。
 3. **虚拟 Amiibo 可做，注入点已定位**：三家都没有 NFC 后端（ScarletNX 只有 `nfp:user`/`nfc:user` 的完整 IPC 声明 + 一律返回 `NFP_DEVICE_NOT_FOUND` 的桩），需自实现。可直接照搬 Ryujinx 的 `INfp`/`VirtualAmiibo` 数据模型：NTAG215 / 540 B dump / UUID 9 B+BCC 持久复用 / `ApplicationAreaSize=0xD8` / `NfpDeviceState` 时序 + ActivateEvent 事件驱动 / 每卡持久 JSON。**Deck 无 NFC 硬件 → 纯软件注入是唯一与"原生运行"契合的路线**，硬件仿真标签（Flipper/AmiiBee）对 IPC 路线无效。红线：从 dump 解应用区绕不开 `key_retail.bin`，故"仅备份自有实体卡"在技术上无法与批量解密分离；空应用区模式可完全不需密钥。
 4. **对"可行性"总结论无影响**：这三项都落在 HLE/输入层，不改变墙 A（CPU ISA 已解）与墙 B（GPU shader 已解）。它们决定的是"体验能否优于原版 Switch"，而不是"能不能跑"。
+
+---
+
+## 8. 追加结论：BOTW 自包含安装形态验证 + rootfs 减重（第 31 轮，2026-10-26）
+
+1. **`~/native-recomp/swr/` 自包含目录已验证可启动**（上轮遗留项闭合）。`run.sh` 有两处路径 bug（指向 `$here/savagewind` 和 `$here/lib`，实际布局是 `usr/bin/savagewind` + `usr/lib`），已修正（原文件备份 `run.sh.bak`）。修正后 `DISPLAY=:0 ~/native-recomp/swr/run.sh` 在 Deck 实机拉起：
+   - `savagewind.log` 记录：窗口 1280x720、`[vk] gpu 0: AMD Custom GPU 0405 (RADV VANGOGH) (api 1.4.350)`、swapchain mailbox —— 与 AppImage 路径行为一致。
+   - 运行期三判据（PID 339997，TUI 阶段采样）：`ELF64/X86-64`、`/proc/maps` grep 兼容层 = 0、`.so` 映射仅 ld-linux/libc/libncursesw/libreadline（TUI 阶段）。GPU 阶段的 369 行 maps + guest heap `0x7000000000-0x7320000000 rw-p` 采样见 `evidence/round31/maps-pid339997.txt`。
+   - `ldd` 全解析（0 not found）；RUNPATH=`$ORIGIN/../lib` 与 `usr/lib` 一致，`LD_LIBRARY_PATH` 为双保险。
+   - **结论：BOTW 的"原生 SteamOS 安装"最终形态 = 一个自包含目录（二进制 + 库 + 字体 + 资产），入口 `run.sh` 可直接作为 Steam non-steam game 添加。不需要 .deb，不需要 FUSE/AppImage。**
+2. **rootfs 减重 ~630M**（833M 可用基线不变，仍 82%）：`/tmp` 下 LAS 解包残留 429M、ScarletNX 解包残留 143M、mng-src.tgz 58M 移入 `~/native-recomp/tmp-cleanup-20261026/`（可删）。`/tmp/_MEI000004e7i2ncrS`（79M，root 属主）是 **Decky Loader 的 PyInstaller 常驻解包目录**——Decky 进程仍活跃，未敢动。
+3. **Deck 当前负载画像**：Steam 全组件（steamwebhelper 4 进程 ~1.1G RSS）+ gamescope/Xwayland + Decky 插件（SteamGridDB/AutoFlatpaks/ProtonDB）+ CSS Loader + DeckyClash(mihomo) + jupiter-fan-control + sogoupinyin(263M, /opt)。构建时 9G 可用内存充足，但长跑游戏时 Steam 库界面建议保持关闭。
+4. **ROM 仍为唯一硬阻塞**（状态未变）：`~/native-recomp/roms/` 只有 hbmenu/reboot_to_payload；TF 卡未挂载（`/home/deck/tf` 不存在，lsblk 无 SD 设备）；`~/.local/share/savagewind/extracted/` 为空。需要：BOTW **1.9.0** exefs+romfs、TOTK **1.0.0** xci、`prod.keys`。
+
+证据：`evidence/round31/swr-selfcontained-verify.txt`、`evidence/round31/maps-pid339997.txt`。
