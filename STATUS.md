@@ -245,3 +245,37 @@ M0 ✅ / M1 ✅ / M2 ✅（本轮再加固，994 pass 0 fail）/ M3 ❌ blocked�
 - `snx-a64dec` 是 a64 解码器**生成器**（需 `--header/--decoder/PROFILE`），不能拿来反解单个指令词；反解用 `llvm-objdump -d` + `.inst` 汇编。
 - `tests/mme_hle.c` 单文件编译需补 `src/nx/gpu/maxwell/mme_hle.c` 与生成的 `settings.c`，且 `-I` 指向含 `snx_settings.h` 的目录（Deck b6 的 `settingsgen/`）。
 - Deck b6 `SNX_BUILD_TESTING=OFF` → 无 `snx-test-*` ninja 目标；host 单测只能在 Mac 跑。
+
+---
+
+## 第 27 轮 · 2026-10-26 14:15 — x86-64 真机 MME 全测闭合
+
+### 里程碑状态
+
+| ID | 状态 | 依据 |
+|---|---|---|
+| M0 Vulkan 设备直持 | ✅ 已验证 | 帧 SHA `445be562…`（env20） |
+| M1 Deck 构建原生 x86-64 ELF | ✅ 已验证 | b6 SHA `95791b35…`；ldd 仅 vdso/libm/libstdc++/libgcc_s/libc |
+| M2 无 ROM 功能面探测 | ✅ **已验证** | mme_hle: 585055 / mme_native: 57 / mme_jit: 2053 / nvn_control: pass / nvn_command_gap: pass |
+| M3 TOTK 资产 | ❌ blocked | 仍需用户提供 |
+| M4 TOTK 运行 | ⏸ 等 M3 | — |
+| M5 shortcuts.vdf | 🔒 未授权 | — |
+
+### 本轮关键成就
+
+**MME 三态全部在 x86-64 真机跑通**——首次完整闭合 native 快路径覆盖盲区。
+
+1. **mme_hle**: native 实现 vs 解释器 585055 次对拍一致（macOS arm64 + x86-64 双平台）
+2. **mme_native**: MME hash 选择 + native/interp 分支 57 次测试通过（x86-64 真机）
+3. **mme_jit**: JIT 编译器生成的 x86-64 代码 vs 解释器 2053 次对拍一致（**首次 x86-64 真机验证**）
+4. **nvn_control**: TOTK 抓包命令流（indexed draw + program bind）解码正确
+5. **nvn_command_gap**: cursor gap 分类器通过
+
+### 证据等级
+
+全部为 **已验证**（Deck x86-64 真机 + macOS host 双平台交叉验证）。
+
+### 更新标记
+
+- `mme_hle_validated=true` / `mme_jit_validated=true` / `mme_native_validated=true`（全部 x86-64 真机）
+- `hardware_validated=false`（仍缺真实游戏帧/输入/体感）
