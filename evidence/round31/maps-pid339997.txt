@@ -1,0 +1,17 @@
+===== maps snapshot (PID 339997, TUI/setup phase) =====
+readelf -h /proc/339997/exe:
+  Class:   ELF64
+  Machine: Advanced Micro Devices X86-64
+grep -ciE "wine|proton|dxvk|box64|qemu|fex|binfmt" /proc/339997/maps -> 0
+/proc/339997/maps -> 36 lines (pre-GPU phase)
+Unique .so mapped:
+  /usr/lib/ld-linux-x86-64.so.2
+  /usr/lib/libc.so.6
+  /usr/lib/libncursesw.so.6.6
+  /usr/lib/libreadline.so.8.3
+Note: TUI asset-extraction/setup phase; window+vk phase log:
+  [window] window 1280x720
+  [vk] gpu 0: AMD Custom GPU 0405 (RADV VANGOGH) (api 1.4.350)
+  [vk] swapchain 1280x720, 4 images, present mode mailbox
+(Second full run of same binary previously captured 369-line maps with guest heap
+ 0x7000000000-0x7320000000 rw-p, zero compat layer lines.)
