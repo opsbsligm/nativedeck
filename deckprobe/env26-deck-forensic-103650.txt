@@ -1,0 +1,36 @@
+=== 客户机代码（AOT 产物）自身判据 ===
+/home/deck/native-recomp/eden/run-gfx/work/games/edenprobe/edenprobe: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=074a3ce4565a1206d46d9035574751625897372d, for GNU/Linux 3.2.0, with debug_info, not stripped
+  Class:                             ELF64
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+=== ldd 兼容层筛查 ===
+clean(无命中)
+=== 启动（graphics 套件，headless） ===
+PID=185817
+SAMPLE1 GPUFD: /dev/dri/renderD128
+SAMPLE2 GPUFD: /dev/dri/renderD128
+SAMPLE2 VKMAP: /usr/lib/libvulkan.so.1.4.350 /usr/lib/libvulkan_radeon.so 
+SAMPLE3 GPUFD: /dev/dri/renderD128
+SAMPLE3 VKMAP: /usr/lib/libvulkan.so.1.4.350 /usr/lib/libvulkan_radeon.so 
+SAMPLE4 GPUFD: /dev/dri/renderD128
+SAMPLE4 VKMAP: /usr/lib/libvulkan.so.1.4.350 /usr/lib/libvulkan_radeon.so 
+SAMPLE5 GPUFD: /dev/dri/renderD128
+SAMPLE5 VKMAP: /usr/lib/libvulkan.so.1.4.350 /usr/lib/libvulkan_radeon.so 
+SAMPLE6 GPUFD: /dev/dri/renderD128
+SAMPLE6 VKMAP: /usr/lib/libvulkan.so.1.4.350 /usr/lib/libvulkan_radeon.so 
+SAMPLE7 VKMAP: /usr/lib/libvulkan.so.1.4.350 /usr/lib/libvulkan_radeon.so 
+=== 结果 ===
+samples=7 compat_layer_maps_hit=0 gpu_device_fd_hit=1 exit=0
+=== 运行日志尾部（vulkan 统计） ===
+[game] {"type":"case","suite":"stream","name":"4096 draws each see their own 4 KiB uniform buffer","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"stream","name":"1024 draws each see their own 64 KiB uniform buffer","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"ring","name":"4096 indexed draws that each take new descriptors all land","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"render enable TRUE draws","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL draws over two equal values whose timestamps differ","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws over values that differ in the low word","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws over values that differ only in the high word","tier":"exact","result":"pass","detail":""}
+vulkan: occlusion-tested draws are predicated on the GPU (conditional rendering)
+[game] {"type":"case","suite":"query","name":"IF_EQUAL draws after two reports of the same count in the same list","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws after a report of 9600 and one of nought","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL draws after two equal reports from a list that finished before","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws after 9600 and nought reported in a list before","tier":"exact","result":"pass","detail":""}

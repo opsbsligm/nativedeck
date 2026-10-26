@@ -1,0 +1,8 @@
+samples=104 compat_layer_maps=[NONE] gpu_fd=[/dev/dri/renderD128 ] vk_maps=libvulkan+radeon exit=0 peak_rss_MiB=502
+--- 客户机进程自身的 vulkan 统计（自己下的 draw）---
+prepare: 16 ms before the game started (0 shaders translated from its files, 84 of 84 pipelines of earlier runs made), not shown, as nothing could be seen
+--- nvdrv 提交面 ---
+25
+nvdrv: ioctl c0b04705 on device 4 (command 1), buffers b0/b0/0
+nvdrv: ioctl 80044701 on device 4 (command 1), buffers 0/4/0
+--- 图像层证据（失败截图）---

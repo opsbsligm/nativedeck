@@ -1,0 +1,1054 @@
+{"type":"note","text":"edenprobe 0.5.0 (v0.5.0) starting"}
+{"type":"note","text":"folder: sdmc:/edenprobe/runs/b5402db"}
+{"type":"note","text":"mode: quick, from the mode file; pictures of failures only; families cpu graphics fs kernel display video audio; no timing passes; the cases that may crash"}
+{"type":"case","suite":"selfcheck","name":"integer arithmetic","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"ulp neighbours are one apart","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"ulp zero tolerance rejects a neighbour","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"the ulp measure counts one between neighbours","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"three units below a power of two is six representable values","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"and the seventh is outside it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"three units above a power of two is three representable values","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"signed zeroes compare equal","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"nan never compares equal","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"no budget is large enough to accept a nan","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"absolute tolerance accepts within","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"absolute tolerance rejects beyond","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"absolute tolerance never accepts a nan","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"absolute tolerance is symmetric","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"channel threshold accepts within","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"selfcheck","name":"channel threshold rejects beyond","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case name becomes the file name it reads like","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"punctuation and case leave the file name alone","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a name with nothing usable in it still names a file","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"two names that agree for longer than a stem still get one each","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a name with no room for its number gives characters up instead","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case named after another's expected picture does not land on it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"and not the other way round either","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a hundred cases spelling one name never share a file","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a root too long to hold whole is refused and nothing is written","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a root that fits is taken","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"there is a corner of the memory card to write in and read back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a picture is written where the line says it is","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a colour picture keeps no raw file beside it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the picture parses back as the image its header claims","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the picture holds the bytes the readback handed over","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the expected picture holds what the judge expected","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the diff picture is three colours deep and no more","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the diff carries the judge's verdict, not a comparison of two images","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a root as long as one can be still reads back what it wrote","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a pixel no judge looked at is not drawn as one it accepted","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a picture of bit patterns keeps the bytes beside it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the raw file is every byte the target held and nothing more","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"two case names that spell one file name get a file each","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a passing case leaves no picture unless one was asked for","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case with no picture reports the line it always did","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case with pictures names them at the end of its own line","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a skip is its own result and the summary counts it apart","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a run under way says its report is still open","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a line too big for its buffer comes back whole or not at all","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the longest line a case can make still fits the buffer it is given","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the pad is waited for until it answers and then not at all","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the detailed screen leaves by itself when nothing is pressed","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"holding the button asks for the detailed mode and never cancels it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the word stress, and nothing else, asks for the stress cases","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the word fatal, and nothing else, asks for the cases that may crash","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the word listen asks for the listening sequence and the audio family","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the word noprogress turns the running screen off and nothing else","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the mode file is read a whole word at a time","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the report says what the mode file was and what was not understood","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a label in the mode file names the run's folder, and a bad one is refused","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the diff panel puts the judge's colours where the pixels were","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a scaled up pixel is one colour and not an average","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a failed case shouts its verdict on the heading and a passing one does not","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the three colours of a verdict are named under the pictures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"all four colours of a verdict are named under the pictures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the two panels show two pictures and not one twice","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the screens gather the cases into their suites, families in the order the run met them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"every case the run has reported is on record for the screens, or none is","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"every suite a run reports is shown under its own family","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a kept case holds what a reader of its line gets back, and no more","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the walk from the overview to a case and back lands where it should","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a frame is owed until one is drawn, and not again until something moves","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"stepping through a group's cases comes round to where it started","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the failure jumps skip every pass and skip and come round","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"left and right move between families on the overview and groups inside","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the view cycles only on a case that kept pictures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"quit leaves from every level, and a run that kept nothing can leave","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a press before the pad has settled is not a press","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"every button means one thing, and everything at once still quits","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a held direction repeats after a delay, and only after a press that counted","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"what repeats is the direction pressed, whatever else is held","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the listening screen names the part, the take and what to listen for, and its buttons are not the results screens'","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the listening screen shows its steps done in a bar, as the running screen","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the listening screen leaves the countdown its rows and names its buttons","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the pad screen shows the prompt large, what the controller sends and the prompt before in its colour","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the pad family runs only when named, and the start screen has its row","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a tap is one finger down after the screen settled, counted when lifted","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"on the start and resume screens a tapped row is the cursor's, then chosen","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"on the results a tapped row is the cursor's, then opened; the bar's boxes do what they say","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the pad screen's question takes yes or no on the bar, and only then","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the touch screen draws each target where its case aims and writes over none","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the overview marks failed groups red, skipped ones amber, and the cursor","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a group marks every case in its result's colour","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a long group scrolls to keep the selected case on screen","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a group shows the selected case's detail under its list, wrapped","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case with no pictures opens on its whole detail","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a drawing case opens on its pictures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"every screen leaves the countdown its rows and names its buttons","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"cases the screens could not hold are counted and the overview says so","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a frame too small for the screens gets one line and nothing past its edge","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a group of hundreds of failures still draws its bar inside its row","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case with no detail is only said to have passed when it did","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen asks only with something to choose, a button a choice","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen waits ten seconds for a person, and a press keeps it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"Y and X in one edge change neither choice, and A in that edge still begins","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen warns exactly while a choice that can end the program is on","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen opens on begin the run, every row as the mode file says","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen's menu turns the row under the cursor, listen with audio","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen counts the cases that may crash in the families chosen","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"what the start screen chooses is the run's mode, the label the file's","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the start screen keeps the video, kernel, display and service families the file names, which have no row","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the words the start screen saves and the journal keeps read back the same","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the resume screen goes on unless start over is chosen, and a mask chooses nothing","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the resume screen shows where it stopped and which choice the cursor is on","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the running screen draws twice a second and counts a step's cases by pass","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the running screen shows the step, the case and the steps done in proportion","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case the program ended inside is counted apart and in a colour of its own","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"every journal record reads back as it was written","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a journal record too long for its buffer is not written in part","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a line that is not a whole journal record is not read as one","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a journal's last line with no newline is left unread","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a start whose newline an abort took is the case the program ended inside","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the journal says which case the program ended inside, and no other","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a run's counts come back from the journal where it stopped","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a launch goes on with a run only for the same build, the same words and its report","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a detailed launch asks before going on, and starting over keeps the crash","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a run the start screen chose goes on after a crash in the mode it chose","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the crash list reads the cases it names and nothing else","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the crash list writes back what it holds","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a line written to the card is whole in the file before the next starts","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the launch after an abort ends the open line before its own records","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"several lines written forward are the file, with nothing missing between","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case on the crash list is skipped as crashed until retry asks for it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case that ended this run is skipped even under retry","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a skip says why in one word of a few, beside the sentence","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case that ended without starting, or started over another, is counted","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the report tells its watcher each case's start and end, and no one else","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the may-crash table names each case once, with its family and why","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case the table names is skipped as may crash until fatal asks for it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case known to hang is skipped until hang asks, and retry does not run it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the checks that record a crash for this run take it back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the words retry and nojournal ask for what they say and nothing else","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the journal keeps the words that change a report, in one order","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the word hang asks for the cases that hang, and only beside retry for both","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"this suite takes its own files away again","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the median is the middle value, or between the two middle ones","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case's number is the smallest of its samples","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a suite's summary counts, adds and orders its cases' times","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a suite that timed nothing sums up to nothing","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"only the verdict pass hands a time to a line","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the time is the smallest sample, rounded to the microsecond","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case that put nothing on the graphics unit reports no time","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the perf line sums up the times the verdict pass reported","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a case inherits neither another case's samples nor a pass's leftovers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"times round to the nearest microsecond, never below one","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"untimed suites report no time","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a timed line is the untimed line with its time last","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the time comes after the pictures a case names","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a time with no room on its line is left off, never cut","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a perf line says what the summary says, or nothing at all","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a rehearsal leaves no count and no picture behind","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a rehearsal knows each case's name from the pass before it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the log line before a rehearsed case names the suite, pass and case","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the word notime turns the timing passes off and says so","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a readback slot is filled with the preset and nothing past it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a slot has arrived once any of its bytes is not the preset","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a slot of no bytes has nothing to wait for","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the preset is not the zero a cleared pixel holds","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a run whose copies all landed by the idle says nothing","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a late copy is counted, with the longest wait rounded up","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"a copy that never arrived is counted apart","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"support","name":"the note is cut to its buffer, never past it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clip space origin is the middle of the target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clip space plus y is the top of the target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clip space minus y is the bottom of the target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an offset viewport moves the rectangle","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an interior point is covered","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an exterior point is not covered","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a point on the top edge is covered","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a point on the left edge is covered","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a point on an edge that is neither top nor left is not covered","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"winding does not change which pixels are covered","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a triangle with no area covers nothing","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the slanted triangle lands on whole pixel boundaries","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the offset viewport halves the triangle and moves it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the fill rule triangles are the two halves of a whole pixel square","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a shared edge is drawn exactly once","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the triangle whose left edge it is takes the shared centres","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"edge distance is the perpendicular one in pixels","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a margin holds back the pixels an edge runs through","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a centre exactly a margin away is still judged","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"with no margin every pixel is judged","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a pixel well outside is called outside","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the mixed value overflows and wraps","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the fragment coordinate reference carries the half pixel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the integer reference matches the arithmetic worked out by hand","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the division agrees with a long division done a bit at a time","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the bit count agrees with a table of nibbles","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the two right shifts differ exactly on the values with the top bit set","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the grown integer reference matches the values worked out by hand","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the integer to float conversions agree with the processor's own","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every packed component is at least a 256th of a code from a half","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the shifts clamp their count to 32 and the sweep reaches past it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the signed division's operands keep a float reciprocal exact","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the bit scans agree with counting leading and trailing noughts","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the bitfield modes agree with masks and shifts and see negative fields","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the minimum, maximum and clamps agree with 64 bit comparisons","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the half patterns raise exponent nought and quiet nothing else","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an snorm round trip returns every half but 0x8000, which becomes 0x8001","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the half precision patterns agree with the format reference both ways","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every byte survives the trip through a normalised float","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"each blend case's sentence is the arithmetic the reference does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"no blend case asks for an alpha destination factor of its own","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a blend case catches the alpha equation taken from the colour one","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a blend case catches the alpha source factor taken from the colour one","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"blend cases that separate the alpha state: 1 by the equation, first \"the source alpha weights both sides\"; 1 by the source factor, first \"adding with both factors one\""}
+{"type":"case","suite":"reference","name":"no blend case lands near the halfway point between two bytes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"adding the source at full weight to nothing gives the source back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the minimum is always one of its two operands","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"repeating folds every index onto a texel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clamping to the edge folds every index onto a texel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"mirroring folds every index onto a texel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"one texture across the target puts sixteen pixels on each texel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"three copies across the target still miss every texel boundary","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the linear layout asks for exactly half of each of two texels","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an RGBA8 texel read as R32_Uint and rotated is its word least significant first","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the block linear rule puts hand worked bytes where a gob keeps them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the block linear rule gives each texel of the suite's texture its own four bytes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a region's pixels sample the texel whose centre they sit on","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a moved rectangle lands at its offset and nothing else changes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a rectangle moved over itself reads each source texel before it goes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a rectangle moved down or up over itself keeps every source row","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an aliased move writes what the alias shader writes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"painting cells covers exactly the cells in the mask","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sampling a region one texel per pixel moves the texture to its corner","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"four quadrants take their own green, and each lag the green that far back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a rectangle not wholly inside is refused and changes nothing","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the coherence pattern is the four sums, modulo 256","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"no coherence pattern texel is the sentinel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"no two texels of one coherence pattern are the same","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"no two coherence patterns agree at any texel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference's multiply and add rounds once, not twice","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every float operand and argument is exactly representable","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the logarithm's operand stays where one budget covers it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the sine and cosine angles stay inside minus pi to pi","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference's addition is the one a float would have done","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference's multiplication is the one a float would have done","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"no ordinary float case produces an infinity or a nan","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every float mode has its budget written down here","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every float budget is the one the tables give","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every float budget's reason begins with the number it is","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every float budget's reason fits the note that carries it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the power of two's allowance grows with its argument","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the runtime's transcendentals give the answers written down here","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the float edge reference matches the values worked out by hand","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the float judge takes the console's answer, noughts by their sign","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the answer the console never gives is refused and named at every pixel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the edge operands are where their budgets say","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the format table has the sixty renderable colour formats","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every format packs the pixels worked out from its name","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every format's fields fit its pixel and the mask is exactly them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every normalised value times its largest code is a code in single precision","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the clear and the drawn value differ in every stored channel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the format conversions invert over every code and round at the ends","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the format quad covers exactly its rectangle, no centre near its edges","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the net file is read a line at a time","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the net file's report line, and whether it says the machine is online","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the account nobody knows is one no line names","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"account ids and dotted addresses are read whole or refused","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the placeholder is replaced everywhere, and a name that will not fit is refused","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an address length recvfrom left unset is not answered with","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a bearer token's alphabet, and two id lists compared as sets","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a result code reads as the platform prints it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a serialised hostent reads back as its name and addresses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a serialised addrinfo list reads back entry by entry to its sentinel","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a PEM certificate decodes to the DER openssl writes for it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a self-signed root names itself as issuer and the certificate it signed does not","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the certificate a handshake hands back is found in either form","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an HTTP response head says where its body is and when it is whole","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the status request is one GET that asks the server to close","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a status document says nothing is wrong only with both lists empty","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a friend profile is read at the offsets the guest reads it at","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"nsd is expected to answer a rewrite, then the placeholder, else the name","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sfdnsres is expected to answer loopback only for a session's own names","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the sign-in wait ends only on the answer a signed in session gives","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"every {size} in a picture url becomes the size asked for","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a profile slot is judged by its id as well as its fields","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clz of each 8-bit lane the cpu suite uses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clz of each 16-bit lane the cpu suite uses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"clz of each 32-bit lane the cpu suite uses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the 16-bit upper lanes hold answers a lost half cannot give","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"frintx and frinta's roundings the cpu suite uses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sqshlu's lanes and saturation the cpu suite uses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"fcvtzs and fcvtzu's lanes the cpu suite uses","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sm4's inputs are the standard's key, FK and CK","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sqrshl and uqrshl lanes worked out by hand","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sqdmlal, sqdmlsl and sqdmull lanes worked out by hand","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sqrshrn, uqrshrn and sqrshrun scalars worked out by hand","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the header that writes the two index limit words is 0x200205f4","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the header of one instanced array draw word is 0x20010485","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an inline wait for idle is 0x80000044","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"six triangle list vertices from vertex 6 are the word 0x40060006","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an index limit goes high word first","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a draw texture of 16 by 16 at (40, 24) is twelve words from 0x420","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a render enable is 0x20030554, the address high word first, the mode","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the tight limit of six 16-bit indices at 0x1000 is 0x100b","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the void block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the q16 block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the q32even block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the q32odd block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the tritw block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the quintw block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the trite block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the quinte block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the part2 block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the part3 block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the part4 block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the dual block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the hdrfirst block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the error block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the infill8 block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the infill12 block as ARM's decoder does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"4-bit weights 7, 8 and 13 unquantize to 29, 35 and 56","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"5-bit weights 3 and 21 unquantize to 6 and 44","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a 3-level weight is 0, 32 or 64","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the 16-bit texel 0x8000 is 128 either way to eight bits","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the 16-bit texel 0x7f80 is 127 either way to eight bits","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an EAC texel is base * 8 + 4 plus modifier * multiplier * 8, clamped","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an EAC multiplier of nought adds the bare modifier","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"EAC indices run down each column","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the 11-bit value 2047 is 255 either way","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the ETC2 builders make the blocks the etc2 suite samples","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 individual block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 differential block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 T block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 H-high block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 H-low block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 planar block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 pta-diff block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 pta-t block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 pta-planar block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"the reference decodes the ETC2 rgba block as Mesa does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an ETC2 T mode paint colour is base 2 plus the distance, clamped","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an ETC2 H mode distance index takes its last bit from the base order","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an ETC2 planar block starts from its origin colour","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a see-through ETC2 punch-through block has no modifier at index 0","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"ETC2 RGBA alpha is base plus modifier times multiplier, clamped","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"an ETC2 block's own bytes sampled as RGBA8 read as an upload of the block","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"no ETC2 block's decoded colours read as an upload of its bytes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a 4x4 BC4 array's levels are one gob each and a layer is three","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a BC4 block one down and one across sits 24 bytes into its gob","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a 64x64 BC4 array uses two-gob tiles on level 0 and one-gob tiles below","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"a solid BC4 block is its value twice and sixteen nought indices","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: each probe tone fills a frame with whole periods","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: a sine is read back at its amplitude","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: a tone reads as nothing at another tone's frequency","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: two tones mixed read back each at its own level","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: frames split back into their channels","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the limiter rule holds a steady input at its threshold","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the limiter rule brings a sine to the threshold times pi over two","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the listening signals stay inside their level and start at rest","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the hiss is white noise with its low end taken off","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the sweep starts and ends at its frequencies","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the conversion tables' formula gives the renderer's values","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: a tone keeps the level the conversion's table gives it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: the two-step reciprocal's estimate and its steps","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"audio: mode 0's two answers are the rule's level and the two-step one","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: the BT.601 colours, truncated and rounded, are the table asked for","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: the shift before the constant gives 128s, after it 255, 26, 255","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: the soft clamp at 64..940 holds white at 235 and black at 16","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: the passthrough job's structure holds the words vic40.h's layout gives","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: every case packs the structures tools/vic-expect.py packs","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: a one-slot job's command words are tools/vic-expect.py's","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: two slots and an NV12 output add their methods as the script does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_passthrough expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_chroma_order expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_order_argb expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_order_x8 expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_matrix_601 expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_matrix_shift expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_soft_clamp expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_clamp_nomatrix expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_alpha_opaque expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_planar_alpha expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_target_clip expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_target_clip_matrix expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_target_odd expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_background expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_background_ring expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_source_crop expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_two_slots expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_pitch expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: vic_nv12_out expects what the script expects","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: the judge passes each case's own model under each of its answers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: a pass says which answers fit, and either where both do","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: a failure names the first wrong byte, or that nothing was written","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vic: the run's note adds up the answers and names a disagreement","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: sixteen buttons are asked for, each once and by one bit","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: the controller answers first, the style case after every button","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: the bits are named low first, and a short buffer stays whole","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: the styles and the ids are named as the service names them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: a press is what goes down in its first tenth of a second","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: a button pressed again counts, and the window closes on time","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: a stick direction is not a press, and nothing for 10 s times out","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: up answers yes, down no, both or neither nothing","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: a stick's distance is the integer square root","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: sticks at rest pass only at nought","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: a stick's edge is full scale within 2%, and its shape is named","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: player 1 with the full key style passes, and nothing else does","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: every connected slot needs a style, and one must be connected","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"pad: each controller's press is the slots that went down together","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: the screen answers, then four corners and the middle, two fingers, the drag and its lift","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: a prompt waits out a finger already down, then takes the next tap","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: the first prompt tells a touch from a docked console, a silent screen and nobody there","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: a tap passes within 48 pixels of its target, judged where it lifted","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: two fingers need two ids, and a drag one finger, one id, going right","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: a lifted finger is followed by states with no touch for half a second","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"touch: the note gives every touch's diameter and angle range and the ids","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"a\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"abc\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"message digest\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"abcdefghijklmnopqrstuvwx...\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"ABCDEFGHIJKLMNOPQRSTUVWX...\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: RFC 1321's \"123456789012345678901234...\" whole and in pieces","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"md5: a million a's","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: every job fits the buffer and its surface is the setup's","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: the patches rebuild the tables tools/vp9-jobs.py wrote","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: surfaces are rows of 64 bytes, heights of 32, chroma after luma","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: two cases are built both ways, the others once","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: the B forms change only LastShowFrame, or the chroma deltas","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: a job's command words, word by word","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: the next job reads what the one before wrote","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: command words that do not fit are none","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: surfaces are read as nvtegra's copy walks them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: a picture written block linear reads back as its planes' MD5s","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: a case's line counts its images and names the first wrong one","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"vp9: two forms say which decodes, and the note adds the cases up","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: a step keeps its first place and time, and one not taken comes last","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: inheritance passes on the console's order and names what stalled","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: the chain passes when its end runs at 44, and fails one level deep","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: preemption gives the time the core changed hands, or that it never did","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: the owner's drop back is read from the order, and Q1 from its priority","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: migration passes on an idle core and fails behind the spinner","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: svcSleepThread(0) must keep the core, and the cores answer Q2 and Q3","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"sched: a case that could not run says why, and the note adds the cases up","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"binder: both of reden's layouts pass, and a history must be newest first","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"binder: a reply in no known layout fails with its bytes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"binder: the cases run with no frame, 3 and 10, asking for nought, 8 and 8","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: the source and the filled destination are the script's","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: every case under every answer is the image the script works out","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: the 2D engine's words are the script's, from NVIDIA's offsets","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: a case passes on any answer's image and its line names the answers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: the copy kept in a cache fails on the raw read, with both named","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: a write outside the window and a third rule fail with their texels","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"blit2d: the note says Q1 and Q2 from passing cases, else from the copies","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: every case is under a suite of the service family, once","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: hwopus passes 24 decoders and the 25th refused out of decoders","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: a closed decoder passes only when the next one opens","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am passes a save size that reads back as ExtendSaveData asked","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: fsp passes a temporary storage whose last marker is gone","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: account passes 52 answering what 51 answers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes a monitor that comes and takes this process","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes each step's state, and None or Error outside them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes an event signaled when a network comes and goes","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes every command out of its state refused as BadState","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes the network asked, with this console as node 0","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes node 0's connection read once, into one to eight","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes the address in host order and the network's config","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes advertise data of 384 carried and 385 refused","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ldn passes a station with nothing near and nothing to join","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: set passes reden's language codes and fails what strays from them","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: csrng passes two buffers written whole and apart","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: nfp passes 25 answering what 3 answers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: aoc passes an empty end and no record past it","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: aoc passes none listed, lists that fit their room and the base id","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: aoc passes a prepare of a missing index answered with success","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time passes a user clock its context's offset past steady","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time passes a steady clock one or two seconds on","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time passes the epoch and the known time dated under UTC","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time passes ToPosixTime giving the known time back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time passes the device's rule dating as the service's own","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: pl passes six loaded fonts behind the decrypted magic","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: pl passes the six in order of priority, each as told","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: profile passes one base twice, of the user, by a name","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: profile passes a 256x256 JPEG of the size told","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: profile passes the user found and nobody made up","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-state passes a mode with its own resolution","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-state passes an application in focus","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-state passes message 95 after 130","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-state passes 3D VR mode on, then off","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-state passes the region Global","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-self passes a setting read back as set","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-functions passes a desired language set lists","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-functions passes every start event handed out","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-functions passes two empty channels refused as empty","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: auddev passes the active output among those listed","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: auddev passes a volume read back as set","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: fsdir passes a directory renamed with what it holds","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: fsdir passes the one file listed once","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: fsdir passes a directory gone with what it held","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-audio passes volumes read back as set","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-channel passes a user channel that keeps what is unpopped","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-storage passes a storage that keeps its size and its end","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: mii passes the six default Miis","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-mode passes VR mode as turned and a normal boot","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: bsd-local passes the answers of a BSD stack","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ipc passes the controller's answers and a Close","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: hid passes npad entries doubled and one apart","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time-snap passes a snapshot of the user clock and its span","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: vi passes the default display, the scaling table and the rounding","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: renderer passes its parameters and two settings kept","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: ngc passes a clean name found clean and given back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: apm passes a configuration kept per mode and the boost mode's","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: am-lock passes a lock taken, held and freed, and its event","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: set-sys passes settings read back as set and flags put back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time-zone passes names listed, the location and a date back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: time-perm passes every write time:u asks refused","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: audout passes one output opened, buffers held and given back","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: fs-file passes files resized, renamed, cleaned, dated and space","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: acc-app passes every user qualified and a thumbnail checked","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"reference","name":"service: renderer passes a renderer stopped, started and stopped","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"journal: launch 2 resumes the run; the program ended inside cpu case \"mrs daif reads nothing outside the four interrupt mask bits\": that case is skipped as crashed and goes on the crash list, and step cpu runs again from its start"}
+{"type":"note","text":"journal: launch 3 resumes the run; the program ended inside cpu case \"sm4ekey and sm4e give the SM4 standard's worked example\": that case is skipped as crashed and goes on the crash list, and step cpu runs again from its start"}
+{"type":"case","suite":"cpu","name":"clz counts each of sixteen 8-bit lanes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"clz counts each of eight 16-bit lanes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"clz counts each of four 32-bit lanes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"sdiv and udiv by zero give zero, 32 and 64 bits","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"frintx rounds to nearest even and raises inexact","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"frinta rounds halfway cases away from zero","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"sqshlu saturates 8, 16 and 64-bit lanes and sets QC","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"48 new straight-line blocks with 33 live registers leave the state worked out apart","tier":"exact","result":"pass","detail":""}
+{"type":"note","text":"cpu compile: 48 blocks of 160 operations, first calls 18 us, second calls 4 us, 296 ns a block to compile"}
+{"type":"case","suite":"cpu","name":"sqrshl and uqrshl round, shift and saturate lanes of every width","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"sqdmlal, sqdmlsl and sqdmull double, accumulate and saturate","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"sqrshrn, uqrshrn and sqrshrun round and narrow scalars","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"fcvtzs and fcvtzu with 64 fraction bits scale by 2^64","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"mrs cntvct_el0 reads a virtual count that moves with the physical one","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"cpu","name":"mrs daif reads nothing outside the four interrupt mask bits","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+{"type":"case","suite":"cpu","name":"sm4ekey and sm4e give the SM4 standard's worked example","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+{"type":"case","suite":"clear","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"clear target 64x64 RGBA8_Unorm, 4096 pixels checked per case"}
+{"type":"case","suite":"clear","name":"clear to opaque red","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"clear","name":"clear to transparent cyan","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"clear","name":"clear to a mid channel value","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"clear","name":"clear bounded by a rectangle","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"graphics device opens with room for every format","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"every reference format is paired with the library's own","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"the three output shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"the uniform buffer has somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"format target 32x32 per format, quad over x 4 to 20 and y 12 to 28, 60 formats"}
+{"type":"note","text":"format not drawn: RGB32_Float, RGB32_Uint, RGB32_Sint; twelve byte pixels, which the render target unit has no surface format for"}
+{"type":"note","text":"format not drawn: RGBA4_Unorm, RGB5_Unorm, RGB5A1_Unorm, RGB565_Unorm, A5BGR5_Unorm; sampling only: the library gives them no colour surface format; the blue first BGR565, BGR5 and BGR5A1 are the sixteen bit formats a target can have"}
+{"type":"note","text":"format not drawn: E5BGR9_Float; sampling only: a shared exponent has no colour surface format"}
+{"type":"note","text":"format not drawn: the BC, ETC2 and ASTC formats; compressed, sampling only"}
+{"type":"note","text":"format not drawn: S8, Z16, Z24X8, ZF32, Z24S8, ZF32_X24S8; depth and stencil, the depth suite's"}
+{"type":"case","suite":"format","name":"R8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"R32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBA8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGB10A2_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGB10A2_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RG11B10_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"RGBX32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGR565_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGR5_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGR5A1_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGRX8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGRA8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGRX8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"format","name":"BGRA8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"the shaders load","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"raster target 64x64 RGBA8_Unorm, clear 0000ff00, drawn ffff00ff"}
+{"type":"case","suite":"raster","name":"a full screen quad covers every pixel","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"clip space plus y is the top half","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"clip space minus x is the left half","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"a triangle's interior is exact and its edges land within a pixel","tier":"position","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"a shared edge belongs to the triangle it is the left edge of","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"the same edge does not also belong to the other triangle","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"a viewport offset moves the triangle","tier":"position","result":"pass","detail":""}
+{"type":"case","suite":"raster","name":"a scissor leaves everything outside it untouched","tier":"position","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"graphics device opens with an integer target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"the integer shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"the uniform buffer has somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"intmath target 64x64 R32_Uint, 4096 pixels per case, sentinel 0xdeadbeef"}
+{"type":"case","suite":"intmath","name":"the fragment coordinate's x is the pixel centre, bit for bit","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"the fragment coordinate's y is the pixel centre, bit for bit","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"the uniform buffer delivers its value unaltered","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a multiply and an add that both overflow 32 bits","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a left shift discards the bits it pushes out","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"an unsigned right shift brings in noughts","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a signed right shift extends the sign bit","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitwise and","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitwise or","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitwise exclusive or","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"counting the set bits","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"finding the lowest and the highest set bit","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"unsigned division by a prime","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"unsigned remainder by a prime","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a signed integer converts to the nearest float, ties to even","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"an unsigned integer converts to the nearest float, ties to even","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a float converts to a signed integer towards nought","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a float above two to the 31 converts to an unsigned integer","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"packUnorm4x8 clamps and rounds each component","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"unpackUnorm4x8 then packUnorm4x8 gives the word back","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"packSnorm2x16 clamps and rounds each component","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"unpackSnorm2x16 then packSnorm2x16 gives the word back, 0x8000 as 0x8001","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"packHalf2x16 of floats that are exactly half precision","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"unpackHalf2x16 of normal halves and infinities","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a left shift by 31, 32 and 33 in a register clamps the count to 32","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"an unsigned right shift by 31, 32 and 33 clamps the count to 32","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a signed right shift by 31, 32 and 33 clamps the count to 32","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a left shift by every count from nought to 63","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"an unsigned right shift by every count from nought to 63","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a signed right shift by every count from nought to 63","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"signed division with negative operands truncates towards nought","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"signed remainder with negative operands takes the dividend's sign","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"findMSB of an unsigned value, nought included","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"findMSB of a signed value, minus one and nought included","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"findLSB, nought included","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitfieldExtract of an unsigned value at every offset and width","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitfieldExtract of a signed value extends the field's sign","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitfieldInsert at every offset and width","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"bitfieldReverse","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"the signed minimum","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"the unsigned maximum","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"a signed clamp","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"intmath","name":"an unsigned clamp","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"the shaders load","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"blend target 64x64 RGBA8_Unorm, 4096 pixels per case, 11 cases"}
+{"type":"note","text":"blend: the alpha channel has an equation of its own, adding leaving 96 and the maximum 64, so the cases that tell the alpha state apart from the colour state mean what they say"}
+{"type":"note","text":"blend: the alpha destination factor does not reach the blend unit, so no case gives it one of its own. Nought and one both left 64, and with the colour destination factor at nought in both draws, one that arrived would have added the destination alpha 32"}
+{"type":"case","suite":"blend","name":"blending off replaces the destination","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"adding with both factors one","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"adding clamps at the top of the range","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"subtracting the destination from the source","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"subtracting clamps at the bottom of the range","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"subtracting the source from the destination","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"the minimum ignores the factors","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"the maximum ignores the factors","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"the source alpha weights both sides","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"the blend constant is a factor of its own","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blend","name":"a source factor of zero leaves the destination","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"graphics device opens with a depth target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"the shaders load","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"depth target 64x64 ZF32, first quad at 0.500, near 0.250, far 0.750"}
+{"type":"case","suite":"depth","name":"these three depths tell all eight comparisons apart","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a depth clear writes the value it was given","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails a never test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a never test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer fails a never test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes a less than test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a less than test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer fails a less than test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails an equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes an equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer fails an equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes a less than or equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes a less than or equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer fails a less than or equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails a greater than test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a greater than test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer passes a greater than test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes a not equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a not equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer passes a not equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails a greater than or equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes a greater than or equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer passes a greater than or equal test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes an always test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes an always test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment farther than the buffer passes an always test","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment that passes with the write open replaces the depth","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"a fragment that passes with the write closed leaves the depth","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"depth","name":"closing the depth write does not stop the colour","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"graphics device opens with room for textures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"the sampling shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"every neighbouring pair of texels averages to a whole byte","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"no pair of texels is far enough apart for a filter weight to matter","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"the textures have somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"the texels reach the textures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"the descriptor sets have somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"texture 4x4 RGBA8_Unorm onto 64x64, 256 pixels per texel"}
+{"type":"case","suite":"texture","name":"nearest sampling inside the texture picks the texel under the pixel","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"repeating tiles the texture","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"clamping to the edge stretches the border texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"mirroring tiles the texture with no seam","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texture","name":"linear sampling halfway between two texels is their average","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"graphics device opens with room for the images","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"the shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"the images have somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"the block linear texture is eight gobs of one gob blocks","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"the starting texels reach the textures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"the processor finds the copy engine's texels where the block linear rule puts them","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a texture rendered in the same list is sampled as drawn","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a partial redraw reaches the sampler and the rest keeps its texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"texels the processor rewrites in a pitch linear texture reach the next sample","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"texels the processor rewrites in part of a block linear texture reach the next sample","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"one row the processor rewrites through a cached mapping reaches the next sample once flushed","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a uniform buffer the processor rewrites between submits reaches the next draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"four submits each see the one word of a uniform buffer rewritten before them","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a uniform buffer pushed between two draws of one list reaches the second only","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a render target sampled as R32_Uint gives the little endian word of its bytes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"redrawing a render target reaches its R32_Uint alias in one list","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a buffer the copy engine writes into a texture reaches the next sample in one list","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"part of an image the copy engine copies into a texture reaches the next sample","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"an image read back before the copies holds what was uploaded","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"a render target copied to an image reads back as drawn","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"coherence","name":"part of a render target copied to an image reads back as drawn","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"graphics device opens with a float target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the float shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the uniform buffer has somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"fmath target 64x64 R32_Float, operands 0.015625 to 1"}
+{"type":"note","text":"fmath budget for \"a float travels through the uniform buffer unaltered\": 0 units in the last place: nothing is computed, the value is copied through a uniform buffer and written out again"}
+{"type":"note","text":"fmath budget for \"addition is correctly rounded\": 0 units in the last place: the core table requires addition and multiplication to be correctly rounded, so there is one right answer, and the reference reaches it exactly because the sum and the product of two single precision numbers are exact in double precision"}
+{"type":"note","text":"fmath budget for \"multiplication is correctly rounded\": 0 units in the last place: the core table requires addition and multiplication to be correctly rounded, so there is one right answer, and the reference reaches it exactly because the sum and the product of two single precision numbers are exact in double precision"}
+{"type":"note","text":"fmath budget for \"a multiply and an add in one call\": 0 units in the last place: the console's binary is one fused FFMA, which rounds once, and the reference is the processor's fused multiply and add, the same single rounding. The table would let an unfused pair round twice, up to 1.5 units off; a machine that splits it differs from the console, and the case says so"}
+{"type":"note","text":"fmath budget for \"division within two and a half units in the last place\": 3 units in the last place: 2.5 for division in the core table, plus the half the reference carries for being a double precision answer rounded to single"}
+{"type":"note","text":"fmath budget for \"the square root\": 5 units in the last place: the table gives the square root no figure of its own and inherits it from one over the inverse square root, which is 2 for the inverse square root and 2.5 for the division, plus the half the reference carries. Three would be a number from somewhere else"}
+{"type":"note","text":"fmath budget for \"two to the power of\": 3.5 plus 2 per unit of the argument: the table allows three plus twice the magnitude of the argument, and the half the reference carries goes on the constant. Over the range this case sweeps that is three and a half at the smallest argument and eleven and a half at the largest, and a flat three would fail a machine that was inside its allowance everywhere but the middle"}
+{"type":"note","text":"fmath budget for \"the logarithm to base two\": 3.5 units in the last place: 3 from the table, which is the figure that applies outside the range from a half to two, where this operand is kept, plus the half the reference carries"}
+{"type":"note","text":"fmath budget for \"the sine, within two to the minus eleven\": 0.000488281 absolute, which is two to the minus eleven: the table bounds these two by an absolute error inside minus pi to pi and not by units in the last place at all. The shading language's own specification leaves them undefined, which is the clearest reason this suite holds itself to the other one"}
+{"type":"note","text":"fmath budget for \"the cosine, within two to the minus eleven\": 0.000488281 absolute, which is two to the minus eleven: the table bounds these two by an absolute error inside minus pi to pi and not by units in the last place at all. The shading language's own specification leaves them undefined, which is the clearest reason this suite holds itself to the other one"}
+{"type":"note","text":"fmath budget for \"fma keeps the product's rounding error, as the console's FFMA does\": 0 units in the last place: the console's FFMA is fused, and the exact product less a nearby float is exact itself, so there is one answer. Done apart the product rounds first and the answer loses its low bits, which is a difference from the console"}
+{"type":"note","text":"fmath budget for \"min and max against infinities\": 0 units in the last place: a minimum or a maximum only picks one of its operands, and against an infinity which one is defined"}
+{"type":"note","text":"fmath budget for \"min and max hand back the operand that is not a NaN\": 0 units in the last place: the console's minimum and maximum hand back the operand that is not a NaN, as GLSL.std.450's NMin and NMax define it. The plain FMin a translator may reach for leaves this undefined, so a NaN here is a difference from the console, which is the machine an emulator answers to"}
+{"type":"note","text":"fmath budget for \"mix carries infinities and NaNs through\": 0 units in the last place: each answer is the infinity or the NaN that x times one less a plus y times a gives in IEEE arithmetic, and x plus a times y less x gives the same one. Vulkan lets a machine assume no infinity or NaN arrives, so a failure is a difference from the console rather than from the table"}
+{"type":"note","text":"fmath budget for \"denormal products, sums and operands flush, as the console's do\": 0 units in the last place: every instruction in the console's binary flushes denormals, operands and results, so each answer is exact and one. The table allows keeping them; a machine that does differs from the console, and the case says so"}
+{"type":"note","text":"fmath budget for \"two to the power of -128 to nearly 128\": 3.5 plus 2 per unit of the argument: the power of two's own figure, over -128 to nearly 128, which reaches 259.5 at the top. Below two to the -126 the console's MUFU flushes the answer, so nought is the answer there"}
+{"type":"note","text":"fmath budget for \"the logarithm from the smallest normal to nearly the largest float\": 3.5 units in the last place: the logarithm's 3 and the half the reference carries, on operands from the smallest normal to nearly the largest float with a full mantissa, none inside a half to two where the table switches to an absolute figure"}
+{"type":"note","text":"fmath budget for \"the square root of denormals and tiny normals\": 5 units in the last place: the square root's figure, on operands from the denormals to two to the -96. The console's MUFU flushes a denormal operand, so nought is the answer for those"}
+{"type":"note","text":"fmath budget for \"the inverse square root of denormals and tiny normals\": 2.5 units in the last place: 2 from the table and the half the reference carries. The console's MUFU flushes a denormal operand, so infinity is the answer for those"}
+{"type":"note","text":"fmath budget for \"floor of negatives and fractions\": 0 units in the last place: the answer is a whole number or the exact difference between the operand and one, so there is one right answer and the table's are exact"}
+{"type":"note","text":"fmath budget for \"fract of negatives\": 0 units in the last place: the answer is a whole number or the exact difference between the operand and one, so there is one right answer and the table's are exact"}
+{"type":"note","text":"fmath budget for \"round of negatives and halves, halves to even as the console's\": 0 units in the last place, and a half to even: the language lets round go either way there, and the console's binary compiles it to the same rounding as roundEven, so a machine that rounds a half away from nought differs from the console. So does one that rounds -0.25 to plus nought, where the console's F2F keeps the sign"}
+{"type":"note","text":"fmath budget for \"roundEven of halves goes to the even neighbour\": 0 units in the last place: the answer is a whole number, so the table's is exact. The sign of a nought is the console's rule: its F2F rounds -0.25 and -0.5 to minus nought, and a machine that gives plus nought differs from the console"}
+{"type":"case","suite":"fmath","name":"a float travels through the uniform buffer unaltered","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"addition is correctly rounded","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"multiplication is correctly rounded","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"a multiply and an add in one call","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"division within two and a half units in the last place","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the square root","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"two to the power of","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the logarithm to base two","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the sine, within two to the minus eleven","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the cosine, within two to the minus eleven","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"fma keeps the product's rounding error, as the console's FFMA does","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"min and max against infinities","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"min and max hand back the operand that is not a NaN","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"mix carries infinities and NaNs through","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"denormal products, sums and operands flush, as the console's do","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"two to the power of -128 to nearly 128","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the logarithm from the smallest normal to nearly the largest float","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the square root of denormals and tiny normals","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"the inverse square root of denormals and tiny normals","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"floor of negatives and fractions","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"fract of negatives","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"round of negatives and halves, halves to even as the console's","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"fmath","name":"roundEven of halves goes to the even neighbour","tier":"ulp","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"graphics device opens with a compute queue","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"the compute and drawing shaders load","tier":"none","result":"pass","detail":""}
+{"type":"note","text":"order: 256 groups of 64 spin 20000 times before the last invocations copy, each storing fragment 2000 times; marker 0x7f3c19e5"}
+{"type":"case","suite":"order","name":"vertices a dispatch wrote before a wait for idle reach the draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"indices a dispatch wrote before a wait for idle reach the draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"draw arguments a dispatch wrote before a wait for idle reach the indirect draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"a uniform buffer a dispatch wrote before a wait for idle reaches the fragments","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"a storage buffer a dispatch wrote before a wait for idle reaches the fragments","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"a grid a dispatch wrote before a wait for idle sizes the indirect dispatch","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"words a dispatch wrote before a wait for idle reach the next dispatch","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"words the fragments stored before a wait for idle reach the next dispatch","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"vertices a dispatch wrote before a full barrier reach the draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"draw arguments a dispatch wrote before a full barrier reach the indirect draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"a storage buffer a dispatch wrote before a full barrier reaches the fragments","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"words the fragments stored before a fragments barrier reach the next draw's fragments","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"words the fragments stored before a tiles barrier reach the next draw's fragments at the same pixel","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"128 dispatch and draw pairs, each ordered by a wait for idle, all draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"128 dispatch and draw pairs with no wait for idle between them are recorded","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"256 draws into one target, each followed by a wait for idle, all land","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"order","name":"256 draws into one target with no wait for idle between them are recorded","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"graphics device opens with room for index buffers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"an indexed draw with the library's open limit uses every index","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"a limit on the last byte of 16-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"a limit on the last byte of 8-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"a limit on the last byte of 32-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"a limit on the last byte of 3006 16-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"index","name":"a limit on the last byte keeps the last index when the draw starts at 4","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"instance","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"instance","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"instance","name":"an instanced array draw uses the uniform value set before it","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"instance","name":"a draw after an instanced array draw adds no instances of its own","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"instance","name":"each subsequent instanced array draw lands as the next instance","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"the geometry and tessellation shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"a geometry shader turns each of four points into its 8 by 8 square","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"a point the geometry shader emits nothing for draws nothing","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"a patch tessellated at level 4 covers its rectangle, and says 4","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"the same patch at level 7 covers the same rectangle, and says 7","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"a geometry shader with no early return squares the shown points only","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"geometry","name":"a patch whose evaluation stage reads no level covers its rectangle at 4","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"bindless","name":"graphics device opens with room for 256 textures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"bindless","name":"the bindless sampling shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"bindless","name":"256 one-texel textures, their descriptors and handles are in place","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"bindless","name":"a handle index below 128 samples its own texture","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"bindless","name":"a handle index from 128 to 255 samples its own texture","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"graphics device opens with room for the blocks","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"a void extent block is its constant colour on every texel","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"4-bit weights 0 to 15 unquantize by bit replication","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"even 5-bit weights unquantize by bit replication","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"odd 5-bit weights unquantize by bit replication","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"weights coded with trits decode and unquantize","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"weights coded with quints decode and unquantize","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"endpoints coded with trits decode and unquantize","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"endpoints coded with quints decode and unquantize","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"a two partition block puts each texel in its partition","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"a three partition 6x6 block puts each texel in its partition","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"a four partition block puts each texel in its partition","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"a dual plane block weights one channel with the second plane","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"an HDR partition is the error colour and the LDR one after it decodes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"an illegal block is the error colour","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"an 8x8 block infills a 2x4 weight grid","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"astc","name":"a 12x12 block infills a 6x6 weight grid","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"eac","name":"graphics device opens with room for the blocks","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"eac","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"eac","name":"a one-channel EAC block decodes every index and both clamps","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"eac","name":"a two-channel EAC texture decodes each channel from its own block","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"graphics device opens with room for the blocks","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"an individual mode block reaches both clamps in its left subblock","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"a flipped differential block takes its second base from the delta","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"a T mode block paints its four colours, the distance clamped at both ends","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"an H mode block whose first base is the larger adds 1 to the distance index","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"an H mode block whose first base is the smaller keeps the distance index even","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"a planar block interpolates three colours and clamps them","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"a see-through punch-through block is transparent at index 2 and unmodified at index 0","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"a see-through punch-through T block is transparent at index 2","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"a punch-through planar block is opaque whatever its opaque bit says","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"etc2","name":"an RGBA block takes its alpha from an 8-bit EAC block, clamped at both ends","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"bcn","name":"graphics device opens with room for the arrays","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"bcn","name":"the array fetching shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"bcn","name":"every layer of a six-layer BC4 array keeps its own 2x2 and 1x1 levels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"bcn","name":"both layers of a BC4 array six texels tall keep their own blocks","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"bcn","name":"the 2x8 second level of a 4x16 BC4 texture reads both of its blocks","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"zeta","name":"graphics device opens with room for the depth textures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"zeta","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"zeta","name":"a Z16 texture the processor wrote samples to its depth","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"zeta","name":"a ZF32 texture the processor wrote samples to its depth","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"zeta","name":"a Z24S8 texture the processor wrote samples to its depth","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"zeta","name":"a Z24S8 texture the processor wrote takes its depth from the top 24 bits","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"graphics device opens with room for the textures","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"the folding shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a block linear R8 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a block linear RG8 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a block linear RGBA8 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a block linear RGBA16 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a block linear RGBA32 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"one gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"two gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"four gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"eight gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"thirty two gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a 37 by 23 texture that ends inside a gob samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"swizzle","name":"a 4 MiB texture the processor wrote uploads and samples as written","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"the buffer texture shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"a buffer texture 0 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"a buffer texture 4 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"a buffer texture 20 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"a buffer texture 36 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"texel","name":"a buffer texture 68 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"stream","name":"graphics device opens with room for the uniform buffers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"stream","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"stream","name":"4096 draws each see their own 4 KiB uniform buffer","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"stream","name":"1024 draws each see their own 64 KiB uniform buffer","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fill","name":"graphics device opens with a 512 by 512 depth target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"fill","name":"the flat shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"fill","name":"one depth tested quad lands first, paying for the first use","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fill","name":"128 full target quads with colour alone land in order","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fill","name":"128 full target quads, each depth tested and written, land in order","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"ring","name":"graphics device opens with room for 4096 uniform buffers","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"ring","name":"the shaders that read 32 textures each load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"ring","name":"the texture, the vertices, the indices and the buffers are in place","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"ring","name":"4096 indexed draws that each take new descriptors all land","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"occlusion","name":"graphics device opens with room for 320 reports","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"occlusion","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"occlusion","name":"the reports have somewhere to live","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"occlusion","name":"320 quads counted one by one are all drawn","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"occlusion","name":"320 quads counted one by one pass 64 samples each","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"occlusion","name":"320 cells cleared one by one between reports are cleared","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"drawtex","name":"graphics device opens with room for a texture","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"drawtex","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"drawtex","name":"the texture, its descriptors and the uniform colour are in place","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"drawtex","name":"a draw texture copies its texture onto its rectangle","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"drawtex","name":"a draw after a draw texture binds the pipeline the draw before it bound","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"drawtex","name":"a draw with another pipeline after a draw texture sets its own viewport","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"graphics device opens with a 64 by 320 target","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"the flat shaders load","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a 32 by 300 pixel quad passes 9600 samples","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a second quad of 1600 pixels adds to the count, 11200","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a reset after a draw leaves a count of nought","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"render enable FALSE skips the draw","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"render enable TRUE draws","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL draws over two equal values whose timestamps differ","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL skips the same two values","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL skips values that differ in the low word","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL draws over values that differ in the low word","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL skips values that differ only in the high word","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL draws over values that differ only in the high word","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL draws after two reports of the same count in the same list","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL skips after two reports of the same count","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL skips after a report of 9600 and one of nought","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL draws after a report of 9600 and one of nought","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL draws after two equal reports from a list that finished before","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL skips after two equal reports from a list before","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_EQUAL skips after 9600 and nought reported in a list before","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"IF_NOT_EQUAL draws after 9600 and nought reported in a list before","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a full target clear under IF_EQUAL after 9600 and nought is skipped too","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a full target clear under IF_NOT_EQUAL after 9600 and nought happens","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a full target clear under IF_EQUAL over two values that differ is skipped","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"query","name":"a full target clear under IF_EQUAL over two equal values happens","tier":"exact","result":"pass","detail":""}
+{"type":"note","text":"query: render enable CONDITIONAL over the value one, high word nought: not drawn"}
+{"type":"note","text":"query: render enable CONDITIONAL over the value 2^32, low word nought: not drawn"}
+{"type":"note","text":"query: render enable CONDITIONAL over a report of 9600 in the same list: not drawn"}
+{"type":"case","suite":"dma","name":"graphics device opens with a compute queue and room for 32 copies","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"dma","name":"the copy shader loads","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"dma","name":"one copy lands first, paying for the first use","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"dma","name":"32 copies of words the processor wrote land whole","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"dma","name":"32 copies of words a dispatch wrote just before land whole","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"blit2d","name":"graphics device opens with both surfaces laid out block linear","tier":"none","result":"pass","detail":"a 128x32 source and 4 destinations of 64x16, blocks two gobs tall"}
+{"type":"case","suite":"blit2d","name":"blit2d_corner_half: half size from the corner origin, into a window cut mid-run","tier":"exact","result":"pass","detail":"fits Q1 A: raw MD5 84fd46bdbeba5e70f758996dd896cf84, all 189 right and nothing outside the window changed in both reads"}
+{"type":"case","suite":"blit2d","name":"blit2d_center_half: half size from the centre origin, into the same window","tier":"exact","result":"pass","detail":"fits Q1 A: raw MD5 1654028909d43464ff4556fbf1802371, all 189 right and nothing outside the window changed in both reads"}
+{"type":"case","suite":"blit2d","name":"blit2d_corner_2_3: two thirds size from the corner origin, 1.5 texels a pixel","tier":"exact","result":"pass","detail":"fits Q1 A, Q2 A: raw MD5 3ee33409edbf6bf600caa6435dccd6ea, all 189 right and nothing outside the window changed in both reads"}
+{"type":"case","suite":"blit2d","name":"blit2d_center_2_3: two thirds size from the centre origin, 1.5 texels a pixel","tier":"exact","result":"pass","detail":"fits Q1 A, Q2 A: raw MD5 6560d24df99ce3fb20477313332d5d18, all 189 right and nothing outside the window changed in both reads"}
+{"type":"note","text":"blit2d: the passing cases answer Q1 A, Q2 A"}
+{"type":"case","suite":"fs","name":"the memory card opens as a file system","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"the card holds a 64 MiB file and 256 small ones to read","tier":"none","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"sequential reads of 512 bytes cover 4 MiB","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"sequential reads of 4 KiB cover 16 MiB","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"sequential reads of 64 KiB cover 64 MiB","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"sequential reads of 1 MiB cover 64 MiB","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"sequential reads of 16 MiB cover 64 MiB","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"4096 random 4 KiB reads at aligned offsets","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"4096 random 4 KiB reads at odd offsets","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"64 KiB reads walk the file backwards","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"4096 reads of the same 4 KiB","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"256 small files are opened, read and closed","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"a read that runs past the end returns only the bytes that are there","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"a read that starts at the end returns no bytes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"fs","name":"a read of no bytes returns no bytes","tier":"exact","result":"pass","detail":""}
+{"type":"case","suite":"sched","name":"threads start on the core and at the priority asked","tier":"none","result":"pass","detail":"the main thread on core 0 at 44; threads of 50, 43 and 40 read cores 0, 1, 2 and priorities 50, 43, 40"}
+{"type":"case","suite":"sched","name":"the owner of a mutex runs at the priority of the thread waiting for it","tier":"position","result":"pass","detail":"the flag 49.9 ms after the thread of 44 asked, while the thread of 45 spun: the owner ran at 44; held 0.0, spinning 0.1, asked 0.4, woke 50.3, got 50.3, flag set 50.3, flag seen 50.3, unlocked 50.4"}
+{"type":"case","suite":"sched","name":"the inherited priority passes down a chain of owners","tier":"position","result":"pass","detail":"the flag 47.1 ms after the thread of 44 asked, while the thread of 45 spun: the end of the chain ran at 44; tail held 0.0, held 0.3, asks the tail 0.3, spinning 2.6, asked 3.0, woke 50.0, got 50.1, flag set 50.1, flag seen 50.1, unlocked 50.2"}
+{"type":"case","suite":"sched","name":"a thread that becomes ready at a better priority takes the core from one spinning","tier":"position","result":"pass","detail":"the thread of 45 saw the flag 10.1 ms after the thread of 43 went to sleep for 10 ms; spinning 0.0, sleeps 0.2, woke 10.2, flag set 10.2, flag seen 10.3"}
+{"type":"case","suite":"sched","name":"the owner goes back to its own priority when it hands the mutex over","tier":"position","result":"pass","detail":"after the handover the thread of 45 ran before the owner, which reads 46; while the thread of 44 waited it read 44 (Q1 A, the priority it runs at); held 0.0, spinning 0.3, asked 0.6, woke 50.0, got 52.9, flag set 52.9, flag seen 53.0, unlocked 53.0"}
+{"type":"case","suite":"sched","name":"a thread behind a spinning one moves to an idle core of its mask","tier":"position","result":"pass","detail":"the thread of 46 ran on core 0 while the thread of 45 spun on core 1; spinning 0.0, ran 0.1, flag set 0.1, flag seen 0.1"}
+{"type":"case","suite":"sched","name":"svcSleepThread(0) leaves the thread on its core","tier":"position","result":"pass","detail":"with a thread of 50 waiting behind it on core 1 it was on core 1 (Q3 A), on core 1 after svcSleepThread(0), on 1 after svcSleepThread(-1); alone, svcSleepThread(-1) took it from core 1 to 1 (Q2 B); ran 0.0, done 0.1, other ran 0.1"}
+{"type":"note","text":"sched: the passing cases answer Q1 A, Q2 B, Q3 A"}
+{"type":"case","suite":"binder","name":"a layer of its own opens and takes a window","tier":"none","result":"pass","detail":"layer 2, binder 2 (the program's window is binder 1)"}
+{"type":"case","suite":"binder","name":"a request for nought, before any frame","tier":"exact","result":"pass","detail":"the status alone (Q1 A); reply: payload 4 bytes at 16, objects 0 at 20: 00000000"}
+{"type":"case","suite":"binder","name":"the history after three frames, eight asked for","tier":"exact","result":"pass","detail":"the status alone (Q1 A), no frames to count or order; reply: payload 4 bytes at 16, objects 0 at 20: 00000000"}
+{"type":"case","suite":"binder","name":"the history after ten frames comes newest first, eight at most","tier":"position","result":"pass","detail":"the status alone (Q1 A), no frames to count or order; reply: payload 4 bytes at 16, objects 0 at 20: 00000000"}
+{"type":"note","text":"binder: the passing cases answer Q1 A"}
+{"type":"case","suite":"vic","name":"the video compositor opens and maps its buffers","tier":"none","result":"pass","detail":"syncpoint 20, buffer at 0x10000000"}
+{"type":"case","suite":"vic","name":"vic_passthrough: without the matrix, Y, U and V reach R, G and B as they are","tier":"exact","result":"pass","detail":"fits Q11 A"}
+{"type":"case","suite":"vic","name":"vic_chroma_order: format 67 reads its chroma pair against format 68","tier":"exact","result":"pass","detail":"fits Q8 either, Q11 either"}
+{"type":"case","suite":"vic","name":"vic_order_argb: A8R8G8B8 puts blue in the first byte","tier":"exact","result":"pass","detail":"fits Q11 A"}
+{"type":"case","suite":"vic","name":"vic_order_x8: X8B8G8R8 fills its fourth byte","tier":"exact","result":"pass","detail":"fits Q2 A, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_matrix_601: the BT.601 matrix turns six colours into RGB","tier":"exact","result":"pass","detail":"fits Q9 A, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_matrix_shift: the matrix shift and the constant column, in their order","tier":"exact","result":"pass","detail":"fits Q3 A, Q9 either"}
+{"type":"case","suite":"vic","name":"vic_soft_clamp: the soft clamp holds the matrix output to 64..940","tier":"exact","result":"pass","detail":"fits Q4 B, Q9 either"}
+{"type":"case","suite":"vic","name":"vic_clamp_nomatrix: the soft clamp without the matrix","tier":"exact","result":"pass","detail":"fits Q10 B, Q5 either, Q4 either"}
+{"type":"case","suite":"vic","name":"vic_alpha_opaque: the opaque alpha fill over a planar alpha below the top","tier":"exact","result":"pass","detail":"fits Q5 B, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_planar_alpha: the source stream alpha fill takes the planar alpha","tier":"exact","result":"pass","detail":"fits Q11 A"}
+{"type":"case","suite":"vic","name":"vic_target_clip: a target rect inside the surface clips the output","tier":"exact","result":"pass","detail":"fits Q7 A, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_target_clip_matrix: the target rect clips the matrix's output too","tier":"exact","result":"pass","detail":"fits Q7 A, Q9 either"}
+{"type":"case","suite":"vic","name":"vic_target_odd: a target rect that starts at column 5","tier":"exact","result":"pass","detail":"fits Q7 A, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_background: with no slot the target rect takes the background colour","tier":"exact","result":"pass","detail":"fits Q7 A"}
+{"type":"case","suite":"vic","name":"vic_background_ring: the background colour around a smaller destination rect","tier":"exact","result":"pass","detail":"fits Q11 A"}
+{"type":"case","suite":"vic","name":"vic_source_crop: a source rect that starts at column 8","tier":"exact","result":"pass","detail":"fits Q7 A, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_two_slots: two slots over each other with blending off","tier":"exact","result":"pass","detail":"fits Q6 A"}
+{"type":"case","suite":"vic","name":"vic_pitch: a surface 100 pixels wide keeps the 1024-byte pitch","tier":"exact","result":"pass","detail":"fits Q7 A, Q11 A"}
+{"type":"case","suite":"vic","name":"vic_nv12_out: NV12 in and NV12 out leaves Y, U and V as they were","tier":"exact","result":"pass","detail":""}
+{"type":"note","text":"vic: the passing cases answer Q2 A, Q3 A, Q4 B, Q5 B, Q6 A, Q7 A, Q9 A, Q10 B, Q11 A"}
+{"type":"case","suite":"nvdec","name":"the video decoder opens and maps its buffers","tier":"none","result":"pass","detail":"syncpoint 20, buffer of 1280 KiB at 0x10000000, clock 4294966296 Hz"}
+{"type":"case","suite":"nvdec","name":"vp9_two_frames: two frames, none hidden","tier":"exact","result":"pass","detail":"form A: 2 of 2 images right at their fence; form B: 0 of 2 images right at their fence, 0 of 1 a job later; first wrong image 1 (frame 0): Y right, U wrong, V wrong (fits Q1 A, Q4 A)"}
+{"type":"case","suite":"nvdec","name":"vp9_hidden_altref: a hidden frame, contexts that adapt, 66 by 66","tier":"exact","result":"pass","detail":"10 of 10 images right at their fence; hidden frames written 1 of 1 (fits Q1 A, Q2 A)"}
+{"type":"case","suite":"nvdec","name":"vp9_frame_parallel: a hidden frame, no adaptation","tier":"exact","result":"pass","detail":"10 of 10 images right at their fence; hidden frames written 1 of 1 (fits Q1 A, Q2 A)"}
+{"type":"case","suite":"nvdec","name":"vp9_hidden_lf_deltas: two hidden frames, loop filter deltas","tier":"exact","result":"pass","detail":"30 of 30 images right at their fence; hidden frames written 2 of 2 (fits Q1 A, Q2 A)"}
+{"type":"case","suite":"nvdec","name":"vp9_error_resilient: seven hidden frames in one superframe, error resilient","tier":"exact","result":"pass","detail":"13 of 13 images right at their fence; hidden frames written 7 of 7 (fits Q1 A, Q2 A)"}
+{"type":"case","suite":"nvdec","name":"vp9_show_existing: frames shown again, LastShowFrame both ways","tier":"exact","result":"pass","detail":"form A: 13 of 13 images right at their fence; hidden frames written 4 of 4; form B: 3 of 13 images right at their fence, 3 of 10 a job later; first wrong image 4 (frame 6): Y wrong, U wrong, V wrong; hidden frames written 2 of 4 (fits Q1 A, Q2 A, Q3 A)"}
+{"type":"note","text":"nvdec: the passing cases answer Q1 A, Q2 A, Q3 A, Q4 A"}
+{"type":"note","text":"audio: renderer revision 4 at 48 kHz; measuring through an aux effect on a submix at gain 0"}
+{"type":"case","suite":"audio","name":"an 11 kHz voice at the output rate keeps its level at high quality","tier":"level","result":"pass","detail":"11 kHz at 0.5 of full scale came out at 0.4995 (-0.01 dB)"}
+{"type":"case","suite":"audio","name":"an 11 kHz voice at the output rate keeps its level at default quality","tier":"level","result":"pass","detail":"11 kHz at 0.5 of full scale came out at 0.4981 (-0.03 dB), at high quality 0.4995; a renderer that takes the smoothing table at a ratio of one gives about 0.41"}
+{"type":"case","suite":"audio","name":"a 10 kHz voice at half the output rate keeps the level default quality's table gives","tier":"level","result":"pass","detail":"came out at 0.3359, its table gives 0.3359 (-0.00 dB); the tables for a ratio up to 1, below 1.3 and above give 0.3359, 0.2270 and 0.1065"}
+{"type":"case","suite":"audio","name":"a 15 kHz voice at 1.25 times the output rate keeps the level default quality's table gives","tier":"level","result":"pass","detail":"came out at 0.3850, its table gives 0.3850 (-0.00 dB); the tables for a ratio up to 1, below 1.3 and above give 0.4593, 0.3850 and 0.2977"}
+{"type":"case","suite":"audio","name":"an 18 kHz voice at twice the output rate keeps the level default quality's table gives","tier":"level","result":"pass","detail":"came out at 0.3742, its table gives 0.3742 (-0.00 dB); the tables for a ratio up to 1, below 1.3 and above give 0.4981, 0.4396 and 0.3742"}
+{"type":"case","suite":"audio","name":"a 10 kHz voice at half the output rate keeps the level high quality's table gives","tier":"level","result":"pass","detail":"came out at 0.4023, its table gives 0.4023 (-0.00 dB); the tables for a ratio up to 1, below 1.3 and above give 0.4023, 0.1689 and 0.0175"}
+{"type":"case","suite":"audio","name":"a 15 kHz voice at 1.25 times the output rate keeps the level high quality's table gives","tier":"level","result":"pass","detail":"came out at 0.4533, its table gives 0.4533 (+0.00 dB); the tables for a ratio up to 1, below 1.3 and above give 0.4997, 0.4533 and 0.2503"}
+{"type":"case","suite":"audio","name":"an 18 kHz voice at twice the output rate keeps the level high quality's table gives","tier":"level","result":"pass","detail":"came out at 0.3693, its table gives 0.3693 (+0.00 dB); the tables for a ratio up to 1, below 1.3 and above give 0.4995, 0.4914 and 0.3693"}
+{"type":"case","suite":"audio","name":"a stereo circular buffer sink comes into use and records the final mix","tier":"level","result":"pass","detail":"loudest recorded sample 0.00500 of full scale, largest write offset reported 37440; the final mix held 1 kHz on the left and 1.6 kHz on the right at 0.005"}
+{"type":"case","suite":"audio","name":"a circular buffer sink records the left channel first and the right second","tier":"level","result":"pass","detail":"channel 0 held 1 kHz at 0.00498 and 1.6 kHz at 0.00000; channel 1 held 1 kHz at 0.00000 and 1.6 kHz at 0.00499; expected 0.005 of its own tone in each and none of the other"}
+{"type":"case","suite":"audio","name":"a tone through the limiter switched off keeps its level","tier":"level","result":"pass","detail":"1 kHz at 0.25 of full scale came out at 0.2497"}
+{"type":"case","suite":"audio","name":"a tone through the limiter in mode 1 comes out at the level of its rule","tier":"level","result":"pass","detail":"1 kHz at 0.25, threshold 0.1: came out at 0.1573, the rule gives 0.1574 (-0.01 dB); in mode 0 it came out at 0.1574"}
+{"type":"note","text":"audio: the limiter in mode 0 brought 1 kHz at 0.25 to 0.1574 and in mode 1 to 0.1573; the rule, threshold over the detector, gives 0.1574, the two-step reciprocal 0.0460; mode 0 here is the rule"}
+{"type":"note","text":"journal: this run took 3 launches; 2 cases skipped as crashed; the program ended inside cpu \"mrs daif reads nothing outside the four interrupt mask bits\", cpu \"sm4ekey and sm4e give the SM4 standard's worked example\""}
+{"type":"summary","passed":994,"failed":0,"skipped":0,"crashed":2}

@@ -1,0 +1,157 @@
+ScarletNX - edenprobe
+build: ScarletNX unknown unknown (clang 18.1.3, Linux x86_64)
+system: SteamOS (Linux 7.2.7-valve2-2-neptune-72-g31504582a073), AMD Custom APU 0405, 8 threads, 14 GB RAM
+fs: 1 RomFS/ExeFS files mapped for the whole run, 2.0 MB
+memory: 4 KiB host pages, views share their source's pages (alias pool)
+Loaded main at 0x8000000
+symbols: 0 functions named
+jit: the AOT module has no runtime code variants; the JIT handles the misses and writes a cache
+jit: 4 compile threads, 131 pcs of earlier runs queued
+acc: 1 user, playing as user 1
+time: the time zone is Etc/GMT-8 (UTC+08)
+game: 0100000000001000, version 0.5.0
+pl: the Japanese stand-in answers for the console font's private-use characters
+pl: the Chinese simplified stand-in answers for the console font's private-use characters
+pl: the Chinese traditional stand-in answers for the console font's private-use characters
+pl: the Korean stand-in answers for the console font's private-use characters
+pl: the extended stand-in answers for the console font's private-use characters
+RomFS: none in /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/edenprobe_data/
+vulkan: native ASTC textures were asked for, but the GPU can't sample ASTC: they are decoded to RGBA8
+vulkan: native ETC2 textures were asked for, but the GPU can't sample ETC2: they are decoded
+vulkan: allocations of at most 256 MiB, bigger images in pieces (sparse binding)
+vulkan: AMD Custom GPU 0405 (RADV VANGOGH), Vulkan 1.4.350, driver 06801063, graphics queue family 0, compute 1 (separate family)
+vulkan: draws sample the color targets they render to in place (attachment feedback loops, enabled by dynamic state, ordered by barriers within the pass)
+memory: GPU engines keep their results, guest memory is trapped until the CPU needs it
+renderer: Vulkan headless (no window, surface or swapchain)
+vulkan: 0 shaders and 0 pipelines of earlier runs loaded from /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/shader_cache/edenprobe.vkshaders in 0 ms, the pipelines to be made in the background; 0 shaders of the game's own programs in /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/shader_cache/edenprobe.vkshipped
+vulkan: The game's files were already checked by an earlier run
+vulkan: the game's own shaders: 0 translated new, 0 in /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/shader_cache/edenprobe.vkshipped, in 0 ms
+prepare: 16 ms before the game started (0 shaders translated from its files, 0 of 0 pipelines of earlier runs made), not shown, as nothing could be seen
+main thread: entry 8000000, stack 1300001000 (1024 KiB), priority 44, core 0
+kernel: core 0 runs on host CPUs 0 4
+heap: 3272 MB requested (result 0)
+[game] {"type":"note","text":"journal: launch 2 resumes the run; the program ended inside cpu case \"mrs daif reads nothing outside the four interrupt mask bits\": that case is skipped as crashed and goes on the crash list, and step cpu runs again from its start"}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of sixteen 8-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of eight 16-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of four 32-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sdiv and udiv by zero give zero, 32 and 64 bits","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"frintx rounds to nearest even and raises inexact","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"frinta rounds halfway cases away from zero","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqshlu saturates 8, 16 and 64-bit lanes and sets QC","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"48 new straight-line blocks with 33 live registers leave the state worked out apart","tier":"exact","result":"pass","detail":""}
+[game] {"type":"note","text":"cpu compile: 48 blocks of 160 operations, first calls 41 us, second calls 4 us, 764 ns a block to compile"}
+[game] {"type":"case","suite":"cpu","name":"sqrshl and uqrshl round, shift and saturate lanes of every width","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqdmlal, sqdmlsl and sqdmull double, accumulate and saturate","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqrshrn, uqrshrn and sqrshrun round and narrow scalars","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"fcvtzs and fcvtzu with 64 fraction bits scale by 2^64","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"mrs cntvct_el0 reads a virtual count that moves with the physical one","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"mrs daif reads nothing outside the four interrupt mask bits","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+
+*** The game ran instruction ce62c820 at 8048b48, which the recompiler cannot run ***
+  x0 = 0000000008130080  x1 = 0000000008130070  x2 = 0000000008130060  x3 = 00000013000fff70
+  x4 = 00000013000fffa0  x5 = 0000000000000005  x6 = 0000001380000030  x7 = 0000000000098011
+  x8 = 0000001100000b70  x9 = 7669672065346d73  x10= 747320344d532065  x11= 7327647261646e61
+  x12= 2064656b726f7720  x13= 09656c706d617865  x14= 4d53206568742065  x15= 61646e6174732034
+  x16= 726f772073276472  x17= 6d6178652064656b  x18= 00000013000ff5e8  x19= 0000000008102db8
+  x20= 0000000008102ad8  x21= 0000000008102000  x22= 0000000000000000  x23= 00000000081b5650
+  x24= 00000000081b5640  x25= 0000000008130170  x26= 0000000008113000  x27= 0000000008102ad8
+  x28= 0000000000000030
+  pc=8048b48 lr=8048b18 sp=13000ffe80 fp=13000ffed0 tls=1380000000
+  pc <main+48b48>  lr <main+48b18>
+   #0 8048b18 <main+48b18>
+   #1 8000a9c <main+a9c>
+   #2 8000140 <main+140>
+  code 8048b28: 910483e4  f0000d21  f9419c21  f0000d22  f9417442  4c407801  4c407822  4c407843 [ce62c820] cec08403  4c007860  4c007883  f0000d20  f9414800  4f00043d  3dc03ffe 
+  mem x0 8130080: a292ffa1 df01febf 99a12b0f c42410cc
+  mem x1 8130070: 00070e15 1c232a31 383f464d 545b6269
+  mem x2 8130060: 01234567 89abcdef fedcba98 76543210
+  mem x3 13000fff70: 00010101 00000013 000000ff 00000013
+  mem x4 13000fffa0: 00130f79 00000000 00130f7c 00000000
+  mem x6 1380000030: 49434653 00000000 00000001 00000000
+  mem x8 1100000b70: 00098011 00000000 00000004 00008000
+  mem x18 13000ff5e8: 000ff925 00000013 081021f8 000000ba
+  mem x19 8102db8: 65346d73 2079656b 20646e61 65346d73
+  mem x20 8102ad8: 00757063 00000000 00646170 00000000
+  mem x21 8102000: 6564756c 00000064 646e6966 2042534d
+  mem x23 81b5650: 00000000 00000001 00000002 00000003
+  mem x24 81b5640: 01010000 01010000 00000000 00000000
+  mem x25 8130170: 00000000 3fd00000 00000000 bfe00000
+  mem x26 8113000: 7466656c 77206120 676e6f72 61747320
+  mem x27 8102ad8: 00757063 00000000 00646170 00000000
+  mem x29 13000ffed0: 00100350 00000013 08000a9c 00000000
+  mem x30 8048b18: 360004e0 f0000d20 f941b400 9103c3e3
+  last SVCs:
+    svc 27 (13000ff660 92 8 ffffffffffffff) -> 0, 92  lr=8023bb8
+    svc 21 (98011 12ee1 10000005 5) -> 0, 12ee1  lr=80c3d14
+    svc 21 (98011 12f73 10000005 5) -> 0, 12f73  lr=80c3d14
+    svc 21 (98011 b49e 10000005 5) -> 0, b49e  lr=80c3d14
+    svc 21 (98011 b4ee 10000005 5) -> 0, b4ee  lr=80c3d14
+    svc 21 (98011 b4ef 10000005 5) -> 0, b4ef  lr=80c3d14
+    svc 21 (98011 b538 10000005 5) -> 0, b538  lr=80c3d14
+    svc 27 (13000ff660 8e 38 ff) -> 0, 8e  lr=8023bb8
+    svc 21 (98011 12f74 10000005 5) -> 0, 12f74  lr=80c3d14
+    svc 21 (98011 13002 10000005 5) -> 0, 13002  lr=80c3d14
+    svc 21 (98011 b539 10000005 5) -> 0, b539  lr=80c3d14
+    svc 21 (98011 b585 10000005 5) -> 0, b585  lr=80c3d14
+    svc 21 (98011 b586 10000005 5) -> 0, b586  lr=80c3d14
+    svc 21 (98011 b5c9 10000005 5) -> 0, b5c9  lr=80c3d14
+    svc 27 (13000ff660 88 20 ffffffff) -> 0, 88  lr=8023bb8
+    svc 21 (98011 13003 10000005 5) -> 0, 13003  lr=80c3d14
+    svc 21 (98011 1308b 10000005 5) -> 0, 1308b  lr=80c3d14
+    svc 21 (98011 b5ca 10000005 5) -> 0, b5ca  lr=80c3d14
+    svc 21 (98011 b610 10000005 5) -> 0, b610  lr=80c3d14
+    svc 21 (98011 b611 10000005 5) -> 0, b611  lr=80c3d14
+    svc 21 (98011 b653 10000005 5) -> 0, b653  lr=80c3d14
+    svc 27 (13000ff660 87 1c fffffffff) -> 0, 87  lr=8023bb8
+    svc 21 (98011 1308c 10000005 5) -> 0, 1308c  lr=80c3d14
+    svc 21 (98011 13113 10000005 5) -> 0, 13113  lr=80c3d14
+    svc 21 (98011 b654 10000005 5) -> 0, b654  lr=80c3d14
+    svc 21 (98011 b699 10000005 5) -> 0, b699  lr=80c3d14
+    svc 21 (98011 b69a 10000005 5) -> 0, b69a  lr=80c3d14
+    svc 21 (98011 b6ec 10000005 5) -> 0, b6ec  lr=80c3d14
+    svc 27 (13000ff660 97 1c fffffffff) -> 0, 97  lr=8023bb8
+    svc 21 (98011 13114 10000005 5) -> 0, 13114  lr=80c3d14
+    svc 21 (98011 131ab 10000005 5) -> 0, 131ab  lr=80c3d14
+    svc 21 (98011 b6ed 10000005 5) -> 0, b6ed  lr=80c3d14
+    svc 21 (98011 b742 10000005 5) -> 0, b742  lr=80c3d14
+    svc 27 (13000ff370 131 4 fff0fffffffffff) -> 0, 131  lr=8023bb8
+    svc 21 (98011 131ac 10000005 5) -> 0, 131ac  lr=80c3d14
+    svc 21 (98011 132dd 10000005 5) -> 0, 132dd  lr=80c3d14
+    svc 21 (98011 b743 10000005 5) -> 0, b743  lr=80c3d14
+    svc 21 (98011 b791 10000005 5) -> 0, b791  lr=80c3d14
+    svc 21 (98011 b792 10000005 5) -> 0, b792  lr=80c3d14
+    svc 21 (98011 b7d6 10000005 5) -> 0, b7d6  lr=80c3d14
+  last IPC requests:
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+    nn::fssrv::sf::IFile cmd 1 (in 0 0) -> 0
+FATAL: The game ran an instruction the recompiler cannot run (ce62c820 at 8048b48). See the .log for details.

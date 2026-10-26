@@ -1,0 +1,56 @@
+ScarletNX - edenprobe
+build: ScarletNX unknown unknown (clang 18.1.3, Linux x86_64)
+system: SteamOS (Linux 7.2.7-valve2-2-neptune-72-g31504582a073), AMD Custom APU 0405, 8 threads, 14 GB RAM
+fs: 1 RomFS/ExeFS files mapped for the whole run, 2.0 MB
+memory: 4 KiB host pages, views share their source's pages (alias pool)
+Loaded main at 0x8000000
+symbols: 0 functions named
+jit: the AOT module has no runtime code variants; the JIT handles the misses and writes a cache
+jit: 4 compile threads, 131 pcs of earlier runs queued
+acc: 1 user, playing as user 1
+time: the time zone is Etc/GMT-8 (UTC+08)
+game: 0100000000001000, version 0.5.0
+pl: the Japanese stand-in answers for the console font's private-use characters
+pl: the Chinese simplified stand-in answers for the console font's private-use characters
+pl: the Chinese traditional stand-in answers for the console font's private-use characters
+pl: the Korean stand-in answers for the console font's private-use characters
+pl: the extended stand-in answers for the console font's private-use characters
+RomFS: none in /home/deck/native-recomp/eden/run-cpu/work/games/edenprobe/edenprobe_data/
+vulkan: native ASTC textures were asked for, but the GPU can't sample ASTC: they are decoded to RGBA8
+vulkan: native ETC2 textures were asked for, but the GPU can't sample ETC2: they are decoded
+vulkan: allocations of at most 256 MiB, bigger images in pieces (sparse binding)
+vulkan: AMD Custom GPU 0405 (RADV VANGOGH), Vulkan 1.4.350, driver 06801063, graphics queue family 0, compute 1 (separate family)
+vulkan: draws sample the color targets they render to in place (attachment feedback loops, enabled by dynamic state, ordered by barriers within the pass)
+memory: GPU engines keep their results, guest memory is trapped until the CPU needs it
+renderer: Vulkan headless (no window, surface or swapchain)
+vulkan: 0 shaders and 0 pipelines of earlier runs loaded from /home/deck/native-recomp/eden/run-cpu/work/games/edenprobe/shader_cache/edenprobe.vkshaders in 0 ms, the pipelines to be made in the background; 0 shaders of the game's own programs in /home/deck/native-recomp/eden/run-cpu/work/games/edenprobe/shader_cache/edenprobe.vkshipped
+vulkan: The game's files were already checked by an earlier run
+vulkan: the game's own shaders: 0 translated new, 0 in /home/deck/native-recomp/eden/run-cpu/work/games/edenprobe/shader_cache/edenprobe.vkshipped, in 0 ms
+prepare: 16 ms before the game started (0 shaders translated from its files, 0 of 0 pipelines of earlier runs made), not shown, as nothing could be seen
+main thread: entry 8000000, stack 1300001000 (1024 KiB), priority 44, core 0
+kernel: core 0 runs on host CPUs 0 4
+heap: 3272 MB requested (result 0)
+[game] {"type":"note","text":"journal: launch 3 resumes the run; the program ended inside cpu case \"sm4ekey and sm4e give the SM4 standard's worked example\": that case is skipped as crashed and goes on the crash list, and step cpu runs again from its start"}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of sixteen 8-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of eight 16-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of four 32-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sdiv and udiv by zero give zero, 32 and 64 bits","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"frintx rounds to nearest even and raises inexact","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"frinta rounds halfway cases away from zero","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqshlu saturates 8, 16 and 64-bit lanes and sets QC","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"48 new straight-line blocks with 33 live registers leave the state worked out apart","tier":"exact","result":"pass","detail":""}
+[game] {"type":"note","text":"cpu compile: 48 blocks of 160 operations, first calls 19 us, second calls 4 us, 326 ns a block to compile"}
+[game] {"type":"case","suite":"cpu","name":"sqrshl and uqrshl round, shift and saturate lanes of every width","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqdmlal, sqdmlsl and sqdmull double, accumulate and saturate","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqrshrn, uqrshrn and sqrshrun round and narrow scalars","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"fcvtzs and fcvtzu with 64 fraction bits scale by 2^64","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"mrs cntvct_el0 reads a virtual count that moves with the physical one","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"mrs daif reads nothing outside the four interrupt mask bits","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+[game] {"type":"case","suite":"cpu","name":"sm4ekey and sm4e give the SM4 standard's worked example","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+[game] {"type":"note","text":"journal: this run took 3 launches; 2 cases skipped as crashed; the program ended inside cpu \"mrs daif reads nothing outside the four interrupt mask bits\", cpu \"sm4ekey and sm4e give the SM4 standard's worked example\""}
+[game] {"type":"summary","passed":530,"failed":0,"skipped":0,"crashed":2}
+[game] EDENPROBE DONE passed=530 failed=0 skipped=0 crashed=2
+am: the application exited
+jit: 0 AOT variants, 0 leaders, 0 hits, 0 misses, 1 images
+jit: 0 batches compiled 0 pcs (0 failed, 0 still queued, 0 batches dropped by memory changes), 0 functions, 0 instructions, 27 KiB of code, 0.00 s compiling, 131 units loaded from /home/deck/native-recomp/eden/run-cpu/work/games/edenprobe/edenprobe.jitcache
+Exit.

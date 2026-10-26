@@ -1,0 +1,982 @@
+ScarletNX - edenprobe
+build: ScarletNX unknown unknown (clang 18.1.3, Linux x86_64)
+system: SteamOS (Linux 7.2.7-valve2-2-neptune-72-g31504582a073), AMD Custom APU 0405, 8 threads, 14 GB RAM
+fs: 1 RomFS/ExeFS files mapped for the whole run, 2.0 MB
+memory: 4 KiB host pages, views share their source's pages (alias pool)
+Loaded main at 0x8000000
+symbols: 0 functions named
+jit: the AOT module has no runtime code variants; the JIT handles the misses and writes a cache
+jit: 4 compile threads, 131 pcs of earlier runs queued
+acc: 1 user, playing as user 1
+time: the time zone is Etc/GMT-8 (UTC+08)
+game: 0100000000001000, version 0.5.0
+pl: the Japanese stand-in answers for the console font's private-use characters
+pl: the Chinese simplified stand-in answers for the console font's private-use characters
+pl: the Chinese traditional stand-in answers for the console font's private-use characters
+pl: the Korean stand-in answers for the console font's private-use characters
+pl: the extended stand-in answers for the console font's private-use characters
+RomFS: none in /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/edenprobe_data/
+vulkan: native ASTC textures were asked for, but the GPU can't sample ASTC: they are decoded to RGBA8
+vulkan: native ETC2 textures were asked for, but the GPU can't sample ETC2: they are decoded
+vulkan: allocations of at most 256 MiB, bigger images in pieces (sparse binding)
+vulkan: AMD Custom GPU 0405 (RADV VANGOGH), Vulkan 1.4.350, driver 06801063, graphics queue family 0, compute 1 (separate family)
+vulkan: draws sample the color targets they render to in place (attachment feedback loops, enabled by dynamic state, ordered by barriers within the pass)
+memory: GPU engines keep their results, guest memory is trapped until the CPU needs it
+renderer: Vulkan headless (no window, surface or swapchain)
+vulkan: 0 shaders and 0 pipelines of earlier runs loaded from /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/shader_cache/edenprobe.vkshaders in 0 ms, the pipelines to be made in the background; 0 shaders of the game's own programs in /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/shader_cache/edenprobe.vkshipped
+vulkan: The game's files were already checked by an earlier run
+vulkan: the game's own shaders: 0 translated new, 0 in /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/shader_cache/edenprobe.vkshipped, in 0 ms
+prepare: 16 ms before the game started (0 shaders translated from its files, 0 of 0 pipelines of earlier runs made), not shown, as nothing could be seen
+main thread: entry 8000000, stack 1300001000 (1024 KiB), priority 44, core 0
+kernel: core 0 runs on host CPUs 0 4
+heap: 3272 MB requested (result 0)
+[game] {"type":"note","text":"journal: launch 3 resumes the run; the program ended inside cpu case \"sm4ekey and sm4e give the SM4 standard's worked example\": that case is skipped as crashed and goes on the crash list, and step cpu runs again from its start"}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of sixteen 8-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of eight 16-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"clz counts each of four 32-bit lanes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sdiv and udiv by zero give zero, 32 and 64 bits","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"frintx rounds to nearest even and raises inexact","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"frinta rounds halfway cases away from zero","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqshlu saturates 8, 16 and 64-bit lanes and sets QC","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"48 new straight-line blocks with 33 live registers leave the state worked out apart","tier":"exact","result":"pass","detail":""}
+[game] {"type":"note","text":"cpu compile: 48 blocks of 160 operations, first calls 19 us, second calls 12 us, 134 ns a block to compile"}
+[game] {"type":"case","suite":"cpu","name":"sqrshl and uqrshl round, shift and saturate lanes of every width","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqdmlal, sqdmlsl and sqdmull double, accumulate and saturate","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"sqrshrn, uqrshrn and sqrshrun round and narrow scalars","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"fcvtzs and fcvtzu with 64 fraction bits scale by 2^64","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"mrs cntvct_el0 reads a virtual count that moves with the physical one","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"cpu","name":"mrs daif reads nothing outside the four interrupt mask bits","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+[game] {"type":"case","suite":"cpu","name":"sm4ekey and sm4e give the SM4 standard's worked example","tier":"none","result":"skip","reason":"crashed","detail":"the program ended inside it earlier in this run; it is on the crash list (sdmc:/edenprobe/crashes), and the mode word retry runs it in a later run"}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: ioctl c0b04705 on device 4 (command 1), buffers b0/b0/0
+nvdrv: ioctl 80044701 on device 4 (command 1), buffers 0/4/0
+nvdrv: ioctl 80284702 on device 4 (command 1), buffers 0/28/0
+nvdrv: ioctl c0184706 on device 4 (command 1), buffers 18/18/0
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: ioctl 40284109 on device 2 (command 1), buffers 28/0/0
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: ioctl c0184102 on device 2 (command 1), buffers 18/18/0
+nvdrv: ioctl c0080101 on device 1 (command 1), buffers 8/8/0
+nvdrv: ioctl c0200104 on device 1 (command 1), buffers 20/20/0
+nvdrv: ioctl c008010e on device 1 (command 1), buffers 8/8/0
+nvdrv: ioctl c0284106 on device 2 (command 1), buffers 28/28/0
+nvdrv: open /dev/nvhost-gpu -> 5
+nvdrv: ioctl 40044801 on device 5 (command 1), buffers 4/0/0
+nvdrv: ioctl 40044101 on device 2 (command 1), buffers 4/0/0
+nvdrv: ioctl c020481a on device 5 (command 1), buffers 20/20/0
+nvdrv: ioctl c0104809 on device 5 (command 1), buffers 10/10/0
+nvdrv: QueryEvent fd 5 (device 5) id 3
+nvdrv: ioctl c018480c on device 5 (command 1), buffers 18/18/0
+nvdrv: ioctl 4004480d on device 5 (command 1), buffers 4/0/0
+nvdrv: ioctl c010480b on device 5 (command 1), buffers 10/10/0
+nvdrv: ioctl c018481b on device 5 (command 11), buffers 18/18/10
+[game] {"type":"case","suite":"clear","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"clear target 64x64 RGBA8_Unorm, 4096 pixels checked per case"}
+nvdrv: ioctl c004001f on device 3 (command 1), buffers 4/4/0
+nvdrv: QueryEvent fd 2 (device 3) id 10000000
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+nvdrv: ioctl c010001e on device 3 (command 1), buffers 10/10/0
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+nvdrv: ioctl c004001c on device 3 (command 1), buffers 4/4/0
+nvdrv: event slot 0 wait canceled
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+vulkan: write tracking on (caches skip unchanged memory)
+[game] {"type":"case","suite":"clear","name":"clear to opaque red","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"clear","name":"clear to transparent cyan","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"clear","name":"clear to a mid channel value","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"clear","name":"clear bounded by a rectangle","tier":"exact","result":"pass","detail":""}
+nvdrv: ioctl c0084105 on device 2 (command 1), buffers 8/8/0
+nvdrv: ioctl c0180105 on device 1 (command 1), buffers 18/18/0
+nvdrv: ioctl c0104103 on device 2 (command 1), buffers 10/10/0
+nvdrv: ioctl c0040020 on device 3 (command 1), buffers 4/4/0
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+nvdrv: QueryEvent fd 5 (device 5) id 3
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"format","name":"graphics device opens with room for every format","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"every reference format is paired with the library's own","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"the three output shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"the uniform buffer has somewhere to live","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"format target 32x32 per format, quad over x 4 to 20 and y 12 to 28, 60 formats"}
+[game] {"type":"note","text":"format not drawn: RGB32_Float, RGB32_Uint, RGB32_Sint; twelve byte pixels, which the render target unit has no surface format for"}
+[game] {"type":"note","text":"format not drawn: RGBA4_Unorm, RGB5_Unorm, RGB5A1_Unorm, RGB565_Unorm, A5BGR5_Unorm; sampling only: the library gives them no colour surface format; the blue first BGR565, BGR5 and BGR5A1 are the sixteen bit formats a target can have"}
+[game] {"type":"note","text":"format not drawn: E5BGR9_Float; sampling only: a shared exponent has no colour surface format"}
+[game] {"type":"note","text":"format not drawn: the BC, ETC2 and ASTC formats; compressed, sampling only"}
+[game] {"type":"note","text":"format not drawn: S8, Z16, Z24X8, ZF32, Z24S8, ZF32_X24S8; depth and stencil, the depth suite's"}
+nvdrv: QueryEvent fd 2 (device 3) id 10000000
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"format","name":"R8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"R32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBA8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGB10A2_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGB10A2_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RG11B10_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX8_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX8_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX8_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX16_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX16_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX16_Snorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX16_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX16_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX32_Float keeps a clear and a quad drawn over it","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX32_Uint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"RGBX32_Sint keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGR565_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGR5_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGR5A1_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGRX8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGRA8_Unorm keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGRX8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"format","name":"BGRA8_Unorm_sRGB keeps a clear and a quad drawn over it","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+nvdrv: QueryEvent fd 5 (device 5) id 3
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"raster","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"the shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"raster target 64x64 RGBA8_Unorm, clear 0000ff00, drawn ffff00ff"}
+nvdrv: QueryEvent fd 2 (device 3) id 10000000
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"raster","name":"a full screen quad covers every pixel","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"clip space plus y is the top half","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"clip space minus x is the left half","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"a triangle's interior is exact and its edges land within a pixel","tier":"position","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"a shared edge belongs to the triangle it is the left edge of","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"the same edge does not also belong to the other triangle","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"a viewport offset moves the triangle","tier":"position","result":"pass","detail":""}
+[game] {"type":"case","suite":"raster","name":"a scissor leaves everything outside it untouched","tier":"position","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+nvdrv: QueryEvent fd 5 (device 5) id 3
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"intmath","name":"graphics device opens with an integer target","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"the integer shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"the uniform buffer has somewhere to live","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"intmath target 64x64 R32_Uint, 4096 pixels per case, sentinel 0xdeadbeef"}
+nvdrv: QueryEvent fd 2 (device 3) id 10000000
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"intmath","name":"the fragment coordinate's x is the pixel centre, bit for bit","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"the fragment coordinate's y is the pixel centre, bit for bit","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"the uniform buffer delivers its value unaltered","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a multiply and an add that both overflow 32 bits","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a left shift discards the bits it pushes out","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"an unsigned right shift brings in noughts","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a signed right shift extends the sign bit","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitwise and","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitwise or","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitwise exclusive or","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"counting the set bits","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"finding the lowest and the highest set bit","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"unsigned division by a prime","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"unsigned remainder by a prime","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a signed integer converts to the nearest float, ties to even","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"an unsigned integer converts to the nearest float, ties to even","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a float converts to a signed integer towards nought","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a float above two to the 31 converts to an unsigned integer","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"packUnorm4x8 clamps and rounds each component","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"unpackUnorm4x8 then packUnorm4x8 gives the word back","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"packSnorm2x16 clamps and rounds each component","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"unpackSnorm2x16 then packSnorm2x16 gives the word back, 0x8000 as 0x8001","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"packHalf2x16 of floats that are exactly half precision","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"unpackHalf2x16 of normal halves and infinities","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a left shift by 31, 32 and 33 in a register clamps the count to 32","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"an unsigned right shift by 31, 32 and 33 clamps the count to 32","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a signed right shift by 31, 32 and 33 clamps the count to 32","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a left shift by every count from nought to 63","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"an unsigned right shift by every count from nought to 63","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a signed right shift by every count from nought to 63","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"signed division with negative operands truncates towards nought","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"signed remainder with negative operands takes the dividend's sign","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"findMSB of an unsigned value, nought included","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"findMSB of a signed value, minus one and nought included","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"findLSB, nought included","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitfieldExtract of an unsigned value at every offset and width","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitfieldExtract of a signed value extends the field's sign","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitfieldInsert at every offset and width","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"bitfieldReverse","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"the signed minimum","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"the unsigned maximum","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"a signed clamp","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"intmath","name":"an unsigned clamp","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"blend","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"the shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"blend target 64x64 RGBA8_Unorm, 4096 pixels per case, 11 cases"}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"note","text":"blend: the alpha channel has an equation of its own, adding leaving 96 and the maximum 64, so the cases that tell the alpha state apart from the colour state mean what they say"}
+[game] {"type":"note","text":"blend: the alpha destination factor does not reach the blend unit, so no case gives it one of its own. Nought and one both left 64, and with the colour destination factor at nought in both draws, one that arrived would have added the destination alpha 32"}
+[game] {"type":"case","suite":"blend","name":"blending off replaces the destination","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"adding with both factors one","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"adding clamps at the top of the range","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"subtracting the destination from the source","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"subtracting clamps at the bottom of the range","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"subtracting the source from the destination","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"the minimum ignores the factors","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"the maximum ignores the factors","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"the source alpha weights both sides","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"the blend constant is a factor of its own","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"blend","name":"a source factor of zero leaves the destination","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"depth","name":"graphics device opens with a depth target","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"the shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"depth target 64x64 ZF32, first quad at 0.500, near 0.250, far 0.750"}
+[game] {"type":"case","suite":"depth","name":"these three depths tell all eight comparisons apart","tier":"none","result":"pass","detail":""}
+mme: macro 8 at word 7b, 58 words uploaded together, hash 6b69938898a770b5: interpreted
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 7 at word 74, 65 words uploaded together, hash 92e843324393eafb: interpreted
+[game] {"type":"case","suite":"depth","name":"a depth clear writes the value it was given","tier":"exact","result":"pass","detail":""}
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails a never test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a never test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer fails a never test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes a less than test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a less than test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer fails a less than test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails an equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes an equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer fails an equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes a less than or equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes a less than or equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer fails a less than or equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails a greater than test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a greater than test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer passes a greater than test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes a not equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth fails a not equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer passes a not equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer fails a greater than or equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes a greater than or equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer passes a greater than or equal test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment nearer than the buffer passes an always test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment at the buffer's own depth passes an always test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment farther than the buffer passes an always test","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment that passes with the write open replaces the depth","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"a fragment that passes with the write closed leaves the depth","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"depth","name":"closing the depth write does not stop the colour","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"texture","name":"graphics device opens with room for textures","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"the sampling shader loads","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"every neighbouring pair of texels averages to a whole byte","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"no pair of texels is far enough apart for a filter weight to matter","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"the textures have somewhere to live","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"the texels reach the textures","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"the descriptor sets have somewhere to live","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"texture 4x4 RGBA8_Unorm onto 64x64, 256 pixels per texel"}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"texture","name":"nearest sampling inside the texture picks the texel under the pixel","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"repeating tiles the texture","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"clamping to the edge stretches the border texels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"mirroring tiles the texture with no seam","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texture","name":"linear sampling halfway between two texels is their average","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"coherence","name":"graphics device opens with room for the images","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"the shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"the images have somewhere to live","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"the block linear texture is eight gobs of one gob blocks","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"the starting texels reach the textures","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"the processor finds the copy engine's texels where the block linear rule puts them","tier":"exact","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"coherence","name":"a texture rendered in the same list is sampled as drawn","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"a partial redraw reaches the sampler and the rest keeps its texels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"texels the processor rewrites in a pitch linear texture reach the next sample","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"texels the processor rewrites in part of a block linear texture reach the next sample","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"one row the processor rewrites through a cached mapping reaches the next sample once flushed","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"a uniform buffer the processor rewrites between submits reaches the next draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"four submits each see the one word of a uniform buffer rewritten before them","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"a uniform buffer pushed between two draws of one list reaches the second only","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"a render target sampled as R32_Uint gives the little endian word of its bytes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"redrawing a render target reaches its R32_Uint alias in one list","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"a buffer the copy engine writes into a texture reaches the next sample in one list","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"part of an image the copy engine copies into a texture reaches the next sample","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"an image read back before the copies holds what was uploaded","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"a render target copied to an image reads back as drawn","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"coherence","name":"part of a render target copied to an image reads back as drawn","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"fmath","name":"graphics device opens with a float target","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the float shader loads","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the uniform buffer has somewhere to live","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"fmath target 64x64 R32_Float, operands 0.015625 to 1"}
+[game] {"type":"note","text":"fmath budget for \"a float travels through the uniform buffer unaltered\": 0 units in the last place: nothing is computed, the value is copied through a uniform buffer and written out again"}
+[game] {"type":"note","text":"fmath budget for \"addition is correctly rounded\": 0 units in the last place: the core table requires addition and multiplication to be correctly rounded, so there is one right answer, and the reference reaches it exactly because the sum and the product of two single precision numbers are exact in double precision"}
+[game] {"type":"note","text":"fmath budget for \"multiplication is correctly rounded\": 0 units in the last place: the core table requires addition and multiplication to be correctly rounded, so there is one right answer, and the reference reaches it exactly because the sum and the product of two single precision numbers are exact in double precision"}
+[game] {"type":"note","text":"fmath budget for \"a multiply and an add in one call\": 0 units in the last place: the console's binary is one fused FFMA, which rounds once, and the reference is the processor's fused multiply and add, the same single rounding. The table would let an unfused pair round twice, up to 1.5 units off; a machine that splits it differs from the console, and the case says so"}
+[game] {"type":"note","text":"fmath budget for \"division within two and a half units in the last place\": 3 units in the last place: 2.5 for division in the core table, plus the half the reference carries for being a double precision answer rounded to single"}
+[game] {"type":"note","text":"fmath budget for \"the square root\": 5 units in the last place: the table gives the square root no figure of its own and inherits it from one over the inverse square root, which is 2 for the inverse square root and 2.5 for the division, plus the half the reference carries. Three would be a number from somewhere else"}
+[game] {"type":"note","text":"fmath budget for \"two to the power of\": 3.5 plus 2 per unit of the argument: the table allows three plus twice the magnitude of the argument, and the half the reference carries goes on the constant. Over the range this case sweeps that is three and a half at the smallest argument and eleven and a half at the largest, and a flat three would fail a machine that was inside its allowance everywhere but the middle"}
+[game] {"type":"note","text":"fmath budget for \"the logarithm to base two\": 3.5 units in the last place: 3 from the table, which is the figure that applies outside the range from a half to two, where this operand is kept, plus the half the reference carries"}
+[game] {"type":"note","text":"fmath budget for \"the sine, within two to the minus eleven\": 0.000488281 absolute, which is two to the minus eleven: the table bounds these two by an absolute error inside minus pi to pi and not by units in the last place at all. The shading language's own specification leaves them undefined, which is the clearest reason this suite holds itself to the other one"}
+[game] {"type":"note","text":"fmath budget for \"the cosine, within two to the minus eleven\": 0.000488281 absolute, which is two to the minus eleven: the table bounds these two by an absolute error inside minus pi to pi and not by units in the last place at all. The shading language's own specification leaves them undefined, which is the clearest reason this suite holds itself to the other one"}
+[game] {"type":"note","text":"fmath budget for \"fma keeps the product's rounding error, as the console's FFMA does\": 0 units in the last place: the console's FFMA is fused, and the exact product less a nearby float is exact itself, so there is one answer. Done apart the product rounds first and the answer loses its low bits, which is a difference from the console"}
+[game] {"type":"note","text":"fmath budget for \"min and max against infinities\": 0 units in the last place: a minimum or a maximum only picks one of its operands, and against an infinity which one is defined"}
+[game] {"type":"note","text":"fmath budget for \"min and max hand back the operand that is not a NaN\": 0 units in the last place: the console's minimum and maximum hand back the operand that is not a NaN, as GLSL.std.450's NMin and NMax define it. The plain FMin a translator may reach for leaves this undefined, so a NaN here is a difference from the console, which is the machine an emulator answers to"}
+[game] {"type":"note","text":"fmath budget for \"mix carries infinities and NaNs through\": 0 units in the last place: each answer is the infinity or the NaN that x times one less a plus y times a gives in IEEE arithmetic, and x plus a times y less x gives the same one. Vulkan lets a machine assume no infinity or NaN arrives, so a failure is a difference from the console rather than from the table"}
+[game] {"type":"note","text":"fmath budget for \"denormal products, sums and operands flush, as the console's do\": 0 units in the last place: every instruction in the console's binary flushes denormals, operands and results, so each answer is exact and one. The table allows keeping them; a machine that does differs from the console, and the case says so"}
+[game] {"type":"note","text":"fmath budget for \"two to the power of -128 to nearly 128\": 3.5 plus 2 per unit of the argument: the power of two's own figure, over -128 to nearly 128, which reaches 259.5 at the top. Below two to the -126 the console's MUFU flushes the answer, so nought is the answer there"}
+[game] {"type":"note","text":"fmath budget for \"the logarithm from the smallest normal to nearly the largest float\": 3.5 units in the last place: the logarithm's 3 and the half the reference carries, on operands from the smallest normal to nearly the largest float with a full mantissa, none inside a half to two where the table switches to an absolute figure"}
+[game] {"type":"note","text":"fmath budget for \"the square root of denormals and tiny normals\": 5 units in the last place: the square root's figure, on operands from the denormals to two to the -96. The console's MUFU flushes a denormal operand, so nought is the answer for those"}
+[game] {"type":"note","text":"fmath budget for \"the inverse square root of denormals and tiny normals\": 2.5 units in the last place: 2 from the table and the half the reference carries. The console's MUFU flushes a denormal operand, so infinity is the answer for those"}
+[game] {"type":"note","text":"fmath budget for \"floor of negatives and fractions\": 0 units in the last place: the answer is a whole number or the exact difference between the operand and one, so there is one right answer and the table's are exact"}
+[game] {"type":"note","text":"fmath budget for \"fract of negatives\": 0 units in the last place: the answer is a whole number or the exact difference between the operand and one, so there is one right answer and the table's are exact"}
+[game] {"type":"note","text":"fmath budget for \"round of negatives and halves, halves to even as the console's\": 0 units in the last place, and a half to even: the language lets round go either way there, and the console's binary compiles it to the same rounding as roundEven, so a machine that rounds a half away from nought differs from the console. So does one that rounds -0.25 to plus nought, where the console's F2F keeps the sign"}
+[game] {"type":"note","text":"fmath budget for \"roundEven of halves goes to the even neighbour\": 0 units in the last place: the answer is a whole number, so the table's is exact. The sign of a nought is the console's rule: its F2F rounds -0.25 and -0.5 to minus nought, and a machine that gives plus nought differs from the console"}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"fmath","name":"a float travels through the uniform buffer unaltered","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"addition is correctly rounded","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"multiplication is correctly rounded","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"a multiply and an add in one call","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"division within two and a half units in the last place","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the square root","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"two to the power of","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the logarithm to base two","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the sine, within two to the minus eleven","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the cosine, within two to the minus eleven","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"fma keeps the product's rounding error, as the console's FFMA does","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"min and max against infinities","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"min and max hand back the operand that is not a NaN","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"mix carries infinities and NaNs through","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"denormal products, sums and operands flush, as the console's do","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"two to the power of -128 to nearly 128","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the logarithm from the smallest normal to nearly the largest float","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the square root of denormals and tiny normals","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"the inverse square root of denormals and tiny normals","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"floor of negatives and fractions","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"fract of negatives","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"round of negatives and halves, halves to even as the console's","tier":"ulp","result":"pass","detail":""}
+[game] {"type":"case","suite":"fmath","name":"roundEven of halves goes to the even neighbour","tier":"ulp","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"order","name":"graphics device opens with a compute queue","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"the compute and drawing shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"note","text":"order: 256 groups of 64 spin 20000 times before the last invocations copy, each storing fragment 2000 times; marker 0x7f3c19e5"}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+vulkan: compute c5a1d99ed20243de ready: block 64x1x1, 2 global buffers, 0 textures, 0 images
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"order","name":"vertices a dispatch wrote before a wait for idle reach the draw","tier":"exact","result":"pass","detail":""}
+mme: macro 1 at word 17, 158 words uploaded together, hash d6cbb9341839a899: interpreted
+[game] {"type":"case","suite":"order","name":"indices a dispatch wrote before a wait for idle reach the draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"draw arguments a dispatch wrote before a wait for idle reach the indirect draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"a uniform buffer a dispatch wrote before a wait for idle reaches the fragments","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"a storage buffer a dispatch wrote before a wait for idle reaches the fragments","tier":"exact","result":"pass","detail":""}
+vulkan: compute d26766e01dfdaa7d ready: block 1x1x1, 1 global buffers, 0 textures, 0 images
+[game] {"type":"case","suite":"order","name":"a grid a dispatch wrote before a wait for idle sizes the indirect dispatch","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"words a dispatch wrote before a wait for idle reach the next dispatch","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"words the fragments stored before a wait for idle reach the next dispatch","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"vertices a dispatch wrote before a full barrier reach the draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"draw arguments a dispatch wrote before a full barrier reach the indirect draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"a storage buffer a dispatch wrote before a full barrier reaches the fragments","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"words the fragments stored before a fragments barrier reach the next draw's fragments","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"words the fragments stored before a tiles barrier reach the next draw's fragments at the same pixel","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"128 dispatch and draw pairs, each ordered by a wait for idle, all draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"128 dispatch and draw pairs with no wait for idle between them are recorded","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"256 draws into one target, each followed by a wait for idle, all land","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"order","name":"256 draws into one target with no wait for idle between them are recorded","tier":"none","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+[game] {"type":"case","suite":"index","name":"graphics device opens with room for index buffers","tier":"none","result":"pass","detail":""}
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"index","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 1 at word 17, 158 words uploaded together, hash d6cbb9341839a899: interpreted
+[game] {"type":"case","suite":"index","name":"an indexed draw with the library's open limit uses every index","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"index","name":"a limit on the last byte of 16-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"index","name":"a limit on the last byte of 8-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"index","name":"a limit on the last byte of 32-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"index","name":"a limit on the last byte of 3006 16-bit indices keeps the last index","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"index","name":"a limit on the last byte keeps the last index when the draw starts at 4","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"instance","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"instance","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"instance","name":"an instanced array draw uses the uniform value set before it","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"instance","name":"a draw after an instanced array draw adds no instances of its own","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"instance","name":"each subsequent instanced array draw lands as the next instance","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"geometry","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"geometry","name":"the geometry and tessellation shaders load","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"geometry","name":"a geometry shader turns each of four points into its 8 by 8 square","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"geometry","name":"a point the geometry shader emits nothing for draws nothing","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"geometry","name":"a patch tessellated at level 4 covers its rectangle, and says 4","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"geometry","name":"the same patch at level 7 covers the same rectangle, and says 7","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"geometry","name":"a geometry shader with no early return squares the shown points only","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"geometry","name":"a patch whose evaluation stage reads no level covers its rectangle at 4","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"bindless","name":"graphics device opens with room for 256 textures","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"bindless","name":"the bindless sampling shader loads","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"bindless","name":"256 one-texel textures, their descriptors and handles are in place","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"bindless","name":"a handle index below 128 samples its own texture","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"bindless","name":"a handle index from 128 to 255 samples its own texture","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"astc","name":"graphics device opens with room for the blocks","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+nvdrv: event slot 0 wait canceled
+[game] {"type":"case","suite":"astc","name":"a void extent block is its constant colour on every texel","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"4-bit weights 0 to 15 unquantize by bit replication","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"even 5-bit weights unquantize by bit replication","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"odd 5-bit weights unquantize by bit replication","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"weights coded with trits decode and unquantize","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"weights coded with quints decode and unquantize","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"endpoints coded with trits decode and unquantize","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"endpoints coded with quints decode and unquantize","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"a two partition block puts each texel in its partition","tier":"exact","result":"pass","detail":""}
+nvdrv: event slot 0 wait canceled
+[game] {"type":"case","suite":"astc","name":"a three partition 6x6 block puts each texel in its partition","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"a four partition block puts each texel in its partition","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"a dual plane block weights one channel with the second plane","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"an HDR partition is the error colour and the LDR one after it decodes","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"astc","name":"an illegal block is the error colour","tier":"exact","result":"pass","detail":""}
+nvdrv: event slot 0 wait canceled
+[game] {"type":"case","suite":"astc","name":"an 8x8 block infills a 2x4 weight grid","tier":"exact","result":"pass","detail":""}
+nvdrv: event slot 0 wait canceled
+[game] {"type":"case","suite":"astc","name":"a 12x12 block infills a 6x6 weight grid","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"eac","name":"graphics device opens with room for the blocks","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"eac","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+nvdrv: event slot 0 wait canceled
+nvdrv: event slot 0 wait canceled
+[game] {"type":"case","suite":"eac","name":"a one-channel EAC block decodes every index and both clamps","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"eac","name":"a two-channel EAC texture decodes each channel from its own block","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"etc2","name":"graphics device opens with room for the blocks","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"etc2","name":"an individual mode block reaches both clamps in its left subblock","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"a flipped differential block takes its second base from the delta","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"a T mode block paints its four colours, the distance clamped at both ends","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"an H mode block whose first base is the larger adds 1 to the distance index","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"an H mode block whose first base is the smaller keeps the distance index even","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"a planar block interpolates three colours and clamps them","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"a see-through punch-through block is transparent at index 2 and unmodified at index 0","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"a see-through punch-through T block is transparent at index 2","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"a punch-through planar block is opaque whatever its opaque bit says","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"etc2","name":"an RGBA block takes its alpha from an 8-bit EAC block, clamped at both ends","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"bcn","name":"graphics device opens with room for the arrays","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"bcn","name":"the array fetching shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"bcn","name":"every layer of a six-layer BC4 array keeps its own 2x2 and 1x1 levels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"bcn","name":"both layers of a BC4 array six texels tall keep their own blocks","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"bcn","name":"the 2x8 second level of a 4x16 BC4 texture reads both of its blocks","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"zeta","name":"graphics device opens with room for the depth textures","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"zeta","name":"the fetching shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"zeta","name":"a Z16 texture the processor wrote samples to its depth","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"zeta","name":"a ZF32 texture the processor wrote samples to its depth","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"zeta","name":"a Z24S8 texture the processor wrote samples to its depth","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"zeta","name":"a Z24S8 texture the processor wrote takes its depth from the top 24 bits","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"swizzle","name":"graphics device opens with room for the textures","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"the folding shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"swizzle","name":"a block linear R8 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"a block linear RG8 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"a block linear RGBA8 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"a block linear RGBA16 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"a block linear RGBA32 texture the processor wrote samples as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"one gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"two gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"four gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"eight gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"thirty two gob tall blocks sample as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"a 37 by 23 texture that ends inside a gob samples as written","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"swizzle","name":"a 4 MiB texture the processor wrote uploads and samples as written","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"texel","name":"graphics device opens","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"texel","name":"the buffer texture shader loads","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"texel","name":"a buffer texture 0 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texel","name":"a buffer texture 4 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texel","name":"a buffer texture 20 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texel","name":"a buffer texture 36 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"texel","name":"a buffer texture 68 bytes into an aligned region fetches its own texels","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"stream","name":"graphics device opens with room for the uniform buffers","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"stream","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"stream","name":"4096 draws each see their own 4 KiB uniform buffer","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"stream","name":"1024 draws each see their own 64 KiB uniform buffer","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+mme: macro 5 at word 6a, 75 words uploaded together, hash 06203c6b298f5615: interpreted
+mme: macro 2 at word 37, 126 words uploaded together, hash 8ffcb6ba925e3942: interpreted
+mme: macro 12 at word a9, 12 words uploaded together, hash 50978e190440c4f7: interpreted
+mme: macro 3 at word 43, 114 words uploaded together, hash 146376c471401166: interpreted
+[game] {"type":"case","suite":"fill","name":"graphics device opens with a 512 by 512 depth target","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"fill","name":"the flat shaders load","tier":"none","result":"pass","detail":""}
+mme: macro 8 at word 7b, 58 words uploaded together, hash 6b69938898a770b5: interpreted
+mme: macro 13 at word b0, 5 words uploaded together, hash 1b427b3f61438f78: interpreted
+mme: macro 9 at word 81, 52 words uploaded together, hash 957c911ea3eb0981: interpreted
+mme: macro 10 at word 8b, 42 words uploaded together, hash 0371eeb53677a8e0: interpreted
+mme: macro 11 at word 95, 32 words uploaded together, hash 4a14e27ce32a568c: interpreted
+mme: macro 6 at word 70, 69 words uploaded together, hash b43db5afed6176d5: interpreted
+mme: macro 7 at word 74, 65 words uploaded together, hash 92e843324393eafb: interpreted
+mme: macro 4 at word 4a, 107 words uploaded together, hash 38af48b669669c54: interpreted
+mme: macro 0 at word 0, 181 words uploaded together, hash 969e678cf90bde5b: interpreted
+[game] {"type":"case","suite":"fill","name":"one depth tested quad lands first, paying for the first use","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"fill","name":"128 full target quads with colour alone land in order","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"fill","name":"128 full target quads, each depth tested and written, land in order","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+[game] {"type":"case","suite":"ring","name":"graphics device opens with room for 4096 uniform buffers","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"ring","name":"the shaders that read 32 textures each load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"ring","name":"the texture, the vertices, the indices and the buffers are in place","tier":"none","result":"pass","detail":""}
+nvdrv: event slot 0 wait canceled
+[game] {"type":"case","suite":"ring","name":"4096 indexed draws that each take new descriptors all land","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+[game] {"type":"case","suite":"occlusion","name":"graphics device opens with room for 320 reports","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"occlusion","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"occlusion","name":"the reports have somewhere to live","tier":"none","result":"pass","detail":""}
+vulkan: channel 20 counts samples passed, with occlusion queries
+[game] {"type":"case","suite":"occlusion","name":"320 quads counted one by one are all drawn","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"occlusion","name":"320 quads counted one by one pass 64 samples each","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"occlusion","name":"320 cells cleared one by one between reports are cleared","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+[game] {"type":"case","suite":"drawtex","name":"graphics device opens with room for a texture","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"drawtex","name":"the drawing shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"drawtex","name":"the texture, its descriptors and the uniform colour are in place","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"drawtex","name":"a draw texture copies its texture onto its rectangle","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"drawtex","name":"a draw after a draw texture binds the pipeline the draw before it bound","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"drawtex","name":"a draw with another pipeline after a draw texture sets its own viewport","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+[game] {"type":"case","suite":"query","name":"graphics device opens with a 64 by 320 target","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"the flat shaders load","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a 32 by 300 pixel quad passes 9600 samples","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a second quad of 1600 pixels adds to the count, 11200","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a reset after a draw leaves a count of nought","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"render enable FALSE skips the draw","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"render enable TRUE draws","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL draws over two equal values whose timestamps differ","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL skips the same two values","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL skips values that differ in the low word","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws over values that differ in the low word","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL skips values that differ only in the high word","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws over values that differ only in the high word","tier":"exact","result":"pass","detail":""}
+vulkan: occlusion-tested draws are predicated on the GPU (conditional rendering)
+[game] {"type":"case","suite":"query","name":"IF_EQUAL draws after two reports of the same count in the same list","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL skips after two reports of the same count","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL skips after a report of 9600 and one of nought","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws after a report of 9600 and one of nought","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL draws after two equal reports from a list that finished before","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL skips after two equal reports from a list before","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_EQUAL skips after 9600 and nought reported in a list before","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"IF_NOT_EQUAL draws after 9600 and nought reported in a list before","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a full target clear under IF_EQUAL after 9600 and nought is skipped too","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a full target clear under IF_NOT_EQUAL after 9600 and nought happens","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a full target clear under IF_EQUAL over two values that differ is skipped","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"query","name":"a full target clear under IF_EQUAL over two equal values happens","tier":"exact","result":"pass","detail":""}
+[game] {"type":"note","text":"query: render enable CONDITIONAL over the value one, high word nought: not drawn"}
+[game] {"type":"note","text":"query: render enable CONDITIONAL over the value 2^32, low word nought: not drawn"}
+[game] {"type":"note","text":"query: render enable CONDITIONAL over a report of 9600 in the same list: not drawn"}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+[game] {"type":"case","suite":"dma","name":"graphics device opens with a compute queue and room for 32 copies","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"dma","name":"the copy shader loads","tier":"none","result":"pass","detail":""}
+[game] {"type":"case","suite":"dma","name":"one copy lands first, paying for the first use","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"dma","name":"32 copies of words the processor wrote land whole","tier":"exact","result":"pass","detail":""}
+[game] {"type":"case","suite":"dma","name":"32 copies of words a dispatch wrote just before land whole","tier":"exact","result":"pass","detail":""}
+nvdrv: open /dev/nvhost-ctrl-gpu -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: open /dev/nvmap -> 3
+nvdrv: open /dev/nvhost-as-gpu -> 4
+nvdrv: GPU address space with 64 KB big pages
+nvdrv: open /dev/nvhost-gpu -> 5
+[game] {"type":"case","suite":"blit2d","name":"graphics device opens with both surfaces laid out block linear","tier":"none","result":"pass","detail":"a 128x32 source and 4 destinations of 64x16, blocks two gobs tall"}
+[game] {"type":"case","suite":"blit2d","name":"blit2d_corner_half: half size from the corner origin, into a window cut mid-run","tier":"exact","result":"pass","detail":"fits Q1 A: raw MD5 84fd46bdbeba5e70f758996dd896cf84, all 189 right and nothing outside the window changed in both reads"}
+[game] {"type":"case","suite":"blit2d","name":"blit2d_center_half: half size from the centre origin, into the same window","tier":"exact","result":"pass","detail":"fits Q1 A: raw MD5 1654028909d43464ff4556fbf1802371, all 189 right and nothing outside the window changed in both reads"}
+[game] {"type":"case","suite":"blit2d","name":"blit2d_corner_2_3: two thirds size from the corner origin, 1.5 texels a pixel","tier":"exact","result":"pass","detail":"fits Q1 A, Q2 A: raw MD5 3ee33409edbf6bf600caa6435dccd6ea, all 189 right and nothing outside the window changed in both reads"}
+[game] {"type":"case","suite":"blit2d","name":"blit2d_center_2_3: two thirds size from the centre origin, 1.5 texels a pixel","tier":"exact","result":"pass","detail":"fits Q1 A, Q2 A: raw MD5 6560d24df99ce3fb20477313332d5d18, all 189 right and nothing outside the window changed in both reads"}
+[game] {"type":"note","text":"blit2d: the passing cases answer Q1 A, Q2 A"}
+nvdrv: open /dev/nvmap -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+[game] {"type":"case","suite":"binder","name":"a layer of its own opens and takes a window","tier":"none","result":"pass","detail":"layer 2, binder 2 (the program's window is binder 1)"}
+[game] {"type":"case","suite":"binder","name":"a request for nought, before any frame","tier":"exact","result":"pass","detail":"the status alone (Q1 A); reply: payload 4 bytes at 16, objects 0 at 20: 00000000"}
+vi: swap interval 1
+[game] {"type":"case","suite":"binder","name":"the history after three frames, eight asked for","tier":"exact","result":"pass","detail":"the status alone (Q1 A), no frames to count or order; reply: payload 4 bytes at 16, objects 0 at 20: 00000000"}
+[game] {"type":"case","suite":"binder","name":"the history after ten frames comes newest first, eight at most","tier":"position","result":"pass","detail":"the status alone (Q1 A), no frames to count or order; reply: payload 4 bytes at 16, objects 0 at 20: 00000000"}
+[game] {"type":"note","text":"binder: the passing cases answer Q1 A"}
+[game] {"type":"note","text":"journal: this run took 3 launches; 2 cases skipped as crashed; the program ended inside cpu \"mrs daif reads nothing outside the four interrupt mask bits\", cpu \"sm4ekey and sm4e give the SM4 standard's worked example\""}
+[game] {"type":"summary","passed":933,"failed":0,"skipped":0,"crashed":2}
+[game] EDENPROBE DONE passed=933 failed=0 skipped=0 crashed=2
+am: the application exited
+jit: 0 AOT variants, 0 leaders, 0 hits, 129 misses, 1 images
+jit: 43 batches compiled 43 pcs (0 failed, 0 still queued, 0 batches dropped by memory changes), 43 functions, 128 instructions, 40 KiB of code, 0.12 s compiling, 131 units loaded from /home/deck/native-recomp/eden/run-gfx2/work/games/edenprobe/edenprobe.jitcache
+Exit.

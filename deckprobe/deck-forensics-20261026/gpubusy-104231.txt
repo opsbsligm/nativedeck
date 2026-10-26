@@ -1,0 +1,4 @@
+samples=127 peak_gpu_busy=100% avg_gpu_busy=23%
+--- 运行期显存/管线证据 ---
+--- 该进程的 DRM 客户端（amdgpu 每个打开 renderD128 的进程都有 fdinfo）---
+--- amdgpu 进程显存记账（drm fdinfo）---
