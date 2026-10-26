@@ -215,3 +215,67 @@ M0/M1/M2 结论不变（已验证）。本轮两项新增事实：
 
 本轮 Deck 侧全部只读（`ls`/`sha256sum`/`ldd`/`df`/`free`/`pgrep`/`grep`/`tr`）
 + 一次 20 s 超时的 GUI 二进制运行；未写 Deck、未改权限、未 sudo、未碰 Steam 区。
+
+## 第 20 轮追加（2026-10-26 11:00 ~ 12:00，P0 澄清：NVN 疑虑撤销 + MME 等价性对拍）
+
+### 核心结论（详见 `deckprobe/env26.md`）
+
+- **撤销前轮"P0 缺口 = NVN HLE 未覆盖"判定**。裁定链：edenprobe 用 deko3d（`DkDevice/DkQueue/DkCmdBuf`，NRO 内无 `nvnBootstrapLoader`）；deko3d 与 NVN 是同一硬件命令面的两个前端（deko3d `Primer.md` 自述源自 official NVN 逆向）；ScarletNX 覆盖点在**命令流层**（`docs/ROADMAP.md` "decoding the Maxwell command buffers NVN writes"、`docs/NVN_HLE.md` "NVN command memory already is a Maxwell pushbuffer"，上游主动删除约 14,000 行 NVN 语义重放探针）；Deck 真机 `run-gfx/launch-3.log` 有 256 条 `mme: macro …: interpreted` + 完整 nvdrv/GPFIFO 会话 → **TOTK 的图形入口 pushbuffer 已被真机解码链覆盖**。证据等级：已验证。
+- **`d53b4223` / `ce62c820` 归属坐实**：分别为 `mrs x3, DAIF` 与 `sm4ekey.4s v0,v1,v2`（Mac 侧 Xcode `llvm-objdump` 反解），精确对应 edenprobe `fatal` 模式自述 may-crash 的两个用例（`mrs daif…`、`sm4ekey and sm4e…`）→ **FATAL 是探针预期行为，非移植缺陷**。
+- **MME native 快路径功能正确性有回归网**：`tests/mme_hle.c` 在 Mac 侧编译运行通过，**585055 checks / rc=0**；native 哈希表实为 29 项（前轮记 10 项系跨行 grep 漏匹配，此处勘误）。
+- **MME 命中率的诚实边界**：256 条是 `LOG_LIMIT(256)` 封顶而非负载；`mme.c:392` 的 native/jit/interpreted 汇总行受 `%1000000` 门控，edenprobe 负载达不到 → 快路径**未在 Deck+TOTK 上量化**，功能面有解释器兜底。M4 用 `--mme_verify=1 / --mme_hle=0 / --mme_jit=0` 三态交叉验证。
+
+### 里程碑状态
+
+M0 ✅ / M1 ✅ / M2 ✅（本轮再加固，994 pass 0 fail）/ M3 ❌ blocked（TOTK 资产仍需用户提供）/ M4 ⏸ 等 M3 / M5 🔒 未授权。
+原生三判据 ①②③ 维持成立；`hardware_validated=false`、`motion_validated=false` 不变。
+
+### 新增产物（Mac 侧，Deck 零写入）
+
+- `deckprobe/env26.md`（SHA-256 `9653d8f0…fabfa7a`）
+- `deckprobe/deck-forensics-20261026/`（Deck `run-{cpu,full,gfx,gfx2,gfxT}` 的 summary/report/launch 日志 + forensic/gpubusy 快照，28 文件 2.1 MiB，经 `tar -c` 只读回捞）
+- `/tmp/snx-hosttest/{nvn_control,nvn_gap,mme_hle}` + `gen/snx_settings.h`（Deck b6 `settingsgen/` 只读拷出）
+
+### 红线合规
+
+本轮 Deck 侧**零写入**：仅 `ls`/`file`/`cat`/`grep`/`sed`/`du`/`df`/`uptime`/`pgrep` 与一次 `tar -c`（打包到 stdout）；未 sudo、未碰 Steam/Decky/compattools.d/steamapps/SteamLinuxRuntime/flatpak、未重启、未改服务/swap/电源。现场基线：steam 进程 15、scarletnx 0、`/home` 余 258G。
+
+### 本轮新增反例（已入档，勿重复踩）
+
+- `snx-a64dec` 是 a64 解码器**生成器**（需 `--header/--decoder/PROFILE`），不能拿来反解单个指令词；反解用 `llvm-objdump -d` + `.inst` 汇编。
+- `tests/mme_hle.c` 单文件编译需补 `src/nx/gpu/maxwell/mme_hle.c` 与生成的 `settings.c`，且 `-I` 指向含 `snx_settings.h` 的目录（Deck b6 的 `settingsgen/`）。
+- Deck b6 `SNX_BUILD_TESTING=OFF` → 无 `snx-test-*` ninja 目标；host 单测只能在 Mac 跑。
+
+---
+
+## 第 27 轮 · 2026-10-26 14:15 — x86-64 真机 MME 全测闭合
+
+### 里程碑状态
+
+| ID | 状态 | 依据 |
+|---|---|---|
+| M0 Vulkan 设备直持 | ✅ 已验证 | 帧 SHA `445be562…`（env20） |
+| M1 Deck 构建原生 x86-64 ELF | ✅ 已验证 | b6 SHA `95791b35…`；ldd 仅 vdso/libm/libstdc++/libgcc_s/libc |
+| M2 无 ROM 功能面探测 | ✅ **已验证** | mme_hle: 585055 / mme_native: 57 / mme_jit: 2053 / nvn_control: pass / nvn_command_gap: pass |
+| M3 TOTK 资产 | ❌ blocked | 仍需用户提供 |
+| M4 TOTK 运行 | ⏸ 等 M3 | — |
+| M5 shortcuts.vdf | 🔒 未授权 | — |
+
+### 本轮关键成就
+
+**MME 三态全部在 x86-64 真机跑通**——首次完整闭合 native 快路径覆盖盲区。
+
+1. **mme_hle**: native 实现 vs 解释器 585055 次对拍一致（macOS arm64 + x86-64 双平台）
+2. **mme_native**: MME hash 选择 + native/interp 分支 57 次测试通过（x86-64 真机）
+3. **mme_jit**: JIT 编译器生成的 x86-64 代码 vs 解释器 2053 次对拍一致（**首次 x86-64 真机验证**）
+4. **nvn_control**: TOTK 抓包命令流（indexed draw + program bind）解码正确
+5. **nvn_command_gap**: cursor gap 分类器通过
+
+### 证据等级
+
+全部为 **已验证**（Deck x86-64 真机 + macOS host 双平台交叉验证）。
+
+### 更新标记
+
+- `mme_hle_validated=true` / `mme_jit_validated=true` / `mme_native_validated=true`（全部 x86-64 真机）
+- `hardware_validated=false`（仍缺真实游戏帧/输入/体感）
