@@ -1,0 +1,69 @@
+ScarletNX - nx-hbmenu
+build: ScarletNX unknown unknown (clang 18.1.3, Linux x86_64)
+system: SteamOS (Linux 7.2.7-valve2-2-neptune-72-g31504582a073), AMD Custom APU 0405, 8 threads, 14 GB RAM
+fs: 2 RomFS/ExeFS files mapped for the whole run, 2.4 MB
+memory: 4 KiB host pages, views share their source's pages (alias pool)
+Loaded main at 0x8000000
+symbols: 0 functions named
+jit: the AOT module has no runtime code variants; the JIT handles the misses and writes a cache
+jit: 4 compile threads, 0 pcs of earlier runs queued
+acc: 1 user, playing as user 1
+time: the time zone is Etc/GMT-8 (UTC+08)
+game: 0100000000001000, version 3.6.1
+pl: the Japanese stand-in answers for the console font's private-use characters
+pl: the Chinese simplified stand-in answers for the console font's private-use characters
+pl: the Chinese traditional stand-in answers for the console font's private-use characters
+pl: the Korean stand-in answers for the console font's private-use characters
+pl: the extended stand-in answers for the console font's private-use characters
+RomFS: image (0.0 MB)
+input: gamepad Steam Deck Controller (id 2, GUID 0300f617de2800000512000000036800, steam)
+input: device path 3-3:1.2, 6 axes, 20 buttons, mapping 0300f617de2800000512000000036800,Steam Deck Controller,a:b0,b:b1,back:b4,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b5,leftshoulder:b9,leftstick:b7,lefttrigger:a4,leftx:a0,lefty:a1,misc1:b11,paddle1:b12,paddle2:b13,paddle3:b14,paddle4:b15,touchpad:b17,misc2:b16,misc3:b19,misc4:b18,rightshoulder:b10,rightstick:b8,righttrigger:a5,rightx:a2,righty:a3,start:b6,x:b2,y:b3,platform:Linux,
+input: enabled accelerometer sensor on Steam Deck Controller
+input: enabled gyroscope sensor on Steam Deck Controller
+video: SDL 3.4.18 on x11
+vulkan: native ASTC textures were asked for, but the GPU can't sample ASTC: they are decoded to RGBA8
+vulkan: native ETC2 textures were asked for, but the GPU can't sample ETC2: they are decoded
+vulkan: allocations of at most 256 MiB, bigger images in pieces (sparse binding)
+vulkan: AMD Custom GPU 0405 (RADV VANGOGH), Vulkan 1.4.350, driver 06801063, graphics queue family 0, compute 1 (separate family)
+vulkan: draws sample the color targets they render to in place (attachment feedback loops, enabled by dynamic state, ordered by barriers within the pass)
+vulkan: swapchain 1920x1080, 5 images, fifo
+vulkan: pipeline cache loaded (39 KB)
+memory: GPU engines keep their results, guest memory is trapped until the CPU needs it
+renderer: Vulkan
+vulkan: 0 shaders and 0 pipelines of earlier runs loaded from /home/deck/native-recomp/recompiled-b6/hbmenu/shader_cache/hbmenu.vkshaders in 0 ms, the pipelines to be made in the background; 0 shaders of the game's own programs in /home/deck/native-recomp/recompiled-b6/hbmenu/shader_cache/hbmenu.vkshipped
+vulkan: The game's files were already checked by an earlier run
+vulkan: the game's own shaders: 0 translated new, 0 in /home/deck/native-recomp/recompiled-b6/hbmenu/shader_cache/hbmenu.vkshipped, in 0 ms
+prepare: 42 ms before the game started (0 shaders translated from its files, 0 of 0 pipelines of earlier runs made), not shown, as it was quick
+main thread: entry 8000000, stack 1300001000 (1024 KiB), priority 44, core 0
+kernel: core 0 runs on host CPUs 0 4
+heap: 3278 MB requested (result 0)
+  [undeclared] nn::psm::IPsmSession cmd 2 -> ok
+  [undeclared] nn::psm::IPsmSession cmd 3 -> ok
+  [undeclared] nn::psm::IPsmSession cmd 4 -> ok
+kernel: core 3 runs on host CPUs 3 7
+sm: ts is not implemented, its commands answer without doing anything
+nvdrv: open /dev/nvmap -> 1
+nvdrv: open /dev/nvhost-ctrl -> 2
+nvdrv: ioctl c0080101 on device 1 (command 1), buffers 8/8/0
+nvdrv: ioctl c0200104 on device 1 (command 1), buffers 20/20/0
+nvdrv: ioctl c008010e on device 1 (command 1), buffers 8/8/0
+vi: swap interval 1
+vulkan: the on-screen controls' atlas is 1024x1776
+cheats: none (no cheats/D9CBE9217B0F6104.txt in the data folder)
+  [undeclared] ts cmd 1 -> ok
+perf: 60.0 frames a second over 5.0 s (300 shown in all)
+vulkan: 0 draws, 0 skipped; 0 dispatches in 0 batches (0 ms waiting), 0 skipped; 0 finishes (0 ms); 0 reads past queued releases; 0 descriptor sets written, 0 reused; 0 draws kept the last one's shaders and pipeline (0 checked)
+vulkan: 0 shaders translated (0 ms), 0 pipelines made (0 from the cache, 0 ms making, 0 ms waited for), 0 render targets made, 0 texture uploads (0 MB); 0 frames over 50 ms in the last 600, the slowest 17 ms
+vulkan: memory used and budgeted: heap 0 32 of 2828 MB (32 ours), heap 1 224 of 5817 MB (64 ours)
+vulkan: caches: 0 render targets (0 MB, 0 parked), 0 textures (0 MB), 0 buffers (0 MB); 211 of 5817 MB in use as they count it, 0 MB freed for the budget so far
+vulkan: 0 draws sampled a target they render to in place (0 barriers in passes, 0 passes begun again), 0 through a copy
+vulkan: GPU-owned guest memory landed for the CPU 0 times, render targets written back for an engine 0 times
+perf: 60.0 frames a second over 5.0 s (600 shown in all)
+perf: 60.0 frames a second over 5.0 s (901 shown in all)
+vulkan: 0 draws, 0 skipped; 0 dispatches in 0 batches (0 ms waiting), 0 skipped; 0 finishes (0 ms); 0 reads past queued releases; 0 descriptor sets written, 0 reused; 0 draws kept the last one's shaders and pipeline (0 checked)
+vulkan: 0 shaders translated (0 ms), 0 pipelines made (0 from the cache, 0 ms making, 0 ms waited for), 0 render targets made, 0 texture uploads (0 MB); 0 frames over 50 ms in the last 600, the slowest 17 ms
+vulkan: memory used and budgeted: heap 0 32 of 2824 MB (32 ours), heap 1 224 of 5809 MB (64 ours)
+vulkan: caches: 0 render targets (0 MB, 0 parked), 0 textures (0 MB), 0 buffers (0 MB); 211 of 5809 MB in use as they count it, 0 MB freed for the budget so far
+vulkan: 0 draws sampled a target they render to in place (0 barriers in passes, 0 passes begun again), 0 through a copy
+vulkan: GPU-owned guest memory landed for the CPU 0 times, render targets written back for an engine 0 times
+perf: 60.0 frames a second over 5.0 s (1201 shown in all)
