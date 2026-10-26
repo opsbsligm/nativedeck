@@ -7,6 +7,11 @@
 2026-10-25
 
 ## 当前进度
+- ✅ 第 31 轮（2026-10-26，Deck 授权恢复后首轮"直接开发"）：
+  - BOTW 管线：SWR v0.3.0-alpha.3 三判据全过（hardware_validated=true 级）；`~/native-recomp/swr/` 自包含目录 run.sh 路径 bug 已修并实机验证可启动（TUI+窗口+RADV VANGOGH swapchain），**只差 1.9.0 exefs+romfs 游戏资产**
+  - TOTK 管线：totk-recomp 构建链就绪（容器 nativedeck-build Up，deps prewarm 163M），build-totk.sh/install-totk.sh 已写，**只差 1.0.0 xci + prod.keys**
+  - rootfs 减重 630M（/tmp 解包残留→~/native-recomp/tmp-cleanup-20261026/）；Decky _MEI 79M 识别未动
+  - GitLab 仓库确认：项目 16 = codex/nativedeck（main=f9e5275）
 - ✅ 主报告 report.md（可行性+取证+安装形态+风险+验证计划）
 - ✅ 作战计划.md（Phase 1-6）
 - ✅ 技术栈与实现路径.md（17 节，~34KB）
@@ -16,7 +21,7 @@
 - ✅ 第 6 轮（2026-10-25 挂账期内的 Mac 本地只读补强）：LAS issue #348/#234/#181/#213/#71/#255/#92/#258/#278/#290/#291/#310 + ScarletNX #661 + nightly 资产清单全部读完
   → 新增 技术栈与实现路径.md §18（Deck 实测性能演进表 + AMD 特化坑表 + 生态信号 + V3 SOP 修订）
   → WeKnora HOMELAB knowledge_id c35f5915-0c93-4d43-8dbb-b0bc66910312（checkpoint-deckevidence，已回读正文）
-- ⏳ V1-V4 全部待挂账解除（hardware_validated 仍为 false）
+- ⏳ BOTW 首帧 / TOTK 完整构建 待 ROM（唯一硬阻塞）
 
 ## 恢复条件
 用户说"继续"或"恢复 nativedeck 任务"，继续第 5 轮未完成部分（issue 穷尽读取 + WeKnora finish）。
