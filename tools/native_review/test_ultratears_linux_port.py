@@ -118,5 +118,35 @@ class LinuxBuildPriority(unittest.TestCase):
                 proc.limited_command(['tool'],0)
 
 
+
+class SdkOptimizedGuards(unittest.TestCase):
+    def run_guard(self, sdk_url, archive_hash):
+        import subprocess
+        import sys
+        script=PORT.parents[1]/'prepare_dotnet_linux.py'
+        program='''import io,json,pathlib,runpy,sys,tempfile
+from unittest import mock
+metadata={"releases":[{"sdk":{"version":"10.0.403","files":[{"rid":"linux-x64","url":sys.argv[2],"hash":sys.argv[3]}]}}]}
+with tempfile.TemporaryDirectory(prefix="nativedeck-sdk-guard-") as d:
+ task_home=pathlib.Path(d);root=task_home/"native-recomp/ports/ultratears-linux-20261030";root.mkdir(parents=True);(root/"evidence").mkdir()
+ def open_url(url,**kw):return io.BytesIO(json.dumps(metadata).encode() if "releases.json" in url else b"not-an-sdk")
+ with mock.patch.object(pathlib.Path,"home",return_value=task_home),mock.patch("urllib.request.urlopen",side_effect=open_url):
+  try:runpy.run_path(sys.argv[1],run_name="__main__")
+  except ValueError as e:print(str(e))
+  else:raise SystemExit("guard did not reject fixture")
+'''
+        r=subprocess.run([sys.executable,'-O','-c',program,str(script),sdk_url,archive_hash],
+                         capture_output=True,text=True,timeout=15)
+        self.assertEqual(r.returncode,0,r.stdout+r.stderr)
+        return r.stdout
+
+    def test_checksum_guard_is_active_under_python_optimization(self):
+        url='https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.403/dotnet-sdk-10.0.403-linux-x64.tar.gz'
+        self.assertIn('SDK SHA512 differs',self.run_guard(url,'0'*128))
+
+    def test_download_identity_guard_is_active_under_python_optimization(self):
+        self.assertIn('Unexpected official SDK identity',self.run_guard('file:///not-an-sdk.tar.gz','0'*128))
+
+
 if __name__ == '__main__':
     unittest.main()
