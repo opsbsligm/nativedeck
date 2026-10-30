@@ -55,4 +55,6 @@ python3 tools/native_review/ultratears_xbox.py prepare \
 
 安装命令加 `--xbox-ui "$HOME/native-recomp/private-ui/xbox-1.4.3"`。安装器核对每份替换及对应原始资源SHA，把替换追加到自己尚未发布的RomFS副本，并更新JSON/原生索引；原始输入不变。不需要运行时mod层、模拟器或兼容工具。修改后索引标记 `ui-patched`，保留原内容指纹，不冒充原版镜像；启动清单记录修改后的实际文件SHA。
 
+图标依赖固定fontTools 4.68.0，实际安装使用 `ports/ultratears-linux/xbox/requirements.txt` 与 `--require-hashes`，该清单也供依赖扫描使用。早期4.60.1验证快照仅表示当时的工具启动检查，现已替换；4.60.1涉及的[GHSA-768j-98cg-p3fv](https://github.com/fonttools/fonttools/security/advisories/GHSA-768j-98cg-p3fv)在4.60.2修复。图标生成不使用该公告的varLib/designspace入口，但仍升级移除受影响依赖，不以未走该路径为由忽略版本问题。
+
 目前覆盖四种区域字体中的按钮提示（含简中、繁中）、八个HUD按钮贴图和资源尺寸表。保持Switch动作的位置映射，因此屏幕显示实际要按的Xbox字母：右B、下A、上Y、左X，另有LB/RB、LT/RT和Menu/View。教程中的固定图片尚未全部替换，不能宣称“全部Xbox”完成。真实资源生成、画面和游戏实跑仍未验证，生成记录和安装清单不会将其升级为实机通过。

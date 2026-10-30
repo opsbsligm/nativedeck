@@ -1,0 +1,22 @@
+{
+  "tool_commit": "f1d00772df1ac3230268f3124bdeb6b7cc81a61c",
+  "fonttools": "4.68.0",
+  "synthetic_cff_icons_rewritten": 19,
+  "synthetic_hud_masks": 8,
+  "ordinary_glyph_unchanged": true,
+  "mask_sha256": {
+    "Nt_KeyTexA_00": "35acaf6a4a47ec27dea02750a87122d63d8abed72300fdf38e6bb26b9112147a",
+    "Nt_KeyTexB_00": "35acaf6a4a47ec27dea02750a87122d63d8abed72300fdf38e6bb26b9112147a",
+    "Nt_KeyTexX_00": "35acaf6a4a47ec27dea02750a87122d63d8abed72300fdf38e6bb26b9112147a",
+    "Nt_KeyTexY_00": "35acaf6a4a47ec27dea02750a87122d63d8abed72300fdf38e6bb26b9112147a",
+    "Nt_KeyTexL_00": "ad9c22e7c09102acc39d911c4e75eb258704c4f418ecd43db05078058bc19e4b",
+    "Nt_KeyTexZL_00": "d477d73694b15e78cd6f4c1e5f5165fedcf5bfe4f9652c01616a5549ade7d5c3",
+    "Nt_KeyTexLSt_00": "5b4556cd0afcd921760cc59a203ca9118e51257255f3f62550d4c2863be1f9cd",
+    "Nt_KeyTexLSt_01": "3e3bf6de7af80d97f2741725768b3904af59a515a7f0388170a883418712e620"
+  },
+  "game_assets_used": false,
+  "hardware_validated": false,
+  "replaces_dependency_version": "4.60.1",
+  "advisory": "https://github.com/fonttools/fonttools/security/advisories/GHSA-768j-98cg-p3fv",
+  "scope": "Pinned public generator with an entirely synthetic CFF font; actual game icon resources unvalidated"
+}

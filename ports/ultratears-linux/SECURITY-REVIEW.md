@@ -20,3 +20,9 @@
 ## 测试依赖下载恢复
 
 MR流水线862的5251及其重试5273均在zstd官方release下载阶段失败，未进入测试。项目包注册表缓存已验证的官方1.5.7源码（SHA-256 `eb33e51f...09e6fa3`），CI使用仅当前项目的短期JOB-TOKEN读取；匿名官方release和codeload来源分别固定完整摘要作为网络回退。令牌只发给固定家庭GitLab地址，不传给GitHub、不打印；下载超时有限次重试，哈希错误直接失败，不关闭测试或降低扫描门禁。
+
+## Xbox工具依赖与网络边界
+
+首次字体工具验证固定4.60.1，后续核对官方PyPI漏洞元数据发现GHSA-768j-98cg-p3fv；当前资源处理只调用TTFont/CFF绘制，不使用公告中的varLib/designspace入口。仍将依赖升级固定为4.68.0，以`requirements.txt`记录实际依赖并用`--require-hashes`执行离线wheel安装，避免只在脚本中声明、依赖扫描看不到版本。上游公告的修复起点为4.60.2，不把未调用受影响入口解释为该版本没有漏洞。
+
+流水线867的新增Medium候选位于`ultratears_xbox.fetch_tools`。该命令只能以固定HTTPS前缀访问`raw.githubusercontent.com/ly05010419/MacNativeGames/<固定完整commit>/`，文件名在四个公开文件白名单中；不接受用户URL、主机、协议或路径片段。每个响应限128KiB并验证固定大小与SHA，生成目录发布前再次逐项读回；没有服务端代任意用户URL抓取的接口。保留SSRF原始候选，不添加抑制规则。该判断不承诺隔离恶意同UID进程或被替换的Python解释器。
