@@ -30,6 +30,8 @@ review-tools:
     - python3 -c "import unittest; suite=unittest.defaultTestLoader.discover('tools/native_review',pattern='test_*.py'); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() and not result.skipped else 1)"
     - python3 -c "import ast,pathlib; files=list(pathlib.Path('tools/native_review').glob('*.py')); [ast.parse(p.read_text(),filename=str(p)) for p in files]; print('Validated',len(files),'Python sources')"
 
+    - python3 -c "import ast,pathlib; files=list(pathlib.Path('ports/ultratears-linux/overlay').rglob('*.py'))+list(pathlib.Path('ports/ultratears-linux').glob('*.py')); [ast.parse(p.read_text(),filename=str(p)) for p in files]; print('Validated',len(files),'Linux overlay Python sources')"
+
 semgrep-sast:
   image: registry.gitlab.com/security-products/semgrep@sha256:6438917354ac62eebd1a85ba7dcd6d597f1bf4613ec6ea9eb61892cf4c3b4732
   allow_failure: false

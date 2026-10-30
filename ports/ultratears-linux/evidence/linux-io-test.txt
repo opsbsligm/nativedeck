@@ -1,0 +1,5 @@
+PASS mapping: regular nonempty file, minimum size, full unmap
+PASS readable range: no access, unmapped hole, overflow, valid interval
+PASS atomic replacement: failure preserves files; success publishes full contents
+PASS truncate: native size change and overflow rejection
+PASS SHA256: known vector, segmented input, empty input

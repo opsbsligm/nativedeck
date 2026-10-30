@@ -1,0 +1,1159 @@
+diff --git a/src/gfx/backend_vk.c b/src/gfx/backend_vk.c
+index 08506d1..34cf917 100644
+--- a/src/gfx/backend_vk.c
++++ b/src/gfx/backend_vk.c
+@@ -11,7 +11,11 @@
+ #include <stdatomic.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef _WIN32
+ #include <windows.h>
++#else
++#include "../runtime/platform/linux_io.h"
++#endif
+ 
+ #include "compat/gfx_compat.h"
+ #include "host/hle.h"
+@@ -46,10 +50,25 @@ typedef struct { uintptr_t lo, hi, base; VkBuffer buf; VkDeviceMemory mem; const
+                  VkBuffer sbuf; VkDeviceSize soff; uint32_t sh; uint8_t no_shadow, filled; uint64_t stamp, sync_sub, used_sub, defer_pass, wb_sub; } pool_ent;
+ static pool_ent *g_pools;
+ static int g_npools, g_capools;
+-static vkb_rw g_pool_mu;   // recording threads look pools up for every draw (read); changes write
++static vkb_rw g_pool_mu = VKB_RW_INITIALIZER;   // recording threads look pools up for every draw (read); changes write
+ static uint64_t g_pool_bytes;
+ 
+ // vkb_lock.h: Windows slim reader-writer locks (zero-initialised = unlocked), with the wait measured as vkb_lock does
++#ifdef __linux__
++static void rw_lock(vkb_rw *l, int kind, int write) {
++    int rc = write ? pthread_rwlock_trywrlock(&l->native) : pthread_rwlock_tryrdlock(&l->native);
++    if (!rc) return;
++    uint64_t t0 = runtime_now_ns();
++    rc = write ? pthread_rwlock_wrlock(&l->native) : pthread_rwlock_rdlock(&l->native);
++    if (rc) die("pthread reader/writer lock");
++    atomic_fetch_add_explicit(&vkb_lock_wait_ns[kind], runtime_now_ns() - t0, memory_order_relaxed);
++    atomic_fetch_add_explicit(&vkb_lock_waits[kind], 1, memory_order_relaxed);
++}
++void vkb_rw_read(vkb_rw *l, int kind) { rw_lock(l, kind, 0); }
++void vkb_rw_write(vkb_rw *l, int kind) { rw_lock(l, kind, 1); }
++void vkb_rw_read_end(vkb_rw *l) { if (pthread_rwlock_unlock(&l->native)) die("pthread unlock"); }
++void vkb_rw_write_end(vkb_rw *l) { vkb_rw_read_end(l); }
++#else
+ void vkb_rw_read(vkb_rw *l, int kind) {
+     if (TryAcquireSRWLockShared((PSRWLOCK)l)) return;
+     uint64_t t0 = runtime_now_ns();
+@@ -67,6 +86,8 @@ void vkb_rw_write(vkb_rw *l, int kind) {
+ }
+ void vkb_rw_write_end(vkb_rw *l) { ReleaseSRWLockExclusive((PSRWLOCK)l); }
+ 
++#endif
++
+ // ---- per recording thread (vkb_mt.c design, implemented below in "several recording threads")
+ static __thread int t_worker;          // vkb_worker(): 0 the translation thread (and any other), 1.. the recording threads
+ static __thread int t_recording;       // recording a chunk (or the prologue) of a submission
+@@ -244,9 +265,14 @@ static void backend_init(void) {
+ static int import_host(uintptr_t a, uintptr_t b, VkBuffer *out_buf, VkDeviceMemory *out_mem) {
+     // The import needs committed memory: guest pages are committed on first touch, so the range is committed now.
+     // A virtual pool is an inaccessible address range (totk_vpool_win.c): no memory to import (sparse binding, later).
++    if (b <= a) return 0;
++#ifdef __linux__
++    if (!linux_host_readable(a, b - a)) return 0;
++#else
+     MEMORY_BASIC_INFORMATION mi;
+     if (a >= GUEST_LO && b <= GUEST_HI) plat_commit(a, b - a);
+     else if (!VirtualQuery((void *)a, &mi, sizeof mi) || mi.State != MEM_COMMIT || mi.Protect == PAGE_NOACCESS) return 0;
++#endif
+     VkMemoryHostPointerPropertiesEXT hp = {VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT};
+     if (!vk_check(vk.vkGetMemoryHostPointerPropertiesEXT(vkc.device, VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT,
+                                                           (void *)a, &hp), "host pointer properties")) return 0;
+@@ -1020,12 +1046,18 @@ static const pool_ent *pool_find(uintptr_t addr, uint64_t len);
+ static void checkpoint_addr(const char *k1) {   // an address: what the memory and the pool table hold now
+     unsigned long long a = strtoull(k1, NULL, 16);
+     if (!a) return;
++#ifdef __linux__
++    vkb_rw_read(&g_pool_mu, LK_POOLS);
++    const pool_ent *p = pool_find((uintptr_t)a, 1);
++    VLOG("    memory %#llx readable %d; pool %s", a, linux_host_readable((uintptr_t)a, 1), p ? "registered" : "none");
++#else
+     MEMORY_BASIC_INFORMATION mi = {0};
+     VirtualQuery((void *)(uintptr_t)a, &mi, sizeof mi);
+     vkb_rw_read(&g_pool_mu, LK_POOLS);
+     const pool_ent *p = pool_find((uintptr_t)a, 1);
+     VLOG("    memory %#llx: state %#lx protect %#lx region %p+%#llx; pool %s %#llx..%#llx", a, mi.State, mi.Protect, mi.BaseAddress,
+          (unsigned long long)mi.RegionSize, p ? "registered" : "none", p ? (unsigned long long)p->lo : 0ull, p ? (unsigned long long)p->hi : 0ull);
++#endif
+     vkb_rw_read_end(&g_pool_mu);
+ }
+ static void checkpoint_line(const char *how, uint32_t n) {
+@@ -1966,8 +1998,13 @@ static void dump_check(uint64_t n) {
+     if (key_at > 0 && n >= (uint64_t)key_at && atomic_compare_exchange_strong(&g_dump_key_at, &key_at, 0)) {
+         char dir[512];
+         snprintf(dir, sizeof dir, "%s/f%llu", getenv("TOTK_DUMP_KEY"), (unsigned long long)n);
++#ifdef _WIN32
+         CreateDirectoryA(getenv("TOTK_DUMP_KEY"), NULL);
+         CreateDirectoryA(dir, NULL);
++#else
++        mkdir(getenv("TOTK_DUMP_KEY"), 0755);
++        mkdir(dir, 0755);
++#endif
+         vkb_tex_dump(dir);
+         vcheck_run();
+         vkb_tex_vcheck_run();
+@@ -2353,9 +2390,14 @@ static wpool_t g_wp[SLOTS][VKB_MAXREC + 1];
+ int vkb_mt_on(void) {
+     static int n = -1;
+     if (n < 0) {
++#ifdef _WIN32
+         SYSTEM_INFO si;
+         GetSystemInfo(&si);
+         int cpus = (int)si.dwNumberOfProcessors;
++#else
++        long available_cpus = sysconf(_SC_NPROCESSORS_ONLN);
++        int cpus = available_cpus > 0 ? (int)available_cpus : 1;
++#endif
+         const char *e = getenv("TOTK_VK_RECORD_THREADS");
+         n = e && *e ? atoi(e) : cpus >= 8 ? 4 : cpus >= 4 ? 2 : 1;
+         if (n > VKB_MAXREC) n = VKB_MAXREC;
+diff --git a/src/gfx/compat/gfx_compat.h b/src/gfx/compat/gfx_compat.h
+index f8706a5..58a674a 100644
+--- a/src/gfx/compat/gfx_compat.h
++++ b/src/gfx/compat/gfx_compat.h
+@@ -18,6 +18,15 @@
+ #include <time.h>
+ #include <malloc.h>
+ #include <unistd.h>
++#ifdef __linux__
++#include "../../runtime/platform.h"
++#endif
++#ifdef __linux__
++#include <sys/mman.h>
++#include <sys/resource.h>
++#include <sys/syscall.h>
++#include <sys/uio.h>
++#endif
+ 
+ uint64_t plat_now_ns(void);
+ void plat_sleep_until_ns(uint64_t t);
+@@ -63,7 +72,17 @@ static inline kern_return_t thread_info(mach_port_t t, int f, thread_info_t i, m
+ static inline kern_return_t task_info(mach_port_t t, int f, task_info_t i, mach_msg_type_number_t *n) { (void)t; (void)f; (void)i; (void)n; return KERN_FAILURE; }
+ static inline kern_return_t thread_policy_set(mach_port_t t, int f, thread_policy_t p, mach_msg_type_number_t n) { (void)t; (void)f; (void)p; (void)n; return KERN_FAILURE; }
+ static inline kern_return_t thread_policy_get(mach_port_t t, int f, thread_policy_t p, mach_msg_type_number_t *n, boolean_t *d) { (void)t; (void)f; (void)p; (void)n; (void)d; return KERN_FAILURE; }
++#ifdef __linux__
++static inline kern_return_t vm_read_overwrite(mach_port_t t, vm_address_t a, vm_size_t n, vm_address_t d, vm_size_t *got) {
++    (void)t;
++    struct iovec local = {(void *)d, n}, remote = {(void *)a, n};
++    ssize_t count = process_vm_readv(getpid(), &local, 1, &remote, 1, 0);
++    *got = count > 0 ? (vm_size_t)count : 0;
++    return count >= 0 && (vm_size_t)count == n ? KERN_SUCCESS : KERN_FAILURE;
++}
++#else
+ static inline kern_return_t vm_read_overwrite(mach_port_t t, vm_address_t a, vm_size_t n, vm_address_t d, vm_size_t *got) { (void)t; (void)a; (void)n; (void)d; *got = 0; return KERN_FAILURE; }
++#endif
+ 
+ // ---- QoS
+ typedef int qos_class_t;
+@@ -74,6 +93,9 @@ static inline int pthread_attr_set_qos_class_np(pthread_attr_t *a, qos_class_t q
+ static inline int pthread_set_qos_class_self_np(qos_class_t q, int r) { (void)q; (void)r; return 0; }
+ static inline int pthread_get_qos_class_np(pthread_t t, qos_class_t *q, int *r) { (void)t; *q = QOS_CLASS_UNSPECIFIED; *r = 0; return 0; }
+ 
++#ifdef __linux__
++#define malloc_size(p) malloc_usable_size(p)
++#else
+ // ---- signals and guarded reads
+ #ifndef SIGBUS
+ #define SIGBUS 10
+@@ -100,13 +122,19 @@ static inline int munmap(void *a, size_t n) { (void)a; (void)n; return -1; }
+ static inline int mprotect(void *a, size_t n, int p) { (void)a; (void)n; (void)p; return -1; }
+ static inline int getpagesize(void) { return 4096; }
+ 
++#endif
++
+ // ---- threads: macOS names only the calling thread
+ static inline int gfx_setname(const char *n) { return pthread_setname_np(pthread_self(), n); }
+ #define pthread_setname_np(n) gfx_setname(n)
+ 
+ // ---- more Darwin calls: the thread id and per-clock nanoseconds
++#ifdef __linux__
++static inline int pthread_threadid_np(void *t, uint64_t *id) { (void)t; *id = (uint64_t)syscall(SYS_gettid); return 0; }
++#else
+ unsigned long __stdcall GetCurrentThreadId(void);
+ static inline int pthread_threadid_np(void *t, uint64_t *id) { (void)t; *id = GetCurrentThreadId(); return 0; }
++#endif
+ static inline uint64_t clock_gettime_nsec_np(clockid_t clk) {
+     struct timespec ts;
+     if (clock_gettime(clk, &ts)) return 0;
+diff --git a/src/gfx/compat/sys/mman.h b/src/gfx/compat/sys/mman.h
+index 17d7c1e..f737d4e 100644
+--- a/src/gfx/compat/sys/mman.h
++++ b/src/gfx/compat/sys/mman.h
+@@ -1,3 +1,9 @@
++#pragma once
++#ifdef __linux__
++#include_next <sys/mman.h>
++#else
+ // Stand-in for the macOS header <sys/mman.h> (MacNativeGames code on Windows): definitions live in gfx_compat.h.
+ #pragma once
+ #include "gfx_compat.h"
++
++#endif
+diff --git a/src/gfx/compat/sys/resource.h b/src/gfx/compat/sys/resource.h
+index ebd4f52..601c1ce 100644
+--- a/src/gfx/compat/sys/resource.h
++++ b/src/gfx/compat/sys/resource.h
+@@ -1,3 +1,9 @@
++#pragma once
++#ifdef __linux__
++#include_next <sys/resource.h>
++#else
+ // Stand-in for the macOS header <sys/resource.h> (MacNativeGames code on Windows): definitions live in gfx_compat.h.
+ #pragma once
+ #include "gfx_compat.h"
++
++#endif
+diff --git a/src/gfx/compat/sys/ucontext.h b/src/gfx/compat/sys/ucontext.h
+index 937a5fd..ec72ef2 100644
+--- a/src/gfx/compat/sys/ucontext.h
++++ b/src/gfx/compat/sys/ucontext.h
+@@ -1,3 +1,9 @@
++#pragma once
++#ifdef __linux__
++#include_next <sys/ucontext.h>
++#else
+ // Stand-in for the macOS header <sys/ucontext.h> (MacNativeGames code on Windows): definitions live in gfx_compat.h.
+ #pragma once
+ #include "gfx_compat.h"
++
++#endif
+diff --git a/src/gfx/nvn/totk_timeline_win.c b/src/gfx/nvn/totk_timeline_win.c
+index d605714..8c6f8a2 100644
+--- a/src/gfx/nvn/totk_timeline_win.c
++++ b/src/gfx/nvn/totk_timeline_win.c
+@@ -6,7 +6,14 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef _WIN32
+ #include <windows.h>
++#define timeline_tid() GetCurrentThreadId()
++#else
++#include <unistd.h>
++#include <sys/syscall.h>
++#define timeline_tid() syscall(SYS_gettid)
++#endif
+ 
+ #include "totk_timeline.h"
+ 
+@@ -47,7 +54,7 @@ void totk_tl_at(int kind, uint64_t t_ns, uint64_t a, uint64_t b) {
+     if (!totk_tl_on()) return;
+     uint64_t i = atomic_fetch_add_explicit(&g_n, 1, memory_order_relaxed);
+     if (i >= TL_CAP) return;
+-    g_ev[i] = (tl_ev){t_ns, a, b, (uint32_t)kind, (uint32_t)GetCurrentThreadId(), atomic_load_explicit(&g_frame, memory_order_relaxed)};
++    g_ev[i] = (tl_ev){t_ns, a, b, (uint32_t)kind, (uint32_t)timeline_tid(), atomic_load_explicit(&g_frame, memory_order_relaxed)};
+ }
+ void totk_tl(int kind, uint64_t a, uint64_t b) {
+     if (!totk_tl_on()) return;
+diff --git a/src/gfx/nvn/totk_vpool_win.c b/src/gfx/nvn/totk_vpool_win.c
+index eb34d3d..53795c5 100644
+--- a/src/gfx/nvn/totk_vpool_win.c
++++ b/src/gfx/nvn/totk_vpool_win.c
+@@ -9,7 +9,12 @@
+ #include <stdatomic.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef _WIN32
+ #include <windows.h>
++#else
++#include <sys/mman.h>
++#include <errno.h>
++#endif
+ 
+ #include "../host/hle.h"
+ #include "nvn_dirty.h"
+@@ -44,10 +49,20 @@ int totk_vpool_init(pool_t *o) {
+     if (phys && !(o->flags & F_CPU_NO_ACCESS)) return 1;   // the game storage itself
+     o->span = o->size;
+     if (phys) {   // CPU_NO_ACCESS: our own storage
++#ifdef __linux__
++        o->host = mmap(NULL, o->span, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
++        if (o->host == MAP_FAILED) o->host = NULL;
++#else
+         o->host = VirtualAlloc(NULL, o->span, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
++#endif
+         if (o->host) { atomic_fetch_add(&g_host_bytes, o->span); atomic_fetch_add(&g_host_pools, 1); }
+     } else {      // virtual: addresses only
++#ifdef __linux__
++        o->host = mmap(NULL, o->span, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
++        if (o->host == MAP_FAILED) o->host = NULL;
++#else
+         o->host = VirtualAlloc(NULL, o->span, MEM_RESERVE, PAGE_NOACCESS);
++#endif
+         vtable *t = calloc(1, sizeof *t);
+         if (!t) die("vpool: table allocation");
+         t->pool = o; t->npages = o->size / TOTK_VPOOL_PAGE;
+@@ -55,7 +70,11 @@ int totk_vpool_init(pool_t *o) {
+         if (!t->pages) die("vpool: page table allocation");
+         pthread_mutex_lock(&g_map_mu); t->next = g_tables; g_tables = t; pthread_mutex_unlock(&g_map_mu);
+     }
++#ifdef __linux__
++    if (!o->host) { LOG("vpool: mmap failed (%d)", errno); return 0; }
++#else
+     if (!o->host) { LOG("vpool: VirtualAlloc(%#llx) failed (%lu)", (unsigned long long)o->span, GetLastError()); return 0; }
++#endif
+     o->mem = o->host;
+     return 1;
+ }
+@@ -67,7 +86,11 @@ int totk_vpool_fini(pool_t *o) {
+         if ((*p)->pool == o) { vtable *t = *p; *p = t->next; free(t->pages); free(t); break; }
+     pthread_mutex_unlock(&g_map_mu);
+     if (o->flags & F_PHYSICAL) { atomic_fetch_sub(&g_host_bytes, o->span); atomic_fetch_sub(&g_host_pools, 1); }
++#ifdef __linux__
++    munmap(o->host, o->span);
++#else
+     VirtualFree(o->host, 0, MEM_RELEASE);
++#endif
+     o->host = NULL; o->mem = o->game_mem; o->span = 0;
+     return 1;
+ }
+diff --git a/src/gfx/vkb_audit.c b/src/gfx/vkb_audit.c
+index 06248b1..abb9545 100644
+--- a/src/gfx/vkb_audit.c
++++ b/src/gfx/vkb_audit.c
+@@ -1,7 +1,9 @@
+ // Fidelity audit of the Vulkan NVN replayer: counting of substitutions and skips (vkb_audit.h).
+ // Counting is always on (array increments on the replay thread); the per-shader tables and the report only within
+ // a TOTK_AUDIT window.
++#ifdef _WIN32
+ #include <direct.h>
++#endif
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
+index 5a0a707..91db0f3 100644
+--- a/src/gfx/vkb_bc7.c
++++ b/src/gfx/vkb_bc7.c
+@@ -11,12 +11,18 @@
+ // BC1: the interface's 12x12 ASTC maps when opaque (tools/bc7build: a texture is BC1 only if none of its texels is
+ // transparent; half the bytes of BC7, and 12x12 ASTC holds less detail than BC1 keeps). Nothing from the game is
+ // in the repository or a build: the cache is made on the player's machine from the player's copy (README.md, Legal).
++#ifdef _WIN32
+ #include <direct.h>
++#endif
+ #include <stdatomic.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef _WIN32
+ #include <windows.h>
++#else
++#include "../runtime/platform/linux_io.h"
++#endif
+ 
+ #include "compat/gfx_compat.h"
+ #include "host/hle.h"
+@@ -98,11 +104,16 @@ static int open_files(void) {   // g_mu held
+     }
+     _fseeki64(g_idx, good, SEEK_SET);
+     snprintf(path, sizeof path, "%s/bc7.pack", d);
++#ifdef __linux__
++    size_t mapped_size;
++    if (pack_size > 0) g_map = linux_map_readonly(path, (size_t)pack_size, &mapped_size);
++#else
+     HANDLE f = pack_size > 0 ? CreateFileA(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+                                            FILE_ATTRIBUTE_NORMAL, NULL) : INVALID_HANDLE_VALUE;
+     HANDLE m = f != INVALID_HANDLE_VALUE ? CreateFileMappingA(f, NULL, PAGE_READONLY, (DWORD)((uint64_t)pack_size >> 32), (DWORD)pack_size, NULL) : NULL;
+     if (f != INVALID_HANDLE_VALUE) CloseHandle(f);
+     if (m) { g_map = MapViewOfFile(m, FILE_MAP_READ, 0, 0, (SIZE_T)pack_size); CloseHandle(m); }
++#endif
+     if (g_map) g_map_size = (uint64_t)pack_size;
+     VLOG("BC7 cache %s: %zu surfaces, %.1f MiB%s", d, g_n, pack_size / 1048576.0, g_map ? " (mapped)" : "");
+     g_open = 1;
+@@ -162,7 +173,11 @@ static int quality(void) {   // TOTK_BC7_QUALITY=0..4 (bc7enc's uber level; back
+ static void *encoder(void *unused) {
+     (void)unused;
+     pthread_setname_np("totk-bc7");
+-    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);   // the game's and the recording threads come first
++#ifdef __linux__
++    linux_worker_priority(1);
++#else
++    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
++#endif   // the game's and the recording threads come first
+     for (;;) {
+         pthread_mutex_lock(&g_jmu);
+         while (!g_jobs) pthread_cond_wait(&g_jcv, &g_jmu);
+diff --git a/src/gfx/vkb_draw.c b/src/gfx/vkb_draw.c
+index 47cbd0c..ec63099 100644
+--- a/src/gfx/vkb_draw.c
++++ b/src/gfx/vkb_draw.c
+@@ -303,7 +303,7 @@ typedef struct { samp_par p; VkSampler s; uint8_t valid; } sreg_t;
+ static treg_t *g_treg;
+ static sreg_t *g_sreg;
+ static int g_ntreg, g_nsreg;
+-static vkb_rw g_reg_mu;   // game threads register while the recording threads read
++static vkb_rw g_reg_mu = VKB_RW_INITIALIZER;   // game threads register while the recording threads read
+ 
+ static void *grow(void *a, int *n, int need, size_t elem) {
+     if (need < *n) return a;
+diff --git a/src/gfx/vkb_lock.h b/src/gfx/vkb_lock.h
+index a5a72ab..e82411c 100644
+--- a/src/gfx/vkb_lock.h
++++ b/src/gfx/vkb_lock.h
+@@ -25,7 +25,13 @@ static inline void vkb_lock(pthread_mutex_t *m, int kind) {
+ 
+ // A reader-writer lock for the tables the recording threads read for every draw (pools, the texture registry): readers
+ // do not exclude each other. Windows SRWLOCK (pointer-sized, zero = unlocked); backend_vk.c implements it.
++#ifdef __linux__
++typedef struct { pthread_rwlock_t native; } vkb_rw;
++#define VKB_RW_INITIALIZER {PTHREAD_RWLOCK_INITIALIZER}
++#else
+ typedef struct { void *opaque; } vkb_rw;
++#define VKB_RW_INITIALIZER {0}
++#endif
+ void vkb_rw_read(vkb_rw *l, int kind);
+ void vkb_rw_read_end(vkb_rw *l);
+ void vkb_rw_write(vkb_rw *l, int kind);
+diff --git a/src/gfx/vkb_shader.c b/src/gfx/vkb_shader.c
+index 035fc8d..c2309c8 100644
+--- a/src/gfx/vkb_shader.c
++++ b/src/gfx/vkb_shader.c
+@@ -10,8 +10,17 @@
+ //    own layout): +0 Ryujinx support buffer, +1..17 constant buffers c0-c16, +18..33 storage buffers, +34..57 combined
+ //    textures, +58..61 images. The translator numbers bindings densely per shader; they are rewritten in the SPIR-V
+ //    when it is loaded, so any vertex shader combines with any fragment shader under one pipeline layout.
++#ifdef _WIN32
+ #include <windows.h>
+-#include <bcrypt.h>   // after windows.h (its types)
++#else
++#include "../runtime/platform/linux_io.h"
++#endif
++#ifdef _WIN32
++#include <bcrypt.h>
++#else
++#include <dirent.h>
++#include <sys/stat.h>
++#endif   // after windows.h (its types)
+ #include <stdatomic.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -113,6 +122,11 @@ static char *read_file(const char *path, size_t *n) {
+ static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;   // the entries, their objects and variants, the programs
+ static pthread_cond_t g_cv = PTHREAD_COND_INITIALIZER;     // an entry no longer busy
+ 
++#ifdef __linux__
++static void sha256_hex(const void *a, size_t na, const void *b, size_t nb, char out[65]) {
++    if (!linux_sha256_hex(a, na, b, nb, out)) die("SHA-256 provider");
++}
++#else
+ static BCRYPT_ALG_HANDLE g_sha;   // opened once (opening it per hash cost more than the hash)
+ static void sha_open(void) { if (BCryptOpenAlgorithmProvider(&g_sha, BCRYPT_SHA256_ALGORITHM, NULL, 0)) die("SHA-256 provider"); }
+ static void sha256_hex(const void *a, size_t na, const void *b, size_t nb, char out[65]) {
+@@ -131,6 +145,8 @@ static void sha256_hex(const void *a, size_t na, const void *b, size_t nb, char
+     out[64] = 0;
+ }
+ 
++#endif
++
+ // The translated shaders: data/shaders/translated.pack (vkb_shpack.c); without it, a folder of <key>.res.json + <key>.spv
+ // (TOTK_SHADER_DIR, development: the translator's output before it is packed).
+ static const char *cache_dir(void) {
+@@ -142,8 +158,13 @@ static int from_pack(void) {   // a folder only when TOTK_SHADER_DIR names one t
+     static int v = -1;
+     if (v < 0) {
+         const char *d = getenv("TOTK_SHADER_DIR");
++#ifdef __linux__
++        struct stat st;
++        v = vkb_shpack_on() && !(d && stat(d, &st) == 0 && S_ISDIR(st.st_mode));
++#else
+         DWORD a = d ? GetFileAttributesA(d) : INVALID_FILE_ATTRIBUTES;
+         v = vkb_shpack_on() && !(a != INVALID_FILE_ATTRIBUTES && (a & FILE_ATTRIBUTE_DIRECTORY));
++#endif
+     }
+     return v;
+ }
+@@ -317,8 +338,18 @@ static int load_module(vkb_shader *s, const char *key, int nvn_stage, uint32_t *
+         char path[1024];
+         snprintf(path, sizeof path, "%s/%s.res.json", cache_dir(), key);
+         j = read_file(path, NULL);
++#ifdef __linux__
++        struct stat st;
++#else
+         struct _stat64 st;
+-        s->stamp = _stat64(path, &st) == 0 ? stamp_of((uint64_t)st.st_mtime, (uint64_t)st.st_size) : 0;
++#endif
++        s->stamp =
++#ifdef __linux__
++            stat(path, &st)
++#else
++            _stat64(path, &st)
++#endif
++             == 0 ? stamp_of((uint64_t)st.st_mtime, (uint64_t)st.st_size) : 0;
+         snprintf(path, sizeof path, "%s/%s.spv", cache_dir(), key);
+         spv = (uint32_t *)read_file(path, &nspv);
+     }
+@@ -515,7 +546,11 @@ static pthread_cond_t g_cq_cv = PTHREAD_COND_INITIALIZER;
+ static void *creator_thread(void *unused) {
+     (void)unused;
+     pthread_setname_np("totk-shader-make");
++#ifdef __linux__
++    linux_worker_priority(0);
++#else
+     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
++#endif
+     pthread_mutex_lock(&g_mu);
+     for (;;) {
+         while (g_cq_out == g_cq_in) pthread_cond_wait(&g_cq_cv, &g_mu);
+@@ -678,8 +713,21 @@ static void ahead_pack(void) {
+ static void *ahead_thread(void *unused) {
+     (void)unused;
+     pthread_setname_np("totk-shader-ahead");
++#ifdef __linux__
++    linux_worker_priority(1);
++#else
+     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
++#endif
+     if (from_pack()) { ahead_pack(); return NULL; }
++#ifdef __linux__
++    DIR *directory = opendir(cache_dir());
++    if (!directory) return NULL;
++    uint64_t t0 = runtime_now_ns();
++    struct dirent *entry;
++    while ((entry = readdir(directory))) {
++        const char *filename = entry->d_name;
++        if (strlen(filename) != 73 || strcmp(filename + 64, ".res.json")) continue;
++#else
+     char pattern[1024];
+     snprintf(pattern, sizeof pattern, "%s/*.res.json", cache_dir());
+     WIN32_FIND_DATAA fd;
+@@ -688,17 +736,25 @@ static void *ahead_thread(void *unused) {
+     uint64_t t0 = runtime_now_ns();
+     do {
+         if (strlen(fd.cFileName) != 64 + 9) continue;
++        const char *filename = fd.cFileName;
++#endif
+         char key[65];
+-        memcpy(key, fd.cFileName, 64);
++        memcpy(key, filename, 64);
+         key[64] = 0;
+         atomic_fetch_add(&g_ahead_total, 1);
++#ifdef __linux__
++        struct stat st;
++        if (fstatat(dirfd(directory), filename, &st, 0) || !S_ISREG(st.st_mode)) continue;
++        vkb_shbin_variant v0 = {{0}, stamp_of((uint64_t)st.st_mtime, (uint64_t)st.st_size)};
++#else
+         uint64_t ft = (uint64_t)fd.ftLastWriteTime.dwHighDateTime << 32 | fd.ftLastWriteTime.dwLowDateTime;
+         uint64_t mtime = ft >= 116444736000000000ull ? (ft - 116444736000000000ull) / 10000000ull : 0;   // FILETIME -> Unix seconds
+         vkb_shbin_variant v0 = {{0}, stamp_of(mtime, (uint64_t)fd.nFileSizeHigh << 32 | fd.nFileSizeLow)};
++#endif
+         vkb_shbin_mark(key, v0.stamp);   // the binaries of other stamps are old (vkb_shbin_compact)
+         if (vkb_shbin_has(key, &v0)) { atomic_fetch_add(&g_ahead_done, 1); continue; }
+         char path[1024];
+-        snprintf(path, sizeof path, "%s/%s", cache_dir(), fd.cFileName);
++        snprintf(path, sizeof path, "%s/%s", cache_dir(), filename);
+         char *j = read_file(path, NULL);
+         int stage = j ? stage_of(j) : -1;
+         free(j);
+@@ -718,8 +774,13 @@ static void *ahead_thread(void *unused) {
+             free(spv);
+         }
+         atomic_fetch_add(&g_ahead_done, 1);
++#ifdef __linux__
++    }
++    closedir(directory);
++#else
+     } while (FindNextFileA(h, &fd));
+     FindClose(h);
++#endif
+     VLOG("shaders compiled ahead: %llu new of %llu, %.0f s", (unsigned long long)g_ahead_made, (unsigned long long)g_ahead_total,
+          (runtime_now_ns() - t0) / 1e9);
+     vkb_shbin_compact();
+diff --git a/src/gfx/vkb_shbin.c b/src/gfx/vkb_shbin.c
+index bf4cb21..648122f 100644
+--- a/src/gfx/vkb_shbin.c
++++ b/src/gfx/vkb_shbin.c
+@@ -11,8 +11,14 @@
+ // Records are only appended: a shader translated again, or a change to the rewrites at load (its stamp), leaves the
+ // old binaries behind (836 -> 1214 MiB after the depth compare clamp, 2026-10-29). After the compile-ahead pass has
+ // told every shader's current stamp (vkb_shbin_mark), vkb_shbin_compact writes the file again without them.
+-#include <windows.h>   // MoveFileExA
++#ifdef _WIN32
++#include <windows.h>
++#else
++#include "../runtime/platform/linux_io.h"
++#endif   // MoveFileExA
++#ifdef _WIN32
+ #include <io.h>
++#endif
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -117,7 +123,11 @@ static void open_file(void) {   // g_mu held
+         g_bytes += size;
+         at += RECORD + size;
+     }
+-    if (_chsize_s(_fileno(f), (long long)at) == 0) {}   // drop a record cut short (and anything after it)
++#ifdef __linux__
++    if (linux_truncate_file(f, at) != 0) { fclose(f); g_init = -1; return; }
++#else
++    if (_chsize_s(_fileno(f), (long long)at) == 0) {}
++#endif   // drop a record cut short (and anything after it)
+     g_f = f;
+     g_end = at;
+     g_init = 1;
+@@ -274,7 +284,11 @@ void vkb_shbin_compact(void) {
+         ok = fflush(o) == 0 && fclose(o) == 0;
+         fclose(g_f);
+         g_f = NULL;
++#ifdef __linux__
++        if (ok && linux_replace_file(tmp, g_path)) {
++#else
+         if (ok && MoveFileExA(tmp, g_path, MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
++#endif
+             g_records = g_bytes = 0;
+             for (uint32_t i = 0; i < CAP; i++) {
+                 slot_t *t = &g_tab[i];
+diff --git a/src/gfx/vkb_shpack.c b/src/gfx/vkb_shpack.c
+index d609baf..48c815c 100644
+--- a/src/gfx/vkb_shpack.c
++++ b/src/gfx/vkb_shpack.c
+@@ -4,7 +4,11 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef _WIN32
+ #include <windows.h>
++#else
++#include "../runtime/platform/linux_io.h"
++#endif
+ 
+ #include "compat/gfx_compat.h"
+ #include "host/hle.h"
+@@ -21,6 +25,10 @@ static pthread_once_t g_once = PTHREAD_ONCE_INIT;
+ static void open_pack(void) {
+     const char *path = getenv("TOTK_SHADER_PACK");
+     if (!path || !*path) path = "data/shaders/translated.pack";
++#ifdef __linux__
++    size_t mapped_size = 0;
++    const uint8_t *p = linux_map_readonly(path, 32, &mapped_size);
++#else
+     HANDLE f = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+     if (f == INVALID_HANDLE_VALUE) return;
+     LARGE_INTEGER sz;
+@@ -28,19 +36,29 @@ static void open_pack(void) {
+     CloseHandle(f);
+     const uint8_t *p = m ? MapViewOfFile(m, FILE_MAP_READ, 0, 0, 0) : NULL;
+     if (m) CloseHandle(m);   // the view keeps the mapping
++#endif
++#ifdef __linux__
++    uint64_t pack_size = mapped_size;
++#else
++    uint64_t pack_size = (uint64_t)sz.QuadPart;
++#endif
+     if (!p) { VLOG("shader pack %s: cannot map it", path); return; }
+     uint32_t version, count;
+     uint64_t at;
+     memcpy(&version, p + 8, 4);
+     memcpy(&count, p + 12, 4);
+     memcpy(&at, p + 16, 8);
+-    if (memcmp(p, "UTSPACK1", 8) || version != 1 || at + (uint64_t)count * sizeof(rec_t) > (uint64_t)sz.QuadPart) {
++    if (memcmp(p, "UTSPACK1", 8) || version != 1 || at > pack_size || (uint64_t)count > (pack_size - at) / sizeof(rec_t)) {
+         VLOG("shader pack %s: not a shader pack or damaged", path);
++#ifdef __linux__
++        linux_unmap_readonly((void *)p, mapped_size);
++#else
+         UnmapViewOfFile(p);
++#endif
+         return;
+     }
+     g_map = p;
+-    g_size = (size_t)sz.QuadPart;
++    g_size = (size_t)pack_size;
+     g_idx = (const rec_t *)(p + at);
+     g_n = count;
+     VLOG("shader pack %s: %zu shaders, %.0f MiB", path, g_n, g_size / 1048576.0);
+diff --git a/src/gfx/vkb_tex.c b/src/gfx/vkb_tex.c
+index 437e678..86293c2 100644
+--- a/src/gfx/vkb_tex.c
++++ b/src/gfx/vkb_tex.c
+@@ -7,7 +7,9 @@
+ #include <math.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef _WIN32
+ #include <direct.h>
++#endif
+ 
+ #include "compat/gfx_compat.h"
+ #include "host/hle.h"
+diff --git a/src/host/audio_renderer.c b/src/host/audio_renderer.c
+index 85036bf..a2af4a0 100644
+--- a/src/host/audio_renderer.c
++++ b/src/host/audio_renderer.c
+@@ -14,8 +14,10 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <time.h>
++#ifdef _WIN32
+ #include <windows.h>  // [port] mach / QoS
+ #undef near  // [port] windef.h macro
++#endif
+ 
+ #define REV(n) (0x30564552u + ((uint32_t)(n) << 24))   /* "REVn" */
+ #define WORK_BUFFER_BYTES 0x10000u                      /* host keeps its state in host memory */
+@@ -251,9 +253,13 @@ static void advance_voice(AudioRenderer *r, ServerVoice *v, double out_seconds)
+ }
+ static void *render_thread(void *p) {
+     AudioRenderer *r = p;
++#ifdef _WIN32
+     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);  // [port] QoS user-interactive
+     // [port] nanosleep sleeps in whole scheduler ticks on Windows; a high-resolution waitable timer keeps the 5 ms period.
+     HANDLE timer = CreateWaitableTimerExW(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
++#else
++    plat_thread_realtime((uint64_t)r->param.sample_count * 1000000000ULL / r->param.sample_rate);
++#endif
+     const double frame = (double)r->param.sample_count / r->param.sample_rate;
+     struct timespec next; clock_gettime(CLOCK_MONOTONIC, &next);
+     while (__atomic_load_n(&r->running, __ATOMIC_ACQUIRE)) {
+@@ -276,12 +282,18 @@ static void *render_thread(void *p) {
+         struct timespec now; clock_gettime(CLOCK_MONOTONIC, &now);
+         int64_t wait = (int64_t)(next.tv_sec - now.tv_sec) * 1000000000LL + (next.tv_nsec - now.tv_nsec);
+         if (wait > 0) {   // [port]
++#ifdef _WIN32
+             if (timer) { LARGE_INTEGER due = {.QuadPart = -(wait / 100)}; SetWaitableTimer(timer, &due, 0, NULL, NULL, FALSE); WaitForSingleObject(timer, INFINITE); }
+             else { struct timespec d = {wait / 1000000000LL, wait % 1000000000LL}; nanosleep(&d, NULL); }
++#else
++            plat_sleep_until_ns((uint64_t)next.tv_sec * 1000000000ULL + (uint64_t)next.tv_nsec);
++#endif
+         }
+         else if (wait < -100000000LL) next = now;   /* fell far behind (debugger, sleep): resynchronise */
+     }
++#ifdef _WIN32
+     if (timer) CloseHandle(timer);  // [port]
++#endif
+     return NULL;
+ }
+ 
+diff --git a/src/host/guest.c b/src/host/guest.c
+index b327ef1..8a87d74 100644
+--- a/src/host/guest.c
++++ b/src/host/guest.c
+@@ -25,7 +25,11 @@ uint64_t guest_tls_alloc(void) {
+ }
+ 
+ Cpu *guest_cpu_new(uint64_t stack_top, uint64_t tls) {
++#ifdef _WIN32
+     Cpu *c = _aligned_malloc(sizeof(Cpu), 64);
++#else
++    Cpu *c = aligned_alloc(64, (sizeof(Cpu) + 63) & ~(size_t)63);
++#endif
+     if (!c) runtime_fail("guest CPU allocation");
+     memset(c, 0, sizeof *c);
+     c->sp = stack_top & ~0xFull;
+@@ -37,7 +41,11 @@ uint64_t guest_call_args(uint64_t fn, int n, const uint64_t *args) {
+     Cpu *c = t_cpu;
+     if (!c) runtime_fail("guest call from a host thread");
+     if (n > 8) runtime_fail("guest call with more than 8 arguments");
++#ifdef _WIN32
+     Cpu *saved = _aligned_malloc(sizeof(Cpu), 64);
++#else
++    Cpu *saved = aligned_alloc(64, (sizeof(Cpu) + 63) & ~(size_t)63);
++#endif
+     if (!saved) runtime_fail("guest call state allocation");
+     memcpy(saved, c, sizeof *c);
+     for (int i = 0; i < n; i++) c->x[i] = args[i];
+@@ -50,7 +58,11 @@ uint64_t guest_call_args(uint64_t fn, int n, const uint64_t *args) {
+     c->pc = saved->pc;
+     c->nzcv = saved->nzcv;
+     memcpy(c->v, saved->v, sizeof c->v);
++#ifdef _WIN32
+     _aligned_free(saved);
++#else
++    free(saved);
++#endif
+     return r;
+ }
+ 
+diff --git a/src/host/overrides_oe.c b/src/host/overrides_oe.c
+index dd0d335..a9dc2b7 100644
+--- a/src/host/overrides_oe.c
++++ b/src/host/overrides_oe.c
+@@ -35,7 +35,7 @@ static uint64_t desired_language(void) {
+         if (strlen(explicit_code) > 7) runtime_fail("language code too long");
+         memcpy(code, explicit_code, strlen(explicit_code));
+     } else {
+-        char tag[LOCALE_NAME_MAX_LENGTH] = {0};
++        char tag[128] = {0};
+         const char *env = getenv("TOTK_LOCALE");
+         if (env && *env) snprintf(tag, sizeof tag, "%s", env);
+ #ifdef _WIN32
+@@ -43,7 +43,15 @@ static uint64_t desired_language(void) {
+             wchar_t w[LOCALE_NAME_MAX_LENGTH];
+             if (GetUserDefaultLocaleName(w, LOCALE_NAME_MAX_LENGTH)) WideCharToMultiByte(CP_UTF8, 0, w, -1, tag, sizeof tag, NULL, NULL);
+         }
++#else
++        else {
++            const char *locale = getenv("LC_ALL");
++            if (!locale || !*locale) locale = getenv("LC_MESSAGES");
++            if (!locale || !*locale) locale = getenv("LANG");
++            if (locale) snprintf(tag, sizeof tag, "%s", locale);
++        }
+ #endif
++        tag[strcspn(tag, ".@")] = 0;  // POSIX locale codeset and modifier
+         char language[16] = {0}, region[4] = {0};
+         size_t n = strcspn(tag, "-_");
+         if (n < sizeof language) memcpy(language, tag, n);
+diff --git a/src/host/overrides_time.c b/src/host/overrides_time.c
+index 5722e98..ec8cb4b 100644
+--- a/src/host/overrides_time.c
++++ b/src/host/overrides_time.c
+@@ -50,22 +50,27 @@ static int64_t posix_now(void) {
+     return (int64_t)time(NULL) + off;
+ }
+ 
+-static int32_t local_utc_offset(int *dst) {
++static int32_t local_utc_offset(int *dst, const struct tm *calendar) {
+ #ifdef _WIN32
++    (void)calendar;
+     TIME_ZONE_INFORMATION tz;
+     DWORD r = GetTimeZoneInformation(&tz);
+     *dst = r == TIME_ZONE_ID_DAYLIGHT;
+     return -(int32_t)(tz.Bias + (r == TIME_ZONE_ID_DAYLIGHT ? tz.DaylightBias : r == TIME_ZONE_ID_STANDARD ? tz.StandardBias : 0)) * 60;
+ #else
+-    *dst = 0;
+-    return 0;
++    *dst = calendar->tm_isdst > 0;
++    return (int32_t)calendar->tm_gmtoff;
+ #endif
+ }
+ 
+ static void fill_calendar(CalendarTime *c, CalendarAdditionalInfo *info, int64_t posix, int local) {
+     time_t t = (time_t)posix;
+     struct tm tm;
++#ifdef _WIN32
+     if ((local ? localtime_s(&tm, &t) : gmtime_s(&tm, &t)) != 0) runtime_fail("calendar conversion");
++#else
++    if (!(local ? localtime_r(&t, &tm) : gmtime_r(&t, &tm))) runtime_fail("calendar conversion");
++#endif
+     *c = (CalendarTime){(int16_t)(tm.tm_year + 1900), (int8_t)(tm.tm_mon + 1), (int8_t)tm.tm_mday, (int8_t)tm.tm_hour,
+                         (int8_t)tm.tm_min, (int8_t)tm.tm_sec, 0};
+     if (info) {
+@@ -73,7 +78,7 @@ static void fill_calendar(CalendarTime *c, CalendarAdditionalInfo *info, int64_t
+         info->day_of_week = tm.tm_wday;
+         info->day_of_year = tm.tm_yday;
+         int dst = 0;
+-        int32_t offset = local ? local_utc_offset(&dst) : 0;
++        int32_t offset = local ? local_utc_offset(&dst, &tm) : 0;
+         snprintf(info->name, sizeof info->name, "%s", local ? "LOCAL" : "UTC");
+         info->dst = (uint8_t)(local && dst);
+         info->utc_offset = offset;
+@@ -116,7 +121,11 @@ HLE_FUNC("_ZN2nn4time18ToPosixTimeFromUtcERKNS0_12CalendarTimeE", time_to_posix_
+     struct tm tm = {0};
+     tm.tm_year = cal->year - 1900; tm.tm_mon = cal->month - 1; tm.tm_mday = cal->day;
+     tm.tm_hour = cal->hour; tm.tm_min = cal->minute; tm.tm_sec = cal->second;
++#ifdef _WIN32
+     c->x[0] = (uint64_t)(int64_t)_mkgmtime(&tm);
++#else
++    c->x[0] = (uint64_t)(int64_t)timegm(&tm);
++#endif
+ }
+ HLE_FUNC("_ZN2nn4time13ClockSnapshotC1Ev", time_snapshot_init) { memset(snap(c->x[0]), 0, sizeof(ClockSnapshot)); }
+ HLE_FUNC("_ZN2nn4time13ClockSnapshot29CreateWithStandardSystemClockEPS1_", time_snapshot_create) {
+diff --git a/src/runtime/platform/linux_compat.h b/src/runtime/platform/linux_compat.h
+index 806f1bf..12bc7ca 100644
+--- a/src/runtime/platform/linux_compat.h
++++ b/src/runtime/platform/linux_compat.h
+@@ -35,3 +35,20 @@ static inline uint32_t arc4random_uniform(uint32_t n) {
+     return r % n;
+ }
+ #endif
++
++// CRT spellings in the shared source; these resolve directly to libc on Linux.
++#include <stdio.h>
++#include <stdlib.h>
++#include <strings.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#ifndef O_BINARY
++#define O_BINARY 0
++#endif
++#define _chsize_s(fd, size) ftruncate((fd), (off_t)(size))
++#define _fseeki64 fseeko
++#define _ftelli64 ftello
++#define _stricmp strcasecmp
++#define _strnicmp strncasecmp
++#define _mkdir(path) mkdir((path), 0755)
++#define _putenv_s(name, value) setenv((name), (value), 1)
+diff --git a/src/vk/vk.c b/src/vk/vk.c
+index a6a0330..5f7f1fc 100644
+--- a/src/vk/vk.c
++++ b/src/vk/vk.c
+@@ -4,7 +4,11 @@
+ #include <SDL3/SDL.h>
+ #include <SDL3/SDL_vulkan.h>
+ #include <pthread.h>
++#ifdef _WIN32
+ #include <windows.h>
++#else
++#include <dlfcn.h>
++#endif
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -52,10 +56,16 @@ static int create_instance(SDL_Window *window) {
+     PFN_vkGetInstanceProcAddr gipa = NULL;
+     if (window) gipa = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+     else {   // no window (TOTK_HEADLESS): SDL's video subsystem is not up, so the loader is loaded here
++#ifdef _WIN32
+         HMODULE m = LoadLibraryA("vulkan-1.dll");
+         if (m) gipa = (PFN_vkGetInstanceProcAddr)(void *)GetProcAddress(m, "vkGetInstanceProcAddr");
++#else
++        static void *loader;
++        if (!loader) loader = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
++        if (loader) gipa = (PFN_vkGetInstanceProcAddr)dlsym(loader, "vkGetInstanceProcAddr");
++#endif
+     }
+-    if (!gipa) { LOG("no Vulkan loader (vulkan-1.dll)"); return 0; }
++    if (!gipa) { LOG("no native Vulkan loader"); return 0; }
+ #define LOAD(f) vk.f = (PFN_##f)gipa(NULL, #f);
+     VK_FN_GLOBAL(LOAD)
+ #undef LOAD
+diff --git a/tools/bc7_build.py b/tools/bc7_build.py
+index 627ad33..f2f6d0a 100644
+--- a/tools/bc7_build.py
++++ b/tools/bc7_build.py
+@@ -29,7 +29,7 @@ SOURCES_CXX = ['src/gfx/tex/bc7.cpp', 'src/gfx/tex/bc7enc/bc7enc.cpp', 'src/gfx/
+ 
+ 
+ def build_tool(env):
+-    exe = ROOT / 'build/bc7build.exe'
++    exe = ROOT / ('build/bc7build' if sys.platform == 'linux' else 'build/bc7build.exe')
+     newest = max((ROOT / s).stat().st_mtime for s in SOURCES_C + SOURCES_CXX)
+     if exe.exists() and exe.stat().st_mtime > newest:
+         return exe
+@@ -39,11 +39,17 @@ def build_tool(env):
+     for s in SOURCES_C + SOURCES_CXX:
+         cxx = s.endswith('.cpp')
+         obj = ROOT / 'build/obj' / ('bc7build_' + s.replace('/', '_').rsplit('.', 1)[0] + '.o')
+-        cmd = [str(CLANG64 / ('clang++.exe' if cxx else 'clang.exe')), '-O2', f'-march={arch}', '-w', '-c', str(ROOT / s), '-o', str(obj)]
++        compiler = ('clang++' if cxx else 'clang') if sys.platform == 'linux' else ('clang++.exe' if cxx else 'clang.exe')
++        cmd = [str(CLANG64 / compiler), '-O2', f'-march={arch}', '-w', '-c', str(ROOT / s), '-o', str(obj)]
+         if cxx:
+             cmd += ['-std=c++17', '-fno-exceptions', '-fno-rtti']
++        if sys.platform == 'linux' and not cxx:
++            cmd += ['-D_GNU_SOURCE', '-D_FILE_OFFSET_BITS=64', '-include', str(ROOT/'src/runtime/platform/linux_compat.h')]
+         subprocess.run(cmd, check=True, env=env)
+         objs.append(str(obj))
++    if sys.platform == 'linux':
++        subprocess.run([str(CLANG64 / 'clang++'), '-o', str(exe)] + objs + ['-pthread', '-lzstd'], check=True, env=env)
++        return exe
+     subprocess.run([str(CLANG64 / 'clang.exe'), '-fuse-ld=lld', '-o', str(exe)] + objs + ['-static', '-pthread', '-lzstd', '-lc++'], check=True, env=env)
+     return exe
+ 
+diff --git a/tools/build_game.py b/tools/build_game.py
+index a6888be..ca521d2 100644
+--- a/tools/build_game.py
++++ b/tools/build_game.py
+@@ -87,7 +87,7 @@ def cpu_arch():
+     """x86-64-v3 where this CPU has AVX2, FMA and BMI2 (Intel Haswell / 2013, AMD Excavator / Zen and newer), else
+     x86-64-v2 (SSE4.2): the code is built on the player's PC, so for its CPU (issue #19: i7-3770, Xeon E3-1230 v2).
+     clang -march=native says which features the CPU has."""
+-    r = subprocess.run([str(CLANG64 / 'clang.exe'), '-march=native', '-dM', '-E', '-x', 'c', os.devnull], capture_output=True,
++    r = subprocess.run([str(CLANG64 / ('clang' if sys.platform == 'linux' else 'clang.exe')), '-march=native', '-dM', '-E', '-x', 'c', os.devnull], capture_output=True,
+                        text=True, env=tool_env())
+     if r.returncode:
+         print('cannot ask clang about this CPU: building for x86-64-v3', flush=True)
+@@ -186,6 +186,16 @@ def main():
+ 
+ def run_limited(cmd, env, mask, on_line=None):
+     """cmd at below-normal priority on the CPUs in mask; on_line(line): its output line by line instead of the console."""
++    if sys.platform == 'linux':
++        from linux_process import limited_command
++        p = subprocess.Popen(limited_command(cmd, mask), env=env,
++                             stdout=subprocess.PIPE if on_line else None,
++                             stderr=subprocess.STDOUT if on_line else None,
++                             text=bool(on_line), errors='replace')
++        if on_line:
++            for line in p.stdout:
++                on_line(line.rstrip('\n'))
++        return p.wait()
+     import ctypes
+     CREATE_SUSPENDED, BELOW_NORMAL_PRIORITY_CLASS = 0x4, 0x4000
+     pipe = subprocess.PIPE if on_line else None
+diff --git a/tools/build_xlate.py b/tools/build_xlate.py
+index 1b1181c..7b2702d 100644
+--- a/tools/build_xlate.py
++++ b/tools/build_xlate.py
+@@ -12,6 +12,7 @@ build rebuilds a translator whose stamp differs). The builder package carries th
+ import argparse
+ import os
+ import pathlib
++import platform
+ import shutil
+ import subprocess
+ import sys
+@@ -22,22 +23,28 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
+ def main():
+     ap = argparse.ArgumentParser()
+     ap.add_argument('--dotnet', default='dotnet')
++    ap.add_argument('--rid', choices=('linux-x64', 'win-x64'),
++                    default='linux-x64' if sys.platform == 'linux' else 'win-x64')
++    ap.add_argument('--jobs', type=int, choices=range(1, 5), default=1)
+     ap.add_argument('--out', type=pathlib.Path, default=ROOT / 'dev-local/build/shaders')   # no game data, not in git
+     ap.add_argument('--cache', type=pathlib.Path, default=ROOT / 'dev-local')
+     a = ap.parse_args()
++    if a.rid == 'linux-x64' and platform.machine().lower() not in ('x86_64', 'amd64'):
++        ap.error('linux-x64 translator requires x86-64 host')
+     out = a.out.resolve()
++    a.cache = a.cache.resolve()
+     env = dict(os.environ, NUGET_PACKAGES=str(a.cache / 'nuget'), DOTNET_CLI_HOME=str(a.cache / 'dotnet-home'),
+                DOTNET_CLI_TELEMETRY_OPTOUT='1', DOTNET_NOLOGO='1', DOTNET_SKIP_FIRST_TIME_EXPERIENCE='1')
+     proj = ROOT / 'third_party/shader_translator/ultrs-shaders.csproj'
+-    rc = subprocess.run([a.dotnet, 'publish', str(proj), '-c', 'Release', '-r', 'win-x64', '--self-contained', 'true',
++    rc = subprocess.run([a.dotnet, 'publish', str(proj), '-c', 'Release', '-r', a.rid, '--self-contained', 'true',
+                          '-p:PublishSingleFile=true', '-p:InvariantGlobalization=true',
+                          '-p:IncludeNativeLibrariesForSelfExtract=true',
+                          f'-p:RyuSrc={ROOT / "third_party/maxwell_shader"}',
+-                         '-o', str(out), '-nologo', '-v:q', '-maxcpucount:4',
++                         '-o', str(out), '-nologo', '-v:q', f'-maxcpucount:{a.jobs}',
+                          '--disable-build-servers'], env=env).returncode   # no MSBuild / compiler servers left running
+     if rc:
+         sys.exit(rc)
+-    exe = out / 'ultrs-shaders.exe'
++    exe = out / ('ultrs-shaders' if a.rid == 'linux-x64' else 'ultrs-shaders.exe')
+     for f in out.iterdir():   # one program; the debug symbols are not needed
+         if f.suffix == '.pdb':
+             f.unlink()
+diff --git a/tools/run_ryujinx_xlate.py b/tools/run_ryujinx_xlate.py
+index 69b4348..66176ca 100644
+--- a/tools/run_ryujinx_xlate.py
++++ b/tools/run_ryujinx_xlate.py
+@@ -5,6 +5,7 @@ Writes <dir>/translated/<key>.spv (+ .res.json) and <dir>/translate-results.tsv
+ """
+ import argparse
+ import ctypes
++from concurrent.futures import ThreadPoolExecutor
+ import json
+ import os
+ import pathlib
+@@ -20,6 +21,10 @@ import progress  # noqa: E402
+ 
+ 
+ def start_pinned(cmd, mask, env):
++    if sys.platform == 'linux':
++        from linux_process import limited_command
++        return subprocess.Popen(limited_command(cmd, mask), env=env, stdin=subprocess.PIPE,
++                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+     CREATE_SUSPENDED, BELOW_NORMAL = 0x4, 0x4000
+     p = subprocess.Popen(cmd, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                          text=True, creationflags=CREATE_SUSPENDED | BELOW_NORMAL)
+@@ -31,7 +36,7 @@ def start_pinned(cmd, mask, env):
+ def main():
+     ap = argparse.ArgumentParser()
+     ap.add_argument('dir', type=pathlib.Path)
+-    ap.add_argument('--workers', type=int, default=8)
++    ap.add_argument('--workers', type=int, choices=range(1, 33), default=1 if sys.platform == 'linux' else 8)
+     ap.add_argument('--new-only', action='store_true', help='translate only keys without a .spv')
+     ap.add_argument('--quiet', action='store_true')
+     a = ap.parse_args()
+@@ -40,7 +45,7 @@ def main():
+         lines = [l for l in lines if not (a.dir / 'translated' / (json.loads(l)['job']['key'] + '.spv')).exists()]
+     (a.dir / 'translated').mkdir(exist_ok=True)
+     env = dict(os.environ, DOTNET_CLI_TELEMETRY_OPTOUT='1', DOTNET_NOLOGO='1',
+-               DOTNET_CLI_HOME=str(ROOT / 'third_party/dotnet-home'))
++               DOTNET_CLI_HOME=str(ROOT / 'dev-local/dotnet-home'))
+     if XLATE is None:
+         sys.exit('the shader translator ultrs-shaders.exe is missing: python tools/build_xlate.py')
+     cmd = [str(XLATE)]   # tools/build_xlate.py, or the builder package's deps/shaders
+@@ -50,28 +55,29 @@ def main():
+     bar = progress.Bar('translating the shaders', len(lines), 'shaders') if a.quiet else None
+ 
+     def worker(shard):
+-        p = start_pinned(cmd + ['--serve'], (1 << a.workers) - 1, env)
+-        for line in shard:
+-            key = json.loads(line)['job']['key']
+-            s = time.perf_counter()
+-            p.stdin.write(line + '\n'); p.stdin.flush()
+-            reply = p.stdout.readline().strip()
+-            dt = time.perf_counter() - s
+-            spv = a.dir / 'translated' / f'{key}.spv'
+-            ok = reply.startswith('ok ')
+-            size = spv.stat().st_size if ok and spv.exists() else 0
+-            msg = '' if ok else (reply[len('fail ' + key) + 1:] if reply.startswith('fail') else reply or 'no reply')
+-            with lock:
+-                results.append((key, 'ok' if ok else 'fail', dt, size, msg.replace('\t', ' ')[:300]))
+-                if bar:
+-                    bar.update(len(results))
+-                elif len(results) % 2000 == 0:
+-                    print(f'{len(results)}/{len(lines)} {time.time() - t0:.0f}s', flush=True)
+-        p.stdin.close(); p.wait()
++        with start_pinned(cmd + ['--serve'], (1 << a.workers) - 1, env) as p:
++            for line in shard:
++                key = json.loads(line)['job']['key']
++                s = time.perf_counter()
++                p.stdin.write(line + '\n'); p.stdin.flush()
++                reply = p.stdout.readline().strip()
++                dt = time.perf_counter() - s
++                spv = a.dir / 'translated' / f'{key}.spv'
++                size = spv.stat().st_size if spv.exists() else 0
++                ok = reply.startswith('ok ') and size > 0
++                msg = '' if ok else (reply[len('fail ' + key) + 1:] if reply.startswith('fail') else reply or 'no reply')
++                with lock:
++                    results.append((key, 'ok' if ok else 'fail', dt, size, msg.replace('\t', ' ')[:300]))
++                    if bar:
++                        bar.update(len(results))
++                    elif len(results) % 2000 == 0:
++                        print(f'{len(results)}/{len(lines)} {time.time() - t0:.0f}s', flush=True)
++            p.stdin.close()
++            if p.wait() != 0:
++                raise RuntimeError('Shader translator exited with failure')
+ 
+-    threads = [threading.Thread(target=worker, args=(s,)) for s in shards]
+-    for t in threads: t.start()
+-    for t in threads: t.join()
++    with ThreadPoolExecutor(max_workers=a.workers) as executor:
++        list(executor.map(worker, shards))  # propagate a worker crash to the build
+     if bar:
+         bar.finish()
+     with (a.dir / ('translate-results-new.tsv' if a.new_only else 'translate-results.tsv')).open('w') as f:   # --new-only keeps the full table
+@@ -80,6 +86,8 @@ def main():
+             f.write(f'{r[0]}\t{r[1]}\t{r[2]:.4f}\t{r[3]}\t{r[4]}\n')
+     ok = sum(r[1] == 'ok' for r in results)
+     print(f'shaders translated: {ok}/{len(results)} ok, {time.time() - t0:.0f}s wall, {sum(r[2] for r in results):.0f}s busy')
++    if ok != len(lines) or len(results) != len(lines):
++        sys.exit('Shader translation incomplete; refusing to publish a partial shader pack')
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/tools/toolchain.py b/tools/toolchain.py
+index e6a8474..fd45354 100644
+--- a/tools/toolchain.py
++++ b/tools/toolchain.py
+@@ -7,6 +7,8 @@ source build downloads), else ULTRS_CLANG64, else C:/msys64/clang64/bin. XLATE:
+ """
+ import os
+ import pathlib
++import shutil
++import sys
+ 
+ import deps_install
+ 
+@@ -14,6 +16,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
+ 
+ 
+ def _clang64():
++    if sys.platform == 'linux':
++        clang = shutil.which('clang')
++        return pathlib.Path(clang).parent if clang else None
+     prefix = deps_install.clang64_for(ROOT)
+     return prefix / 'bin' if prefix else None
+ 
+@@ -21,6 +26,11 @@ def _clang64():
+ CLANG64 = _clang64()
+ XLATE = next((p for p in (ROOT / 'deps/shaders/ultrs-shaders.exe', ROOT / 'dev-local/build/shaders/ultrs-shaders.exe') if p.is_file()),
+              None)
++if sys.platform == 'linux':
++    candidates = [ROOT / 'deps/shaders/ultrs-shaders', ROOT / 'dev-local/build/shaders/ultrs-shaders']
++    if os.environ.get('ULTRS_SHADER_TRANSLATOR'):
++        candidates.insert(0, pathlib.Path(os.environ['ULTRS_SHADER_TRANSLATOR']))
++    XLATE = next((p for p in candidates if p.is_file() and os.access(p, os.X_OK)), None)
+ 
+ 
+ def env():
