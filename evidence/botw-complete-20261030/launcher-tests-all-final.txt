@@ -1,0 +1,27 @@
+test_console_rotates_with_bounded_storage (test_botw_launch.BotwLauncher) ... ok
+test_existing_prelock_game_and_deleted_exe_detected (test_botw_launch.BotwLauncher) ... ok
+test_input_audit_enables_existing_trace_without_disabling_real_controller (test_botw_launch.BotwLauncher) ... ok
+test_live_game_does_not_touch_settings_or_saves (test_botw_launch.BotwLauncher) ... ok
+test_lock_blocks_other_process_and_releases_on_close (test_botw_launch.BotwLauncher) ... ok
+test_missing_install_records_error_without_mutating_save (test_botw_launch.BotwLauncher) ... 旷野之息启动失败：[Errno 2] No such file or directory: '/Users/liguangming/reports/nativedeck-botw-complete-20261030/worktree/.native-review-test-tmp/tmp5ue362jf/absent/releases/sdk7-20261029/bin/savagewind'
+ok
+test_missing_second_dlc_refuses_full_profile (test_botw_launch.BotwLauncher) ... ok
+test_native_launch_uses_fixed_data_root_backups_and_reports_exit (test_botw_launch.BotwLauncher) ... ok
+test_new_build_profile_checks_actual_binaries_and_both_dlcs (test_botw_launch.BotwLauncher) ... ok
+test_profile_array_and_nested_file_escape_are_refused (test_botw_launch.BotwLauncher) ... ok
+test_profile_path_escape_and_symlink_escape_are_refused (test_botw_launch.BotwLauncher) ... ok
+test_restricted_portal_is_not_a_game_but_restricted_game_still_detected (test_botw_launch.BotwLauncher) ... ok
+test_save_snapshot_roundtrip_dedupe_and_corruption_refusal (test_botw_launch.BotwLauncher) ... ok
+test_source_change_during_backup_never_publishes_snapshot (test_botw_launch.BotwLauncher) ... ok
+test_steamdeck_diagram_requires_matching_layout_pack (test_botw_launch.BotwLauncher) ... ok
+test_supervisor_captures_errors_and_propagates_exit (test_botw_launch.BotwLauncher) ... ok
+test_supervisor_forwards_stop_and_preserves_child_lock (test_botw_launch.BotwLauncher) ... ok
+test_symlink_escape_and_oversized_save_refused (test_botw_launch.BotwLauncher) ... ok
+test_unreadable_save_tree_is_not_silently_omitted (test_botw_launch.BotwLauncher) ... ok
+test_wrong_arch_rejected (test_botw_launch.BotwLauncher) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.570s
+
+OK
+旷野之息仍在运行，保留当前会话：113473

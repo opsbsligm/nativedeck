@@ -1,4 +1,5 @@
 import json
+import hashlib
 import os
 import signal
 import struct
@@ -181,6 +182,81 @@ class BotwLauncher(unittest.TestCase):
             launch.write_console(path, b'abcdefgh')
         self.assertEqual(path.read_bytes(), b'abcdefgh')
         self.assertEqual(path.with_suffix('.log.1').read_bytes(), b'12345678')
+
+    def active_fixture(self):
+        release=self.root/'releases/fresh'
+        game=self.root/'games/fresh'
+        dummy_id=format(42,'016x')
+        header=bytearray(64);header[:6]=b'\x7fELF\x02\x01';struct.pack_into('<H',header,18,62)
+        for path in [release/'bin/savagewind',game/'swgame.so']:
+            path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(header);path.chmod(0o755)
+        for path,value in [(release/'fonts/wqy-microhei.ttc',b'font'),(game/'romfs/Pack/Bootup_CNzh.pack',b'pack'),
+                           (game/'romfs/System/Version.txt',b'1.6.0'),(game/'swgame.so.id',dummy_id.encode()),
+                           (game/'aoc1/System/AocVersion.txt',b'3.0'),(game/'aoc2/System/AocVersion.txt',b'3.0')]:
+            path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(value)
+        profile={'schema':1,'version':'1.6.0','release':'releases/fresh','game':'games/fresh',
+                 'gamelib_id':dummy_id,'runtime_sha256':hashlib.sha256(header).hexdigest(),
+                 'gamelib_sha256':hashlib.sha256(header).hexdigest(),'dlc':{'1':'3.0','2':'3.0'}}
+        (self.root/'native-active.json').write_text(json.dumps(profile))
+        return release,game,profile
+
+    def test_new_build_profile_checks_actual_binaries_and_both_dlcs(self):
+        release,game,_=self.active_fixture()
+        self.assertEqual(launch.preflight(self.root)[:2],(release/'bin/savagewind',game))
+        (game/'swgame.so').write_bytes((game/'swgame.so').read_bytes()+b'changed')
+        with self.assertRaisesRegex(ValueError,'校验失败'):
+            launch.preflight(self.root)
+
+    def test_profile_path_escape_and_symlink_escape_are_refused(self):
+        _,_,profile=self.active_fixture()
+        for path in ['../outside','/tmp/other-game']:
+            profile['release']=path
+            (self.root/'native-active.json').write_text(json.dumps(profile))
+            with self.assertRaisesRegex(ValueError,'路径'):
+                launch.preflight(self.root)
+        (self.root/'escape').symlink_to(self.root.parent)
+        profile['release']='escape'
+        (self.root/'native-active.json').write_text(json.dumps(profile))
+        with self.assertRaisesRegex(ValueError,'路径'):
+            launch.preflight(self.root)
+
+    def test_missing_second_dlc_refuses_full_profile(self):
+        _,game,_=self.active_fixture()
+        (game/'aoc2/System/AocVersion.txt').write_text('2.0')
+        with self.assertRaisesRegex(ValueError,'DLC内容'):
+            launch.preflight(self.root)
+
+    def test_profile_array_and_nested_file_escape_are_refused(self):
+        release,game,profile=self.active_fixture()
+        (self.root/'native-active.json').write_text('[]')
+        with self.assertRaisesRegex(ValueError,'配置版本'):
+            launch.preflight(self.root)
+        (self.root/'native-active.json').write_text(json.dumps(profile))
+        (release/'bin/savagewind').unlink()
+        (release/'bin/savagewind').symlink_to(self.root.parent/'outside-runtime')
+        with self.assertRaisesRegex(ValueError,'路径'):
+            launch.preflight(self.root)
+
+    def test_steamdeck_diagram_requires_matching_layout_pack(self):
+        _,game,profile=self.active_fixture()
+        pack=game/'romfs/Pack/Bootup.pack'
+        pack.write_bytes(b'private-layout-fixture')
+        profile['ui']={'controller':'steamdeck','bootup_sha256':hashlib.sha256(pack.read_bytes()).hexdigest()}
+        (self.root/'native-active.json').write_text(json.dumps(profile))
+        launch.preflight(self.root)
+        pack.write_bytes(b'different-callout-layout')
+        with self.assertRaisesRegex(ValueError,'指示线资源'):
+            launch.preflight(self.root)
+
+    def test_input_audit_enables_existing_trace_without_disabling_real_controller(self):
+        (self.root/'input-audit.enabled').touch()
+        with mock.patch.object(launch,'running_games',return_value=[]), \
+             mock.patch.object(launch,'preflight',return_value=(self.root/'bin/savagewind',self.root/'game',self.root/'font')), \
+             mock.patch.object(launch,'supervise',return_value=0) as supervise:
+            self.assertEqual(launch.launch(self.root,[],self.save.parent),0)
+        env=supervise.call_args.args[2]
+        self.assertEqual(env['SAVAGEWIND_INPUT'],'')
+        self.assertEqual(env['SAVAGEWIND_NO_USER_INPUT'],'0')
 
 
 if __name__ == '__main__':

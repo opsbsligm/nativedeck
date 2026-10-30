@@ -39,3 +39,5 @@ python3 -m unittest discover -s tools/native_review -p 'test_*.py' -v
 构建及打包测试需要Linux的C编译器、GNU coreutils、tar与zstd。CI启用MR内SAST和密钥检测；安全扫描作业成功还需检查其报告中的实际发现，不能把扫描进程退出0直接当作零风险。
 
 2026-10-30 10:20增量：用户授权仅重启游戏后，简中标题、读档和游戏HUD已实机通过；当前游戏进程为113473。上述“尚需重启”的描述是更早检查点，最新结果见`evidence/review-20261030/chinese-render-acceptance.json`。完整流程、影片坏块、fresh重建、全手柄按键与DLC仍未验收。
+
+2026-10-30 四项收尾结果：BOTW影片精确恢复、完整fresh游戏代码编译、双DLC3.0和大师模式存读档、24项软件控制器输入链及Xbox静态图标已取得实机证据；上文相应旧限制为历史检查点。详见`BOTW-FRESH.md`与`evidence/botw-complete-20261030/`。实体按键机械触点、DLC后期剧情通关不在本次已验证范围。王国之泪保持挂账。

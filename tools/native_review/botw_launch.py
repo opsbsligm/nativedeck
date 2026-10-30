@@ -8,6 +8,7 @@ import selectors
 import shutil
 import signal
 import stat
+import string
 import struct
 import subprocess
 import sys
@@ -150,20 +151,71 @@ def native_header(path):
 
 
 def preflight(root):
-    runtime = root/'releases/sdk7-20261029/bin/savagewind'
-    game = root/'games/botw-1.6.0'
-    font = root/'releases/sdk7-20261029/fonts/wqy-microhei.ttc'
+    root = root.resolve()
+    descriptor = root/'native-active.json'
+    profile = None
+    if descriptor.exists():
+        profile = json.loads(descriptor.read_text())
+        if not isinstance(profile, dict) or profile.get('schema') != 1 or profile.get('version') != '1.6.0':
+            raise ValueError('未知原生安装配置版本')
+        def local_path(key):
+            value = profile.get(key)
+            if not isinstance(value, str) or Path(value).is_absolute() or '..' in Path(value).parts:
+                raise ValueError('原生安装路径必须位于本游戏目录内')
+            path = (root/value).resolve()
+            if not path.is_relative_to(root):
+                raise ValueError('原生安装路径越出本游戏目录')
+            return path
+        release = local_path('release')
+        game = local_path('game')
+        expected_id = profile.get('gamelib_id', '')
+        if not isinstance(expected_id, str) or len(expected_id) != 16 or any(c not in string.digits+'abcdef' for c in expected_id):
+            raise ValueError('无效游戏库版本标识')
+    else:
+        release = root/'releases/sdk7-20261029'
+        game = root/'games/botw-1.6.0'
+        expected_id = 'f0cd698371c0a703'
+    runtime = release/'bin/savagewind'
+    font = release/'fonts/wqy-microhei.ttc'
+    for path in [runtime,game/'swgame.so',font,game/'swgame.so.id',game/'romfs',game/'exefs',game/'aoc1',game/'aoc2']:
+        if not path.resolve().is_relative_to(root):
+            raise ValueError('安装文件路径越出本游戏目录')
     native_header(runtime)
     native_header(game/'swgame.so')
     if not os.access(runtime, os.X_OK):
         raise ValueError('原生游戏程序缺少执行权限')
     if (game/'romfs/System/Version.txt').read_text().strip() != '1.6.0':
         raise ValueError('当前SDK7游戏目录要求1.6.0资源')
-    if (game/'swgame.so.id').read_text().strip() != 'f0cd698371c0a703':
+    if (game/'swgame.so.id').read_text().strip() != expected_id:
         raise ValueError('游戏库版本标识不匹配')
     for path in [font, game/'romfs/Pack/Bootup_CNzh.pack']:
         if not path.is_file() or not path.stat().st_size:
             raise ValueError('中文字体或简中资源缺失')
+    if profile is not None:
+        for name, path in [('runtime_sha256', runtime), ('gamelib_sha256', game/'swgame.so')]:
+            expected = profile.get(name, '')
+            if not isinstance(expected, str) or len(expected) != 64 or any(c not in string.digits+'abcdef' for c in expected):
+                raise ValueError('缺少原生构建文件摘要')
+            digest = hashlib.sha256()
+            before = path.stat()
+            with path.open('rb') as stream:
+                for block in iter(lambda: stream.read(1024*1024), b''):
+                    digest.update(block)
+            after = path.stat()
+            if digest.hexdigest() != expected or (before.st_ino, before.st_size, before.st_mtime_ns) != (after.st_ino, after.st_size, after.st_mtime_ns):
+                raise ValueError('原生程序或游戏库校验失败')
+        if profile.get('dlc') != {'1': '3.0', '2': '3.0'}:
+            raise ValueError('完整安装必须同时登记两个3.0版DLC')
+        for index in (1, 2):
+            if (game/f'aoc{index}/System/AocVersion.txt').read_text().strip() != '3.0':
+                raise ValueError('DLC内容缺失或版本不匹配')
+        if 'ui' in profile:
+            ui=profile['ui']
+            if not isinstance(ui,dict) or ui.get('controller')!='steamdeck':
+                raise ValueError('未知手柄示意图配置')
+            bootup=game/'romfs/Pack/Bootup.pack'
+            if not bootup.resolve().is_relative_to(game) or hashlib.sha256(bootup.read_bytes()).hexdigest()!=ui.get('bootup_sha256'):
+                raise ValueError('Steam Deck示意图与指示线资源不匹配')
     return runtime, game, font
 
 
@@ -243,10 +295,15 @@ def launch(root, args, data_root):
             env['SAVAGEWIND_DATA_ROOT'] = str(data_root)
             env['SAVAGEWIND_FONT'] = str(font)
             env['SAVAGEWIND_CC'] = str(root.parent/'tools/swr_cc.sh')
-            env['LD_LIBRARY_PATH'] = str(root/'releases/sdk7-20261029/lib') + (
+            env['LD_LIBRARY_PATH'] = str(runtime.parent.parent/'lib') + (
                 ':'+env['LD_LIBRARY_PATH'] if env.get('LD_LIBRARY_PATH') else '')
             env['DISPLAY'] = env.get('DISPLAY') or ':0'
             env.pop('SAVAGEWIND_ROMFS_OVERLAY', None)
+            if (root/'input-audit.enabled').is_file():
+                # Use the runtime's existing GetNpadState trace, with real input enabled.
+                # An empty script supplies no synthetic game actions.
+                env['SAVAGEWIND_INPUT'] = ''
+                env['SAVAGEWIND_NO_USER_INPUT'] = '0'
             status['phase'] = 'running'
             atomic_json(state/'last-launch.json', status)
             rc = supervise([str(runtime), '--play', str(game), *args], data_root, env, lock.fileno(), state/'console.log')
