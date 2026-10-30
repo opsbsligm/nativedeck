@@ -1,0 +1,21 @@
+{
+  "binary": "/home/deck/native-recomp/dist/totk-recomp/totk",
+  "elf64_x86_64": true,
+  "function_counters": {
+    "g_ftab_count": 0,
+    "g_imp_count": 0,
+    "g_s_ftab_count": 0
+  },
+  "inspection_passed": false,
+  "errors": [
+    "empty_game_function_table_runtime_probe_only"
+  ],
+  "playability_validated": false,
+  "release_accepted": false,
+  "evidence_required": [
+    "matching game version and input hashes",
+    "complete and verified resources",
+    "Steam entry launch, save/load and controls",
+    "Chinese text and Xbox prompts on screen"
+  ]
+}

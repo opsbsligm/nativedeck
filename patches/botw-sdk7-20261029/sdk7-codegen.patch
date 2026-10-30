@@ -1,0 +1,55 @@
+--- a/tools/gen.py
++++ b/tools/gen.py
+@@ -605,6 +605,13 @@
+ 
+ def main_sites(nso, base, opts):
+     """(version, sites) of a main module (tools/game_sites.py); none with --no-sites"""
++    if getattr(opts, 'legacy_sdk7', False):
++        from legacy_sdk7 import verify_main
++        path = os.path.join(opts.input, 'main') if opts.name in ('layout', 'all') else opts.input
++        try:
++            return verify_main(path, base, nso.build_id)
++        except ValueError as exc:
++            raise game_sites.SiteError(str(exc)) from exc
+     if opts.no_sites:
+         return '', {}
+     return game_sites.for_module(nso, base, opts.any_version, lambda s: print(s, file=sys.stderr))
+@@ -709,11 +716,14 @@
+     ap.add_argument('--chunk-bytes', type=int, default=1500000)  # and about this much C (even compile times)
+     ap.add_argument('--big-fn', type=int, default=100000)  # bytes of C from which a function gets its own file
+     ap.add_argument('--limit', type=int, default=0)
++    ap.add_argument('--legacy-sdk7', action='store_true', help='exact local 1.6.0 profile; original pacing/menus')
+     ap.add_argument('--any-version', action='store_true')  # (a main module of a version not supported yet)
+     ap.add_argument('--no-sites', action='store_true')  # (made-up modules, tools/test_layout.py: no sites, no patches)
+     ap.add_argument('--simd', choices=('asm', 'c'),
+                     default='asm' if platform.machine().lower() in ('arm64', 'aarch64') else 'c')
+     args = ap.parse_args()
++    if args.legacy_sdk7 and (args.no_sites or args.any_version):
++        ap.error('--legacy-sdk7 cannot be combined with --no-sites or --any-version')
+     if len(args.paths) != (1 if args.name in ('layout', 'all') else 2):
+         ap.error('wrong number of arguments')
+ 
+@@ -721,6 +731,12 @@
+         if args.name in ('layout', 'all'):
+             exefs, outdir = args.input, args.paths[0]
+             lay = layout.checked(exefs)
++            if args.legacy_sdk7:
++                from legacy_sdk7 import verify_exefs
++                try:
++                    verify_exefs(exefs, [m[0] for m in lay])
++                except ValueError as exc:
++                    raise layout.LayoutError(str(exc)) from exc
+             layout.show(lay)
+             main_base = next(b for n, b, *_ in lay if n == 'main')
+             version, sites = main_sites(Nso(os.path.join(exefs, 'main')), main_base, args)
+--- a/Makefile
++++ b/Makefile
+@@ -130,7 +130,7 @@
+ GAMELIB_SRCS := tools/gen.py tools/lifter.py tools/analyze.py tools/nso.py tools/passes.py tools/patches.py \
+                 tools/simd_c.py tools/gamelib_entry.c runtime/hle/hle_symbols.txt \
+                 runtime/cpu.h runtime/simd.h runtime/simd_fp.h runtime/simd_softfma.h runtime/gamelib.h
+-GAMELIB_SRCS += tools/layout.py tools/game_sites.py
++GAMELIB_SRCS += tools/layout.py tools/game_sites.py tools/legacy_sdk7.py
+ GAMELIB_ID := $(shell (cat $(GAMELIB_SRCS); echo '$(strip $(GENFLAGS))'; echo '$(GENFLAGS_ZIG)') | (shasum -a 256 2>/dev/null || sha256sum) | cut -c1-16)
+ # The compatible target (#9): x86-64 CPUs without AVX2 / FMA / BMI2 get the game code built with GENARCH_COMPAT in
+ # place of GENARCH (no -mfma: simd.h's fma is runtime/simd_softfma.h, slower). The start screen builds the one the CPU

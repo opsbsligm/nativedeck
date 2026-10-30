@@ -1,0 +1,15 @@
+{
+  "font_sha256": "2420e8078af796b19a3f6ef13de527a1a91c1e7171eea115926c614ced1009b3",
+  "true_type_glyf": true,
+  "message_files": 1091,
+  "required_cjk_characters": 3206,
+  "missing_cjk_characters": [],
+  "coverage_passed": true,
+  "rendered_chinese_validated": false,
+  "defaults_configured": true,
+  "active_game_restarted": false,
+  "settings_changed": true,
+  "settings_sha256": "8ecf25e09627c1d53b4a99631bfd6688b625aa6cf3912efb2955c3298b334d2e",
+  "launcher_sha256": "60ebdbc427d8ee4f3a37efca5d3840e5fd5228d692f8feda463d4167c1ed8848",
+  "rollback_launcher": "/home/deck/native-recomp/evidence/review-20261030/run.sh.before-chinese"
+}

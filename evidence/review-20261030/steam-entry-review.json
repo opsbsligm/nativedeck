@@ -1,0 +1,12 @@
+{
+  "entries": 9,
+  "project_entries": [
+    {
+      "appid": 2245023905,
+      "AppName": "塞尔达传说：旷野之息（原生）",
+      "Exe": "\"/home/deck/native-recomp/swr/run.sh\"",
+      "StartDir": "\"/home/deck/native-recomp/swr\"",
+      "IsHidden": 0
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+--- a/runtime/game_sites.h
++++ b/runtime/game_sites.h
+@@ -3,6 +3,8 @@
+ // (runtime/gamelib.h, the generated layout.c). g_site holds them once the library is loaded (gamelib_load).
+ #pragma once
+ #include <stdint.h>
++#include <stdbool.h>
++bool gamelib_legacy_sdk7_profile(void);
+ 
+ // name (as in tools/game_sites.py) and what is there
+ #define GAME_SITES(X)                                                                                                  \
+--- a/runtime/gamelib.c
++++ b/runtime/gamelib.c
+@@ -73,10 +73,24 @@
+ 
+ GameSites g_site;
+ const char *g_game_version = "";
++static bool g_legacy_sdk7;
++bool gamelib_legacy_sdk7_profile(void) { return g_legacy_sdk7; }
+ 
+ // g_site from the library's sites: every one runtime/game_sites.h names has to be there (the library and this build
+ // come from the same tools/game_sites.py, or their GAMELIB_IDs would differ).
+ static bool take_sites(const GameLibTables *t) {
++    g_legacy_sdk7 = false;
++    // This port keeps the original game's pacing and menus; cross-version sites are unavailable.
++    if (!strcmp(t->version, "1.6.0") && *t->nmodules == 3 &&
++        !strcmp(t->modules[0].name, "main") &&
++        !strcmp(t->modules[0].build_id, "8e9978d50bdd20b4c8395a106c27ffde00000000000000000000000000000000")) {
++        memset(&g_site, 0, sizeof g_site);
++        g_site.main_data = t->modules[0].base + 0x2a6d000;
++        g_site.main_end = t->modules[0].base + t->modules[0].size;
++        g_game_version = t->version;
++        g_legacy_sdk7 = true;
++        return true;
++    }
+     static const struct {
+         const char *name;
+         size_t off;
+--- a/runtime/hle/framepace.c
++++ b/runtime/hle/framepace.c
+@@ -62,6 +62,7 @@
+ }
+ 
+ bool framepace_on(void) {
++    if (gamelib_legacy_sdk7_profile()) return false;
+     static int on = -1;
+     if (on < 0) on = env_int("SAVAGEWIND_FRAMEPACE", 1) != 0;
+     return on;
+@@ -71,6 +72,7 @@
+ // The menus: the game is paused (pause menu, map), or the title screen's menu is up (screen 1 in the UI screen
+ // manager [screen_mgr]: +0x28 count, +0x30 screens by id).
+ static bool in_menu(void) {
++    if (!g_site.pause_state || !g_site.screen_mgr) return false;
+     if (*(uint32_t *)(uintptr_t)PAUSE_STATE) return true;
+     uint64_t mgr = *(uint64_t *)(uintptr_t)g_site.screen_mgr;
+     return mgr && VF(uint32_t, mgr, 0x28) > 1 && VF(uint64_t, mgr, 0x30) &&
+@@ -81,6 +83,7 @@
+ // +0x1d2b8, as hasActiveEvent, 1.8.2 0x7000ffa208, reads it; the time of day stands still meanwhile). Some of their
+ // waits count frames: the new game's opening gave Link control 2 s early at 60 fps, 3 s at 120.
+ static bool in_event(void) {
++    if (!g_site.event_mgr) return false;
+     uint64_t evt = *(uint64_t *)(uintptr_t)g_site.event_mgr;
+     return evt && *(uint64_t *)(uintptr_t)(evt + 0x1d2b8);
+ }
+@@ -89,6 +92,7 @@
+ 
+ // The game's UI screen `id` exists (the screen manager's array; ids as runtime/ui/game_options.mm uses them)
+ static bool screen_up(uint32_t id) {
++    if (!g_site.screen_mgr) return false;
+     uint64_t mgr = *(uint64_t *)(uintptr_t)g_site.screen_mgr;
+     if (!mgr || VF(uint32_t, mgr, 0x28) <= id) return false;
+     uint64_t arr = VF(uint64_t, mgr, 0x30);
+@@ -381,6 +385,7 @@
+ // (1000 a wheel): ksys::world::Manager [world_mgr] (+0x5c0 count, +0x5c8 its managers; [0] = TimeMgr, the time at
+ // +0xb8); uking::act::PlayerInfo [player_info] (+0x88 Link's position, +0xa4 the stamina).
+ static void clock_probe(uint64_t vfr) {
++    if (gamelib_legacy_sdk7_profile()) return;
+     static int every = -1;
+     static uint64_t t0, next, frames;
+     static double game;
+@@ -411,6 +416,7 @@
+ 
+ // SAVAGEWIND_LOG_SCREENS=1: the pause state and the game's UI screens that exist (their ids), each time they change
+ static void log_screens(void) {
++    if (!g_site.screen_mgr || !g_site.pause_state) return;
+     static int on = -1;
+     static char last[1024];
+     if (on < 0) on = env_int("SAVAGEWIND_LOG_SCREENS", 0);
+--- a/runtime/nvn/objects.c
++++ b/runtime/nvn/objects.c
+@@ -18,6 +18,7 @@
+ // only when the device reports 55.15 or later (main 0x7100d802e0). The per-device entries (scratch memory
+ // factors, L2 size, texture limits, memory pool page size) are what a Tegra X1 reports; the rest is the table.
+ static uint32_t device_integer(uint32_t which) {
++    if (gamelib_legacy_sdk7_profile() && which < 2) return which ? 311 : 53;
+     static const uint32_t v[] = {
+         [0] = 55, [1] = 15,
+         [2] = 14, [3] = 0x10000, [4] = 0x100, [5] = 8, [6] = 0x10, [7] = 4, [8] = 0x10, [9] = 0x20,
+--- a/runtime/services/audio.c
++++ b/runtime/services/audio.c
+@@ -9,6 +9,7 @@
+ #include <SDL3/SDL.h>
+ 
+ #include "../hle.h"
++#include "../game_sites.h"
+ #include "../settings.h"
+ #include "../ipc.h"
+ 
+@@ -1091,6 +1092,7 @@
+ }
+ 
+ static bool sdk_renderer_on(void) {
++    if (gamelib_legacy_sdk7_profile()) return false;
+     const char *e = ENV("SAVAGEWIND_AUDIO_DFC");
+     return !e || strcmp(e, "0");
+ }
+--- a/runtime/services/fs.c
++++ b/runtime/services/fs.c
+@@ -866,6 +866,7 @@
+ // 0x71014b854e in the Ghidra project, read by FUN_7100d4b57c and FUN_7100d4bca0); "%s" leaves just "Savage Wind
+ // <version>". Called once main is loaded; anything else at that address is left alone.
+ void fs_title_version_patch(void) {
++    if (!g_site.title_version_format) return;
+     char *fmt = (char *)(uintptr_t)g_site.title_version_format;
+     if (memcmp(fmt, "Ver.%s", 7)) { LOG("[fs] title version: \"Ver.%%s\" not found, left as is\n"); return; }
+     memcpy(fmt, "%s", 3);
+--- a/runtime/ui/game_options.mm
++++ b/runtime/ui/game_options.mm
+@@ -935,6 +935,7 @@
+ static bool g_dlc_button;
+ 
+ extern "C" void rt_title_menu_prepare(void) {
++    if (gamelib_legacy_sdk7_profile()) return;
+     int n = 0;
+     g_ndlc_lists = 0;
+     g_dlc_button = false;
+--- a/runtime/nvn/glyphs.c
++++ b/runtime/nvn/glyphs.c
+@@ -38,8 +38,13 @@
+ 
+ // The game's sheet: 256x1024 BC4, 5 x 20 cells of 50x50 (51 apart). nn::font copies it into a texture memory pool of
+ // its own, so it is recognised by its contents (the same in every region and language).
+-typedef struct { uint32_t cols, rows, sheet_w, sheet_h; } SheetFont;
+-static const SheetFont k_sheet = {5, 20, 256, 1024};
++typedef struct {
++    uint32_t cols, rows, sheet_w, sheet_h, cell_w, cell_h;
++    uint64_t bytes, hash;
++} SheetFont;
++static const SheetFont k_sheet = {5, 20, 256, 1024, 50, 50, 0x20000, 0x726127a3b63fbd95ull};
++// Measured from 1.6.0 External_00.bffnt (TGLP/BNTX): 44x39 cells, 2 columns.
++static const SheetFont k_sdk7_sheet = {2, 25, 128, 1024, 44, 39, 0x10000, 0x5b727fdf123af8d4ull};
+ #define SHEET_BYTES 0x20000ull
+ #define SHEET_HASH 0x726127a3b63fbd95ull  // FNV-1a of those bytes (External_00.bffnt from 0x2000, 1.8.2)
+ 
+@@ -582,18 +587,18 @@
+ 
+ // Where glyph index i's cell is in the uploaded sheet: its top-left pixel and whether rows run bottom-up
+ static void cell_origin(const SheetFont *f, uint32_t i, int *x0, int *y0) {
+-    *x0 = (int)(i % f->cols) * (CELL + 1);
+-    *y0 = (int)(i / f->cols) * (CELL + 1);
++    *x0 = (int)(i % f->cols) * (f->cell_w + 1);
++    *y0 = (int)(i / f->cols) * (f->cell_h + 1);
+ }
+ static int sheet_y(const SheetFont *f, int y0, int y) { return (int)f->sheet_h - 1 - (y0 + y); }  // (stored bottom-up)
+ 
+ bool glyphs_apply(uint64_t addr, uint64_t pool_lo, uint64_t pool_hi, uint32_t format, uint32_t w, uint32_t h,
+                   uint8_t *lin, uint32_t wb, uint32_t hb) {
+-    const SheetFont *f = &k_sheet;
++    const SheetFont *f = w == k_sdk7_sheet.sheet_w ? &k_sdk7_sheet : &k_sheet;
+     if (format != FMT_BC4 || w != f->sheet_w || h != f->sheet_h || w != wb * 4 || h != hb * 4) return false;
+-    if (addr < pool_lo || addr + SHEET_BYTES > pool_hi) return false;
+-    uint64_t hash = fnv1a((const uint8_t *)(uintptr_t)addr, SHEET_BYTES);
+-    if (hash != SHEET_HASH) {
++    if (addr < pool_lo || addr > pool_hi || f->bytes > pool_hi - addr) return false;
++    uint64_t hash = fnv1a((const uint8_t *)(uintptr_t)addr, f->bytes);
++    if (hash != f->hash) {
+         static int nlog;
+         if (nlog++ < 4) LOG("[glyphs] 256x1024 BC4 texture %llx is not the button glyph sheet (hash %016llx)\n",
+                             (unsigned long long)addr, (unsigned long long)hash);
+@@ -606,14 +611,14 @@
+     int changed = 0;
+     for (int code = 0xE040; code < 0xE0A0; code++) {
+         uint32_t gi = index_of(code);
+-        if (gi == 0xffff) continue;
++        if (gi == 0xffff || gi >= f->cols * f->rows) continue;
+         int x0, y0;
+         cell_origin(f, gi, &x0, &y0);
+-        if (x0 + CELL > (int)w || y0 + CELL > (int)h) continue;
++        if (x0 + f->cell_w > (int)w || y0 + f->cell_h > (int)h) continue;
+         // the original glyph's box (its lit pixels)
+-        int bx0 = CELL, by0 = CELL, bx1 = -1, by1 = -1;
+-        for (int y = 0; y < CELL; y++)
+-            for (int x = 0; x < CELL; x++)
++        int bx0 = f->cell_w, by0 = f->cell_h, bx1 = -1, by1 = -1;
++        for (int y = 0; y < (int)f->cell_h; y++)
++            for (int x = 0; x < (int)f->cell_w; x++)
+                 if (orig[(uint64_t)sheet_y(f, y0, y) * w + x0 + x] > 96) {
+                     if (x < bx0) bx0 = x;
+                     if (x > bx1) bx1 = x;
+@@ -626,15 +631,15 @@
+         memset(&cv, 0, sizeof cv);
+         int copy = 0;
+         bool drawn = draw_glyph(&cv, b, code, kind, &copy);
+-        if (copy && index_of(copy) != 0xffff) {  // the game's glyph from another cell
++        if (copy && index_of(copy) != 0xffff && index_of(copy) < f->cols * f->rows) {  // the game's glyph from another cell
+             int sx0, sy0;
+             cell_origin(f, index_of(copy), &sx0, &sy0);
+-            for (int y = 0; y < CELL; y++)
+-                memcpy(img + (uint64_t)sheet_y(f, y0, y) * w + x0, orig + (uint64_t)sheet_y(f, sy0, y) * w + sx0, CELL);
++            for (int y = 0; y < (int)f->cell_h; y++)
++                memcpy(img + (uint64_t)sheet_y(f, y0, y) * w + x0, orig + (uint64_t)sheet_y(f, sy0, y) * w + sx0, f->cell_w);
+             changed++;
+         } else if (drawn) {
+-            for (int y = 0; y < CELL; y++)
+-                for (int x = 0; x < CELL; x++)
++            for (int y = 0; y < (int)f->cell_h; y++)
++                for (int x = 0; x < (int)f->cell_w; x++)
+                     img[(uint64_t)sheet_y(f, y0, y) * w + x0 + x] = (uint8_t)lroundf(cv.a[y * CELL + x] * 255);
+             changed++;
+         }

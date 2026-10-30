@@ -1,0 +1,12 @@
+[
+  {
+    "file": "assets/prod.keys",
+    "old_mode": "0o644",
+    "new_mode": "0o600"
+  },
+  {
+    "file": "assets/keys/combined.keys",
+    "old_mode": "0o644",
+    "new_mode": "0o600"
+  }
+]

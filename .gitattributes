@@ -10,3 +10,5 @@
 *.rules text eol=lf
 *.xml text eol=lf
 *.ini text eol=lf
+# Unified diff context markers are literal spaces; keep archived patch bytes intact.
+patches/botw-sdk7-20261029/*.patch -text whitespace=-blank-at-eol

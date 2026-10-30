@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.native-review-test-tmp/
+.native-review-ci/
+*.xci
+*.nsp
+*.nsz
+*.nca
+*.keys
+*.bfttf
+swgame.so

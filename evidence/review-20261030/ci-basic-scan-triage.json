@@ -1,0 +1,23 @@
+{
+  "job_id": 5064,
+  "head": "1fd795aa4ccc43abfabd0724d5e348d7cc1e343b",
+  "scan_status": "success",
+  "finding_count": 71,
+  "severity": {
+    "High": 68,
+    "Medium": 3
+  },
+  "affected_files": [
+    "evidence/input/gamepad.c",
+    "evidence/input/hid.c",
+    "evidence/input/hid_motion.c",
+    "evidence/input/las_bindings.c",
+    "evidence/input/las_hid_set.c",
+    "evidence/input/las_input.c",
+    "evidence/input/misc.c",
+    "evidence/input/pad_map.c",
+    "evidence/input/totk_shim_sdl3.c"
+  ],
+  "findings_in_changed_files": [],
+  "all_finding_source_blobs_unchanged_from_main": true
+}
