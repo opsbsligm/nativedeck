@@ -21,6 +21,8 @@ stages:
 
 review-tools:
   stage: test
+  tags:
+    - gitlab--duo
   image: python:3.12-bookworm
   script:
     - apt-get update -qq && apt-get install -y --no-install-recommends zstd
@@ -28,7 +30,9 @@ review-tools:
     - python3 -c "import ast,pathlib; files=list(pathlib.Path('tools/native_review').glob('*.py')); [ast.parse(p.read_text(),filename=str(p)) for p in files]; print('Validated',len(files),'Python sources')"
 
 semgrep-sast:
+  image: registry.gitlab.com/security-products/semgrep@sha256:6438917354ac62eebd1a85ba7dcd6d597f1bf4613ec6ea9eb61892cf4c3b4732
   allow_failure: false
 
 secret_detection:
+  image: registry.gitlab.com/security-products/secrets@sha256:dd2449c8bf1fdb25c7e81b7128c9ada36e0b4f10c8763bd71c3a2ca8cda9e51a
   allow_failure: false

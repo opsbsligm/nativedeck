@@ -55,3 +55,9 @@ Deck备份均在`~/native-recomp/evidence/review-20261030/`：`run.sh.before-chi
 新进程绑定原runtime SHA `51b453fe03bca95fd38d1e92ab9b249192fa64da39d336ab68b821e11b26f1c3`；日志确认加载完整中文字库，录帧已关闭。结果见`chinese-render-acceptance.json`，存档备份回执见`chinese-restart.json`；两张精选截图为`chinese-title.png`和`chinese-gameplay.png`。未重启Steam或系统。
 
 GitLab本次MR还包含实例策略注入的安全作业，其中“跨文件静态安全扫描”由既有策略设为`allow_failure=true`。本项目新增测试/SAST/密钥作业均不允许失败；不能把实例作业的豁免写成全部强制扫描通过，最终以实际报告和MR状态分别确认。
+
+## CI增量：历史告警与执行器路由
+
+pipeline839的基础扫描执行成功并报告71条C告警（68 High、3 Medium），涉及9份历史取证源码快照。已逐文件核对blob与`main@56459c3`完全相同，新增工具和CI也未引用这些C文件；见`ci-basic-scan-triage.json`。这些告警保留为待源码层复核，不归类为已修复或已证明误报，不据此宣称全仓无漏洞。
+
+该流水线中实例注入的五项扫描均执行成功；本项目新加的三个作业因安全执行器14只允许固定摘要的扫描镜像而报`runner_system_failure/disallowed image`，是本次CI配置路由问题。已把单元测试安排到既有Linux构建执行器13（`gitlab--duo`），项目扫描改用执行器14已有白名单中的官方镜像精确摘要。此修复需要新HEAD流水线验证；未更改执行器配置、镜像白名单或安全策略。
