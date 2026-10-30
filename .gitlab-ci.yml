@@ -25,8 +25,9 @@ review-tools:
     - gitlab--duo
   image: local.gitlab-ci.invalid/gitlab-org/duo-workflow/default-docker-image/workflow-generic-image:v0.0.23
   script:
-    - apt-get update -qq && apt-get install -y --no-install-recommends zstd
-    - python3 -m unittest discover -s tools/native_review -p 'test_*.py' -v
+    - bash tools/native_review/prepare_ci_zstd.sh "$CI_PROJECT_DIR/.native-review-ci"
+    - export PATH="$CI_PROJECT_DIR/.native-review-ci/bin:$PATH"
+    - python3 -c "import unittest; suite=unittest.defaultTestLoader.discover('tools/native_review',pattern='test_*.py'); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() and not result.skipped else 1)"
     - python3 -c "import ast,pathlib; files=list(pathlib.Path('tools/native_review').glob('*.py')); [ast.parse(p.read_text(),filename=str(p)) for p in files]; print('Validated',len(files),'Python sources')"
 
 semgrep-sast:
