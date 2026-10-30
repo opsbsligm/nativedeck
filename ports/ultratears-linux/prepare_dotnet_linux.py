@@ -5,7 +5,7 @@ root=Path.home()/'native-recomp/ports/ultratears-linux-20261030'
 deps=root/'deps'; deps.mkdir(exist_ok=True)
 url='https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json'
 with urllib.request.urlopen(url,timeout=45) as r: metadata=json.load(r)
-version=metadata['latest-sdk']
+version='10.0.403'  # Tested SDK; keep in sync with build-native-shaders.sh
 file=None
 for release in metadata['releases']:
     for sdk in [release.get('sdk',{}),*release.get('sdks',[])]:
