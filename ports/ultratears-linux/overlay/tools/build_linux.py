@@ -7,6 +7,7 @@ import argparse
 import ast
 import json
 import os
+import re
 from pathlib import Path
 import platform
 import shlex
@@ -14,7 +15,7 @@ import shutil
 import subprocess
 import sys
 
-from linux_inputs import verify_generated
+from linux_inputs import UPSTREAM, check_exefs, digest, verify_generated
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -56,11 +57,13 @@ def main():
         ap.error('--jobs must be between 1 and 4')
     sources = [(ROOT/p).resolve() for p in source_lists()]
     generated = []
+    generated_stamp = None
     if args.target == 'game':
         if not args.generated or not args.exefs:
             ap.error('game requires --generated and --exefs from checked local 1.4.3 input')
         try:
             generated = verify_generated(args.generated, args.exefs)
+            generated_stamp = digest(args.generated/'manifest-linux.json')
         except (OSError, ValueError) as e:
             ap.error(str(e))
     out = args.out.resolve()
@@ -106,7 +109,25 @@ def main():
     print(json.dumps({'target': args.target, 'runtime_sources': len(sources), 'generated_sources': len(generated),
                       'output': str(target), 'game_playability_validated': False}), flush=True)
     if not args.generate_only:
-        raise SystemExit(subprocess.call(['ninja', '-f', str(build), '-j', str(args.jobs), '-k', '0']))
+        code = subprocess.call(['ninja', '-f', str(build), '-j', str(args.jobs), '-k', '0'])
+        if code == 0 and args.target == 'game':
+            verify_generated(args.generated,args.exefs)
+            if digest(args.generated/'manifest-linux.json') != generated_stamp:
+                raise SystemExit('Generated input changed during compilation; refusing build record')
+            counts = {}
+            for module in ('main','subsdk0','sdk'):
+                text=(args.generated/module/(module+'_table.c')).read_text()
+                match=re.search(r'const uint64_t '+module+r'_fn_count\s*=\s*(\d+)\s*;',text)
+                counts[module]=int(match[1])
+            record = {'schema':1,'kind':'ultratears-linux-build','version':'1.4.3','upstream':UPSTREAM,
+                      'binary_sha256':digest(target),'exefs':check_exefs(args.exefs),
+                      'generated_manifest_sha256':digest(args.generated/'manifest-linux.json'),
+                      'function_counts':counts,'hardware_validated':False}
+            output=target.with_suffix('.build.json')
+            temporary=output.with_suffix('.json.new')
+            temporary.write_text(json.dumps(record,indent=2)+'\n')
+            temporary.replace(output)
+        raise SystemExit(code)
 
 
 if __name__ == '__main__':
