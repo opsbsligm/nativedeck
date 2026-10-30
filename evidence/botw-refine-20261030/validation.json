@@ -1,0 +1,50 @@
+{
+  "recorded_at": "2026-10-30T17:20:08.888700+08:00",
+  "scope": "BOTW 1.6.0 SDK7 launcher only",
+  "deck_unit_tests": {
+    "total": 14,
+    "passed": 14,
+    "skipped": 0
+  },
+  "deployment": {
+    "install": {
+      "installed": true,
+      "game_restarted": false,
+      "game_binary_changed": false,
+      "launcher_sha256": "caaf87c57f074a48ee9b13bd3dca34691f24e96dd8217e878e1a82e1b610a9f5",
+      "helper_sha256": "67c2ffa516b69343798c8053443f3734d6a74484ad19f0039f9ec657d58fe35e",
+      "rollback": "/home/deck/native-recomp/evidence/botw-refine-20261030/run.sh.before"
+    },
+    "duplicate_rc": 0,
+    "duplicate_message": "旷野之息仍在运行，保留当前会话：113473",
+    "game_pids_before": [
+      113473
+    ],
+    "game_pids_after": [
+      113473
+    ],
+    "runtime_unchanged": true,
+    "settings_unchanged": true,
+    "save_files_unchanged_during_probe": true,
+    "runtime_log_inode_unchanged": true,
+    "active_game_restarted": false,
+    "new_game_launch_validated": false,
+    "live_save_backup_attempted": false
+  },
+  "xbox_mapping_source_review": {
+    "follows_actual_binding": true,
+    "south": "A",
+    "east": "B",
+    "west": "X",
+    "north": "Y",
+    "full_physical_validation": false
+  },
+  "known_open": [
+    "One 16KiB IVFC mismatch in Demo104_1.webm; existing copies cannot supply verified repair bytes",
+    "Fresh complete game-library rebuild not validated",
+    "New idle game launch via this supervisor not exercised while preserving current game",
+    "Complete controls, static tutorial prompts and DLC not validated"
+  ],
+  "full_port_hardware_validated": false,
+  "game_content_included": false
+}
