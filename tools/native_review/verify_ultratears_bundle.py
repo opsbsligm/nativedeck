@@ -40,6 +40,8 @@ def verify(root, full=False):
     if not resources <= files.keys():
         raise ValueError('Incomplete game resource manifest')
     required = {'ultratears', 'run.sh', 'verify_ultratears_bundle.py', 'native_binary_check.py','native_dependencies.py','build-inputs/build-record.json'}
+    if 'xbox_ui' in manifest:
+        required|={'build-inputs/xbox-ui.json','build-inputs/xbox-manifest.tsv'}
     if not required <= files.keys():
         raise ValueError('Incomplete native bundle manifest')
     for name, info in files.items():
@@ -52,6 +54,9 @@ def verify(root, full=False):
         critical = name == 'ultratears' or name.startswith(('lib/', 'data/exefs/', 'data/fonts/', 'build-inputs/')) or name.endswith(('.py','.sh'))
         if (full or critical) and digest(path) != info['sha256']:
             raise ValueError('资源校验失败：'+name)
+    if 'xbox_ui' in manifest:
+        if json.loads((root/'build-inputs/xbox-ui.json').read_text())!=manifest['xbox_ui']:
+            raise ValueError('Xbox资源记录不一致')
     check = inspect(root/'ultratears', require_ultratears=True)
     if not check['inspection_passed']:
         raise ValueError('游戏程序未通过原生检查：'+','.join(check['errors']))

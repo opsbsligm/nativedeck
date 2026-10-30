@@ -35,3 +35,24 @@ python3 tools/native_review/ultratears_bundle.py \
 `run.sh` 默认 `TOTK_LANG=zh-Hans`、handheld模式、集显不另建内存池副本，保留玩家显式语言/模式设置。存档与可变shader缓存写入 `${XDG_DATA_HOME:-$HOME/.local/share}/ultratears`，不写其他游戏。启动器只直接exec本目录的原生程序，不调用兼容工具；正常启动做关键文件哈希、全部文件尺寸和原生链接检查，`--verify`才遍历全部大文件哈希。
 
 Xbox图标及完整中文显示没有因这些默认项而被标记为完成，清单相应验收字段始终为false。测试使用可识别的微型合成格式/ELF夹具，未被当作游戏或安装到Steam。
+
+## 单实例与Xbox资源
+
+启动器对自己的应用数据目录持有 `flock`，第二次启动退出75，避免两个进程同时写同一份存档。游戏退出即释放锁，不需要清理过期PID；不关闭其他游戏。
+
+Xbox图标复用用户指定MacNativeGames的MIT源码，固定 `f1d00772df1ac3230268f3124bdeb6b7cc81a61c`，四份公开文件逐项SHA-256核对。下面第一条命令只下载公开脚本和许可证；第二条只读取本地1.4.3游戏资源，在新目录生成私人资源替换。需要独立环境中的Python 3.14以上（`compression.zstd`）与fontTools，不安装到SteamOS根文件系统。
+
+```sh
+python3 ports/ultratears-linux/prepare_ui_python.py
+python3 tools/native_review/ultratears_xbox.py fetch-tools \
+  --destination "$HOME/native-recomp/deps/macnativegames-xbox-f1d00772"
+python3 tools/native_review/ultratears_xbox.py prepare \
+  --tools "$HOME/native-recomp/deps/macnativegames-xbox-f1d00772" \
+  --python "$HOME/native-recomp/deps/ui-python/bin/python3" \
+  --romfs "$HOME/native-recomp/project-data/romfs" \
+  --destination "$HOME/native-recomp/private-ui/xbox-1.4.3"
+```
+
+安装命令加 `--xbox-ui "$HOME/native-recomp/private-ui/xbox-1.4.3"`。安装器核对每份替换及对应原始资源SHA，把替换追加到自己尚未发布的RomFS副本，并更新JSON/原生索引；原始输入不变。不需要运行时mod层、模拟器或兼容工具。修改后索引标记 `ui-patched`，保留原内容指纹，不冒充原版镜像；启动清单记录修改后的实际文件SHA。
+
+目前覆盖四种区域字体中的按钮提示（含简中、繁中）、八个HUD按钮贴图和资源尺寸表。保持Switch动作的位置映射，因此屏幕显示实际要按的Xbox字母：右B、下A、上Y、左X，另有LB/RB、LT/RT和Menu/View。教程中的固定图片尚未全部替换，不能宣称“全部Xbox”完成。真实资源生成、画面和游戏实跑仍未验证，生成记录和安装清单不会将其升级为实机通过。

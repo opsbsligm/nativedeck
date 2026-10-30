@@ -1,0 +1,48 @@
+{
+  "verified_at": "2026-10-30T07:15:44.941587+00:00",
+  "linux_tests": {
+    "passed": 43,
+    "skipped": 0,
+    "environment": "Steam Deck existing Ubuntu build container",
+    "scope": "synthetic ELF/resources, transaction rollback, native linkage and launch isolation",
+    "log_sha256": "c06f09b49b3d125e9ae70de0b39b76e8cab79be50dccc467a7a76ef9a655462d"
+  },
+  "production_audit_library_rejected": {
+    "binary": "/home/deck/native-recomp/ports/ultratears-linux-20261030/build/libultratears-runtime-audit.so",
+    "elf64_x86_64": true,
+    "elf_entry": 0,
+    "interpreter": null,
+    "function_counters": {},
+    "inspection_passed": false,
+    "errors": [
+      "native_executable_entry_not_proven",
+      "native_glibc_interpreter_not_proven",
+      "main_function_table_missing_or_empty",
+      "subsdk0_function_table_missing_or_empty",
+      "sdk_function_table_missing_or_empty"
+    ],
+    "playability_validated": false,
+    "release_accepted": false,
+    "evidence_required": [
+      "matching game version and input hashes",
+      "complete and verified resources",
+      "Steam entry launch, save/load and controls",
+      "Chinese text and Xbox prompts on screen"
+    ]
+  },
+  "public_icon_tools": {
+    "repository": "https://github.com/ly05010419/MacNativeGames",
+    "commit": "f1d00772df1ac3230268f3124bdeb6b7cc81a61c",
+    "source_sha256_verified": true,
+    "fonttools": "4.60.1",
+    "cli_import_test": "SteamOS host native Python; --help exited 0"
+  },
+  "actual_game_inputs_available": false,
+  "game_elf_built": false,
+  "game_resources_generated": false,
+  "hardware_validated": false,
+  "chinese_display_validated": false,
+  "all_xbox_prompts_validated": false,
+  "tutorial_images_complete": false,
+  "steam_entry_added": false
+}

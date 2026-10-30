@@ -179,7 +179,7 @@ def publish_no_replace(source,destination):
         number=ctypes.get_errno();raise OSError(number,os.strerror(number),str(destination))
 
 
-def prepare(binary,exefs,data,jobs,destination,library_dirs=(),workspace=None,build_record=None):
+def prepare(binary,exefs,data,jobs,destination,library_dirs=(),workspace=None,build_record=None,xbox_ui=None):
     binary,exefs,data,jobs=map(lambda p:Path(p).resolve(),(binary,exefs,data,jobs))
     workspace=(Path.home()/'native-recomp' if workspace is None else Path(workspace)).resolve()
     destination=Path(destination).absolute()
@@ -216,6 +216,13 @@ def prepare(binary,exefs,data,jobs,destination,library_dirs=(),workspace=None,bu
     for name in ('verify_ultratears_bundle.py','native_binary_check.py','native_dependencies.py'):files[name]=here/name
     files['build-inputs/shader-jobs.jsonl']=regular(jobs)
     peak=sum(p.stat().st_size for p in files.values())
+    ui_rows=None
+    if xbox_ui is not None:
+        from ultratears_xbox import manifest as ui_manifest
+        xbox_ui=Path(xbox_ui).resolve();ui_rows=ui_manifest(xbox_ui)
+        files['build-inputs/xbox-ui.json']=regular(xbox_ui/'xbox-ui.json')
+        files['build-inputs/xbox-manifest.tsv']=regular(xbox_ui/'manifest.tsv')
+        peak+=sum(r['bytes']+16 for r in ui_rows.values())
     destination.parent.mkdir(parents=True,exist_ok=True)
     if shutil.disk_usage(destination.parent).free < peak+4*1024**3: raise ValueError('Insufficient space for bundle plus 4GiB reserve')
     print(f'Additional disk estimate {peak/1024**3:.2f}GiB; source resources retained',flush=True)
@@ -235,11 +242,20 @@ def prepare(binary,exefs,data,jobs,destination,library_dirs=(),workspace=None,bu
             with target.open('rb') as stored:os.fsync(stored.fileno())
             manifest[name]={'bytes':target.stat().st_size,'sha256':expected}
             print('Copied and verified '+name,flush=True)
+        ui_record=None
+        if ui_rows is not None:
+            from ultratears_xbox import apply_to_stage
+            ui_record=apply_to_stage(stage/'data/romfs',xbox_ui)
+            for name in ('romfs.bin','index.json','runtime-index.bin'):
+                relative='data/romfs/'+name;path=stage/relative
+                manifest[relative]={'bytes':path.stat().st_size,'sha256':digest(path)}
+                with path.open('rb') as stored:os.fsync(stored.fileno())
         script=stage/'run.sh';script.write_text(RUN);script.chmod(0o755)
         manifest['run.sh']={'bytes':script.stat().st_size,'sha256':digest(script)}
         doc={'schema':1,'kind':'ultratears-linux-prepared','version':'1.4.3','files':manifest,
              'hardware_validated':False,'chinese_display_validated':False,'xbox_prompts_validated':False,
              'shader_scope':'pack matches supplied shader inventory; actual GPU translation unvalidated'}
+        if ui_record is not None:doc['xbox_ui']=ui_record
         (stage/'bundle.json').write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n')
         verify(stage,full=True)
         # Persist the staged tree before its single no-overwrite publication.
@@ -260,10 +276,11 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('binary','exefs','data','shader-jobs','destination'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--build-record',type=Path)
+    p.add_argument('--xbox-ui',type=Path,help='Locally generated pinned Xbox resources; baked into the staged RomFS')
     p.add_argument('--library-dir',type=Path,action='append',default=[])
     a=p.parse_args()
     if sys.platform!='linux' or platform.machine().lower() not in ('x86_64','amd64'):p.error('Native Linux x86-64 is required')
     try:
-        print(json.dumps(prepare(a.binary,a.exefs,a.data,a.shader_jobs,a.destination,a.library_dir,build_record=a.build_record),ensure_ascii=False))
+        print(json.dumps(prepare(a.binary,a.exefs,a.data,a.shader_jobs,a.destination,a.library_dir,build_record=a.build_record,xbox_ui=a.xbox_ui),ensure_ascii=False))
     except (OSError,ValueError,KeyError,TypeError,subprocess.CalledProcessError,struct.error) as e:
         p.exit(1,str(e)+'\n')
