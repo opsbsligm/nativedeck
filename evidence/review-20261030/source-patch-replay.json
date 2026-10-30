@@ -1,0 +1,21 @@
+{
+  "upstream_commit": "4249c880bc6b09ad0207fc3f6e7595346f08d232",
+  "source_only_patch_replay_passed": true,
+  "files": [
+    "Makefile",
+    "runtime/game_sites.h",
+    "runtime/gamelib.c",
+    "runtime/hle/framepace.c",
+    "runtime/nvn/glyphs.c",
+    "runtime/nvn/objects.c",
+    "runtime/services/audio.c",
+    "runtime/services/fs.c",
+    "runtime/ui/game_options.mm",
+    "tools/gen.py"
+  ],
+  "game_code_generated_or_compiled": false,
+  "patch_sha256": {
+    "sdk7-native-runtime.patch": "39b8d3a46d0d1397fff27195e23b6940c55f4d6ac61c9c88a8c1a9fb054eb44b",
+    "sdk7-codegen.patch": "760bb91e532fc97fc37a58abdfe36c7b74384f8c56b7e262c3fdda733198e2ee"
+  }
+}

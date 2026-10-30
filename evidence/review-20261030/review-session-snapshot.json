@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-10-30T10:05:28.585933+08:00",
+  "scope": "Current BOTW session and review changes; full game/DLC not accepted",
+  "botw_game_version": "1.6.0",
+  "pid": 24031,
+  "process_alive": true,
+  "steam": {
+    "SteamAppId": "2245023905",
+    "SteamGameId": "9642304250746765312"
+  },
+  "process_elapsed": "10:27:22",
+  "loaded_compatibility_paths": [],
+  "latest_fps_sample": "[vk] t=37638.8 frame 1128875 30.0 fps max 34ms (236033 draws, 0 skipped, 8001 passes, 958 dispatches, 378 flushes, wait 0ms, compile 0 (warm 0), fbcopy 0 (+27840 live), upload 58.7MB, sets 473024 (423431 shared), fbloop 15720 (15600 barriers), gmem waits 0 holds 0, uub 23748 (4830 same), gcopy 1239391 hit 159023 miss (55.9 MB))",
+  "sha256": {
+    "runtime": "51b453fe03bca95fd38d1e92ab9b249192fa64da39d336ab68b821e11b26f1c3",
+    "botw_launcher": "60ebdbc427d8ee4f3a37efca5d3840e5fd5228d692f8feda463d4167c1ed8848",
+    "totk_wrapper": "3ebf93b37f8c319e9e3ebf0240eb0a006e6c07e2f31b83e9be7051280447395f",
+    "font": "2420e8078af796b19a3f6ef13de527a1a91c1e7171eea115926c614ced1009b3",
+    "totk_probe": "be853390a2b591ae5901f0b7057c33920898ff7da38e744d15b259e866aa7c54"
+  },
+  "disk_free_bytes": {
+    "/": 873447424,
+    "/home": 131960176640
+  },
+  "rendered_chinese_validated": false,
+  "full_port_hardware_validated": false,
+  "fresh_game_library_rebuild_completed": false,
+  "totk_real_game_build": false,
+  "active_session_restarted": false
+}

@@ -1,0 +1,17 @@
+test_additional_sdk_module_is_not_silently_admitted (test_legacy_sdk7.LegacySdk7.test_additional_sdk_module_is_not_silently_admitted) ... ok
+test_matching_claimed_id_cannot_admit_a_forged_main (test_legacy_sdk7.LegacySdk7.test_matching_claimed_id_cannot_admit_a_forged_main) ... ok
+test_other_build_ids_and_bases_are_refused_before_reading_input (test_legacy_sdk7.LegacySdk7.test_other_build_ids_and_bases_are_refused_before_reading_input) ... ok
+test_nonzero_counter_does_not_claim_release_or_playability (test_native_binary_check.NativeBinaryCheck.test_nonzero_counter_does_not_claim_release_or_playability) ... ok
+test_real_native_elf_with_zero_table_is_rejected (test_native_binary_check.NativeBinaryCheck.test_real_native_elf_with_zero_table_is_rejected) ... ok
+test_truncated_and_wrong_architecture_are_rejected (test_native_binary_check.NativeBinaryCheck.test_truncated_and_wrong_architecture_are_rejected) ... ok
+test_archive_failure_cannot_publish_manifest_or_success (test_package_native_dir.PackageNativeDirectory.test_archive_failure_cannot_publish_manifest_or_success) ... ok
+test_space_in_resource_name_survives_manifest_and_archive (test_package_native_dir.PackageNativeDirectory.test_space_in_resource_name_survives_manifest_and_archive) ... skipped 'Archive round trip needs zstd'
+test_duplicate_keys_are_rejected_without_changes (test_settings_defaults.SettingsDefaults.test_duplicate_keys_are_rejected_without_changes) ... ok
+test_explicit_language_and_icons_are_preserved (test_settings_defaults.SettingsDefaults.test_explicit_language_and_icons_are_preserved) ... ok
+test_player_bindings_and_audio_survive_and_backup_matches (test_settings_defaults.SettingsDefaults.test_player_bindings_and_audio_survive_and_backup_matches) ... ok
+test_paths_are_literal_and_do_not_execute_shell_substitution (test_totk_build_inner.BuildPaths.test_paths_are_literal_and_do_not_execute_shell_substitution) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.276s
+
+OK (skipped=1)
