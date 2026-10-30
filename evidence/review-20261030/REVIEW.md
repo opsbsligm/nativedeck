@@ -47,3 +47,11 @@ Deck备份均在`~/native-recomp/evidence/review-20261030/`：`run.sh.before-chi
 本轮脚本和证据归档在Mac `~/reports/nativedeck-review-20261030/`及此工作树，设备侧仅使用上述项目目录。没有本轮大于2GiB产物，没有往`/tmp`或`/private/tmp`生成文件。原工作区脏`STATUS.md`保留原状。
 
 来源：[Debian字体包及摘要](https://packages.debian.org/trixie/all/fonts-wqy-microhei/download)、[GitLab MR安全扫描配置](https://docs.gitlab.com/user/application_security/detect/security_configuration/#use-security-scanning-tools-with-merge-request-pipelines)。
+
+## 10:20增量：获准重启后的简中画面验收
+
+用户随后明确允许“仅重启游戏验证”。已先备份5个存档文件并逐文件SHA核对，再仅结束旧游戏PID24031，从原Steam掌机入口启动新PID113473。已实际观察简中标题菜单、“读取哪个数据/复苏神庙”读档界面、“开始/取消”确认框和游戏内“移动/操作说明/视角操作”提示；既有存档成功载入，约30fps，Xbox提示配置及画面抽查通过。此增量取代前文“中文画面未验证/当前游戏未重启”的当时状态，不改变影片坏块、fresh完整重建、全物理按键、完整流程/DLC及TOTK未完成的结论。
+
+新进程绑定原runtime SHA `51b453fe03bca95fd38d1e92ab9b249192fa64da39d336ab68b821e11b26f1c3`；日志确认加载完整中文字库，录帧已关闭。结果见`chinese-render-acceptance.json`，存档备份回执见`chinese-restart.json`；两张精选截图为`chinese-title.png`和`chinese-gameplay.png`。未重启Steam或系统。
+
+GitLab本次MR还包含实例策略注入的安全作业，其中“跨文件静态安全扫描”由既有策略设为`allow_failure=true`。本项目新增测试/SAST/密钥作业均不允许失败；不能把实例作业的豁免写成全部强制扫描通过，最终以实际报告和MR状态分别确认。

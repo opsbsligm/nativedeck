@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-10-30T10:20:07.600704+08:00",
+  "pid": 113473,
+  "scope": "Observed Chinese title, existing save load and gameplay HUD; not complete text/controller coverage",
+  "steam_appid": "2245023905",
+  "runtime_sha256": "51b453fe03bca95fd38d1e92ab9b249192fa64da39d336ab68b821e11b26f1c3",
+  "rendered_chinese_validated": true,
+  "existing_save_loaded": true,
+  "user_authorized_game_restart": true,
+  "xbox_icons_configured": true,
+  "xbox_prompt_smoke_validated": true,
+  "physical_controller_all_buttons_validated": false,
+  "full_port_hardware_validated": false,
+  "full_game_and_dlc_validated": false,
+  "frame_recording_stopped": true,
+  "screenshots_sha256": {
+    "title": "7a6363534c55f75f99b44e3bd9eb007d422cae3a6b219e9bdfd1ce971f171406",
+    "save_menu": "a9fb72862dce7a3ebbccaa49ca7e6811970c28a9acceb02c7f846825d323e6b8",
+    "load_confirm": "ba9f441fd77708fec59019817f00059e34a9e8441d24b391dbb5eb9396e2be18",
+    "gameplay": "ac8c6e11d097796a88ab22242be170a3f127e80975e7c51a2159c6b0fe82b3d2"
+  },
+  "font_load_evidence": [
+    "[pl] system font /home/deck/native-recomp/swr/releases/sdk7-20261029/fonts/wqy-microhei.ttc (4626376 bytes)"
+  ],
+  "last_fps_sample": "[vk] t=301.2 frame 8860 30.0 fps max 34ms (235452 draws, 0 skipped, 8001 passes, 720 dispatches, 378 flushes, wait 0ms, compile 0 (warm 0), fbcopy 0 (+27660 live), upload 58.3MB, sets 471624 (422742 shared), fbloop 15660 (15540 barriers), gmem waits 0 holds 0, uub 23748 (4830 same), gcopy 1235758 hit 158726 miss (55.8 MB))",
+  "steam_or_system_restarted": false
+}
