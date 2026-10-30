@@ -1,0 +1,10 @@
+{
+  "native_linux_elf_x86_64": true,
+  "sdk": "10.0.403",
+  "binary_bytes": 78378111,
+  "sha256": "c4afd5bc3026c223df34c5b75dbbfa282262421d4b084178c68cfaf55311509b",
+  "serve_protocol_negative_test": true,
+  "reply": "fail native-linux-smoke FileNotFoundException: Could not find file '/home/deck/native-recomp/ports/ultratears-linux-20261030/build/shader-smoke/intentionally-absent.code'.",
+  "real_game_shaders_validated": false,
+  "game_playability_validated": false
+}

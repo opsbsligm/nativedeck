@@ -12,3 +12,7 @@
 *.ini text eol=lf
 # Unified diff context markers are literal spaces; keep archived patch bytes intact.
 patches/botw-sdk7-20261029/*.patch -text whitespace=-blank-at-eol
+# A unified diff deliberately retains context prefixes and upstream CRLF bytes.
+ports/ultratears-linux/linux.patch -text whitespace=-blank-at-eol
+# Native port validation evidence is ordinary UTF-8 text.
+ports/ultratears-linux/evidence/*.txt text diff

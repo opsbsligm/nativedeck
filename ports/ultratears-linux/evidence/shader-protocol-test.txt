@@ -1,0 +1,8 @@
+test_ok_reply_without_output_is_failure (__main__.ShaderWorkerFailure.test_ok_reply_without_output_is_failure) ... ok
+test_process_failure_is_not_reported_as_success (__main__.ShaderWorkerFailure.test_process_failure_is_not_reported_as_success) ... ok
+test_worker_writes_result_only_for_existing_output (__main__.ShaderWorkerFailure.test_worker_writes_result_only_for_existing_output) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.506s
+
+OK

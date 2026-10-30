@@ -1,0 +1,8 @@
+GPU=AMD Custom GPU 0405 (RADV VANGOGH)
+Vulkan=1.4.350
+IntegratedGPU=1
+ExternalMemoryHost=1
+ShaderObjectExtension=1
+ShaderObjectFeature=1
+RequiredCapabilitiesPresent=1
+GamePlayabilityValidated=false
