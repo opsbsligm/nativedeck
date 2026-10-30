@@ -29,6 +29,9 @@ int main(int argc, char **argv) {
     assert(linux_unmap_readonly((void *)mapped, n));
     assert(!linux_map_readonly(path, 4, &n) && n == 0);
     assert(!linux_map_readonly(directory, 0, &n));
+    assert(symlink(path, temp) == 0);
+    assert(!linux_map_readonly(temp, 0, &n));
+    assert(unlink(temp) == 0);
     put(temp, "");
     assert(!linux_map_readonly(temp, 0, &n));
     puts("PASS mapping: regular nonempty file, minimum size, full unmap");

@@ -4,6 +4,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <inttypes.h>
+#include <ctype.h>
 #include <openssl/evp.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +17,7 @@
 
 void *linux_map_readonly(const char *path, size_t minimum, size_t *size) {
     if (size) *size = 0;
-    int fd = open(path, O_RDONLY | O_CLOEXEC);
+    int fd = open(path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW);
     if (fd < 0) return NULL;
     struct stat st;
     if (fstat(fd, &st) || !S_ISREG(st.st_mode) || st.st_size <= 0 ||
@@ -42,13 +44,23 @@ int linux_host_readable(uintptr_t address, size_t size) {
     FILE *f = fopen("/proc/self/maps", "r");
     if (!f) return 0;
     uintptr_t cursor = address, end = address + size;
-    char line[4096], permissions[5];
-    unsigned long long lo, hi;
+    char line[4096];
+    uintmax_t lo, hi;
     int ok = 0;
     while (fgets(line, sizeof line, f)) {
-        if (sscanf(line, "%llx-%llx %4s", &lo, &hi, permissions) != 3) continue;
+        char *tail, *upper;
+        if (!isxdigit((unsigned char)line[0])) continue;
+        errno = 0;
+        lo = strtoumax(line, &tail, 16);
+        if (errno || *tail != '-') continue;
+        upper = tail + 1;
+        if (!isxdigit((unsigned char)*upper)) continue;
+        errno = 0;
+        hi = strtoumax(upper, &tail, 16);
+        if (errno || *tail != ' ' || lo >= hi || hi > UINTPTR_MAX) continue;
+        while (*tail == ' ') tail++;
         if (hi <= cursor) continue;
-        if (lo > cursor || permissions[0] != 'r') break;
+        if (lo > cursor || *tail != 'r') break;
         cursor = hi < end ? (uintptr_t)hi : end;
         if (cursor == end) { ok = 1; break; }
     }
@@ -57,7 +69,7 @@ int linux_host_readable(uintptr_t address, size_t size) {
 }
 
 int linux_replace_file(const char *temporary, const char *destination) {
-    int fd = open(temporary, O_RDONLY | O_CLOEXEC);
+    int fd = open(temporary, O_RDONLY | O_CLOEXEC | O_NOFOLLOW);
     if (fd < 0) return 0;
     int ok = fsync(fd) == 0;
     close(fd);
@@ -68,9 +80,9 @@ int linux_replace_file(const char *temporary, const char *destination) {
     char *parent = strdup(destination);
     if (parent) {
         char *slash = strrchr(parent, '/');
-        if (slash) { if (slash == parent) slash[1] = 0; else *slash = 0; }
-        else strcpy(parent, ".");
-        fd = open(parent, O_RDONLY | O_CLOEXEC | O_DIRECTORY);
+        const char *directory = ".";
+        if (slash) { if (slash == parent) slash[1] = 0; else *slash = 0; directory = parent; }
+        fd = open(directory, O_RDONLY | O_CLOEXEC | O_DIRECTORY);
         if (fd >= 0) {
             if (fsync(fd)) fprintf(stderr, "[cache] directory sync failed: %s\n", strerror(errno));
             close(fd);

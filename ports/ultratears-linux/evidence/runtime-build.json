@@ -1,10 +1,10 @@
 {
   "upstream_commit": "0c9ce8afd4c3ab81c33200917af51fb9807aeef0",
   "runtime_source_count": 60,
-  "build_observation": "Final user service observed inactive/dead with ExecMainStatus=0 after 61/61 archive step",
+  "build_observation": "Security update: observed final 3/3 archive step; POSIX behavior and full link audit passed",
   "public_source_files_matched": 37,
-  "runtime_archive_sha256": "5262a7f1f3c7601492678755443bd0cc64b1051a4aad002f782ed2019fd63146",
-  "runtime_archive_bytes": 3024290,
-  "verified_at": "2026-10-30T04:40:17.084675+00:00",
+  "runtime_archive_sha256": "5c06122842160d3440c1f43da6fd0f12ac2cdf167b095a0b4732e5a6d9f2b92e",
+  "runtime_archive_bytes": 3024658,
+  "verified_at": "2026-10-30T06:51:29.912112+00:00",
   "game_playability_validated": false
 }
