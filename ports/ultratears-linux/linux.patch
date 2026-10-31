@@ -223,6 +223,232 @@ index 937a5fd..ec72ef2 100644
  #include "gfx_compat.h"
 +
 +#endif
+diff --git a/src/gfx/nvn/hle_nvn.c b/src/gfx/nvn/hle_nvn.c
+index d2c0dd2..10c2999 100644
+--- a/src/gfx/nvn/hle_nvn.c
++++ b/src/gfx/nvn/hle_nvn.c
+@@ -347,7 +347,12 @@ NVN(nvnMemoryPoolFinalize, void, NVNmemoryPool *p) {
+     va_release(o->va);
+     totk_vpool_fini(o); o->magic = 0;
+ }
+-NVN(nvnMemoryPoolFlushMappedRange, void, const NVNmemoryPool *p, ptrdiff_t off, size_t n) { (void)p; (void)off; (void)n; }
++NVN(nvnMemoryPoolFlushMappedRange, void, const NVNmemoryPool *p, ptrdiff_t off, size_t n) {
++    const pool_t *o = (const pool_t *)p;
++    if (!o || o->magic != MAGIC('P','O','O','L') || !o->mem || off < 0 ||
++        (uint64_t)off > o->size || n > o->size - (uint64_t)off) return;
++    nvn_dirty_mark_range(o->mem + off, n);
++}
+ NVN(nvnMemoryPoolGetFlags, NVNmemoryPoolFlags, const NVNmemoryPool *p){return (NVNmemoryPoolFlags)((const pool_t *)p)->flags;}
+ NVN(nvnMemoryPoolMap, void *, const NVNmemoryPool *p){const pool_t *v=(const void *)p;if(v->magic!=MAGIC('P','O','O','L'))return NULL;return (v->flags&NVN_MEMORY_POOL_FLAGS_CPU_NO_ACCESS)?NULL:v->mem;}
+ NVN(nvnMemoryPoolMapVirtual, NVNboolean, NVNmemoryPool *p, int n, const NVNmappingRequest *r) {
+@@ -369,7 +374,7 @@ NVN(nvnBufferGetAddress, NVNbufferAddress, const NVNbuffer *b){const totk_buffer
+ NVN(nvnBufferGetMemoryPool, NVNmemoryPool *, const NVNbuffer *b){return (void *)((const totk_buffer *)b)->pool;}
+ NVN(nvnBufferGetMemoryOffset, ptrdiff_t, const NVNbuffer *b){return ((const totk_buffer *)b)->off;}
+ NVN(nvnBufferGetSize, size_t, const NVNbuffer *b){return ((const totk_buffer *)b)->size;}
+-NVN(nvnBufferFlushMappedRange, void, const NVNbuffer *b,ptrdiff_t off,size_t size){const totk_buffer *v=(const void *)b;if(off<0||(uint64_t)off>v->size||size>v->size-(uint64_t)off)die("invalid NVN buffer flush range");dm_guest_write_prepare((uint8_t *)h_nvnBufferMap(b)+off,size);}
++NVN(nvnBufferFlushMappedRange, void, const NVNbuffer *b,ptrdiff_t off,size_t size){const totk_buffer *v=(const void *)b;if(off<0||(uint64_t)off>v->size||size>v->size-(uint64_t)off)die("invalid NVN buffer flush range");dm_guest_write_prepare((uint8_t *)h_nvnBufferMap(b)+off,size);nvn_dirty_mark_range((uint8_t *)h_nvnBufferMap(b)+off,size);}
+ 
+ // ---------- 描述符池 ----------
+ // ---------- Descriptor pools ----------
+@@ -579,7 +584,13 @@ NVN(nvnTextureWriteTexels, void, const NVNtexture *t, const NVNtextureView *v, c
+ NVN(nvnTextureWriteTexelsStrided, void, const NVNtexture *t, const NVNtextureView *v, const NVNcopyRegion *r, const void *src, ptrdiff_t row, ptrdiff_t img) {
+     write_texels(CTX(t), (const view_t *)v, r, src, row, img);
+ }
+-NVN(nvnTextureFlushTexels, void, const NVNtexture *t, const NVNtextureView *v, const NVNcopyRegion *r) { (void)t; (void)v; (void)r; }
++NVN(nvnTextureFlushTexels, void, const NVNtexture *t, const NVNtextureView *v, const NVNcopyRegion *r) {
++    (void)v; (void)r;  // conservatively invalidate this texture, not every pool
++    const tex_t *o = (const tex_t *)t;
++    if (!o || o->magic != MAGIC('T','E','X',0) || !o->pool || !o->mem || o->off < 0 ||
++        (uint64_t)o->off > o->pool->size || o->L.size > o->pool->size - (uint64_t)o->off) return;
++    nvn_dirty_mark_range(o->mem, (size_t)o->L.size);
++}
+ NVN(nvnTextureInvalidateTexels, void, const NVNtexture *t, const NVNtextureView *v, const NVNcopyRegion *r) { (void)t; (void)v; (void)r; }
+ 
+ // ---------- 采样器 ----------
+diff --git a/src/gfx/nvn/nvn_dirty.h b/src/gfx/nvn/nvn_dirty.h
+index a5a56f4..8e2ddf0 100644
+--- a/src/gfx/nvn/nvn_dirty.h
++++ b/src/gfx/nvn/nvn_dirty.h
+@@ -21,3 +21,9 @@ int nvn_dirty_recent(uintptr_t lo, uintptr_t hi, nvn_dirty_rec *out, int max);
+ void nvn_dirty_stats(uint64_t *faults, uint64_t *preps);           // 累计：游戏写触发的缺页次数、宿主写前解保护的页数 | Cumulative: number of page faults triggered by game writes, number of pages unprotected before host writes
+ void nvn_dirty_mp_stats(uint64_t *calls, uint64_t *pages, uint64_t *ns);   // 累计：本模块 mprotect 调用次数、覆盖页数、耗时 | Cumulative: this module's mprotect call count, pages covered, time spent
+ void nvn_dirty_slot_stats(int *live, int *used_slots, uint64_t *adds_total); // 当前存活槽、槽表高水位、登记总次数 | Currently live slots, slot table high-water mark, total number of registrations
++
++// Explicit CPU flush notices. marked_since: -1 unknown range, 0 no notice, 1 changed.
++// This does not claim OS write tracking or that unnotified memory is clean.
++int nvn_dirty_mark_range(const void *addr, size_t len);
++int nvn_dirty_marked_since(const void *addr, size_t len, uint64_t stamp);
++uint64_t nvn_dirty_notice_epoch(void);
+diff --git a/src/gfx/nvn/nvn_dirty_win.c b/src/gfx/nvn/nvn_dirty_win.c
+index cb813ea..b08f483 100644
+--- a/src/gfx/nvn/nvn_dirty_win.c
++++ b/src/gfx/nvn/nvn_dirty_win.c
+@@ -37,6 +37,7 @@ static range_t *find(uintptr_t a) {
+ // were hundreds of GetWriteWatch calls a submission (~9% of the recording thread, Great Sky Island, 2026-10-24).
+ // Other threads (the retire thread's copy back of GPU writes) scan every time.
+ static _Atomic uint64_t g_epoch;
++static _Atomic uint64_t g_notice_epoch;  // explicit CPU flushes, independent of OS write watch
+ static _Thread_local int t_epoch_thread;
+ void nvn_dirty_epoch_begin(void) { t_epoch_thread = 1; atomic_fetch_add(&g_epoch, 1); }
+ 
+@@ -114,6 +115,42 @@ void nvn_dirty_remove_range(const void *mem) {
+     pthread_mutex_unlock(&g_slot_mu);
+ }
+ 
++// Explicit flush notifications are positive evidence of CPU writes, even on
++// systems without write watch. Zero here means "no notified write", NOT clean.
++uint64_t nvn_dirty_notice_epoch(void) {
++    return atomic_load_explicit(&g_notice_epoch, memory_order_acquire);
++}
++int nvn_dirty_mark_range(const void *addr, size_t len) {
++    uintptr_t a = (uintptr_t)addr;
++    if (!len) return 0;
++    if (len > UINTPTR_MAX - a) return 0;
++    pthread_mutex_lock(&g_slot_mu);
++    range_t *r = find(a);
++    if (!r || a + len > r->end) { pthread_mutex_unlock(&g_slot_mu); return 0; }
++    uintptr_t first = (a - r->base) / 4096;
++    uintptr_t end = (a + len - r->base + 4095) / 4096;
++    uint64_t generation = atomic_fetch_add(&g_now, 1) + 1;
++    for (uintptr_t p = first; p < end; p++) atomic_store(&r->gen[p], generation);
++    atomic_fetch_add_explicit(&g_notice_epoch, 1, memory_order_release);
++    pthread_mutex_unlock(&g_slot_mu);
++    return 1;
++}
++int nvn_dirty_marked_since(const void *addr, size_t len, uint64_t stamp) {
++    uintptr_t a = (uintptr_t)addr;
++    if (!len) return 0;
++    if (len > UINTPTR_MAX - a) return -1;
++    pthread_mutex_lock(&g_slot_mu);
++    range_t *r = find(a);
++    if (!r || a + len > r->end) { pthread_mutex_unlock(&g_slot_mu); return -1; }
++    uintptr_t first = (a - r->base) / 4096;
++    uintptr_t end = (a + len - r->base + 4095) / 4096;
++    int changed = 0;
++    for (uintptr_t p = first; p < end; p++)
++        if (atomic_load(&r->gen[p]) > stamp) { changed = 1; break; }
++    pthread_mutex_unlock(&g_slot_mu);
++    return changed;
++}
++
+ int nvn_dirty_tracked(const void *addr, size_t len) {
+     range_t *r = find((uintptr_t)addr);
+     return r && g_watch > 0 && atomic_load(&r->watched) && (uintptr_t)addr + len <= r->end;
+diff --git a/src/gfx/nvn/nvn_impl.h b/src/gfx/nvn/nvn_impl.h
+index b5e665d..2a9255b 100644
+--- a/src/gfx/nvn/nvn_impl.h
++++ b/src/gfx/nvn/nvn_impl.h
+@@ -1,34 +1,43 @@
+-// NVN implementation registration macros shared by hle_nvn.c and TOTK extension files.
+-// [Windows port] Registered in PE sections .nvni$m / .nvnx$m between the markers of nvn_registry.c.
+-#pragma once
+-#include "nvn_protos.h"
+-
+-// TOTK: NVN entry points that wait for the GPU, the display or other threads give up the caller's virtual core for
+-// their duration (runtime/threads.c), as the Horizon thread would block there.
+-int runtime_core_away(void);
+-void runtime_core_back(int *away);
+-#define NVN_BLOCKING() __attribute__((cleanup(runtime_core_back))) int totk_core_away_ = runtime_core_away()
+-
+-typedef struct { const char *name; void *fn; } nvn_impl;
+-#define NVN(name, ret, ...)                                                                       \
+-    static ret h_##name(__VA_ARGS__);                                                             \
+-    static const NVNT_##name chk_##name __attribute__((unused)) = h_##name;                       \
+-    __attribute__((used, section(".nvni$m"))) static const nvn_impl e_##name = {#name, (void *)h_##name}; \
+-    static ret h_##name(__VA_ARGS__)
+-// 无原型的新版接口：不做签名检查
+-// Newer interfaces without prototypes: no signature check
+-#define NVN_NOPROTO(name, ret, ...)                                                               \
+-    static ret h_##name(__VA_ARGS__);                                                             \
+-    __attribute__((used, section(".nvni$m"))) static const nvn_impl e_##name = {#name, (void *)h_##name}; \
+-    static ret h_##name(__VA_ARGS__)
+-
+-
+-// TOTK: entry points the game asks nvnDeviceGetProcAddress / nvnBootstrapLoader for that are not in main's
+-// name table (no counting thunk). They are returned directly by nvn_lookup.
+-#define NVN_EXTRA(name, ret, ...)                                                                 \
+-    static ret x_##name(__VA_ARGS__);                                                             \
+-    __attribute__((used, section(".nvnx$m"))) static const nvn_impl ex_##name = {#name, (void *)x_##name}; \
+-    static ret x_##name(__VA_ARGS__)
++// NVN implementation registration macros shared by hle_nvn.c and TOTK extension files.
++// [Windows port] Registered in PE sections .nvni$m / .nvnx$m between the markers of nvn_registry.c.
++#pragma once
++#include "nvn_protos.h"
++
++// TOTK: NVN entry points that wait for the GPU, the display or other threads give up the caller's virtual core for
++// their duration (runtime/threads.c), as the Horizon thread would block there.
++int runtime_core_away(void);
++void runtime_core_back(int *away);
++#define NVN_BLOCKING() __attribute__((cleanup(runtime_core_back))) int totk_core_away_ = runtime_core_away()
++
++typedef struct { const char *name; void *fn; } nvn_impl;
++#ifdef __ELF__
++// ELF does not sort PE $ subsections. Named retained sections expose exact
++// __start/__stop ranges and survive --gc-sections (LLVM lld start-stop-gc).
++#define NVN_ENTRY_IMPL __attribute__((used, retain, section("totk_nvni"), aligned(__alignof__(nvn_impl))))
++#define NVN_ENTRY_EXTRA __attribute__((used, retain, section("totk_nvnx"), aligned(__alignof__(nvn_impl))))
++#else
++#define NVN_ENTRY_IMPL __attribute__((used, section(".nvni$m")))
++#define NVN_ENTRY_EXTRA __attribute__((used, section(".nvnx$m")))
++#endif
++#define NVN(name, ret, ...)                                                                       \
++    static ret h_##name(__VA_ARGS__);                                                             \
++    static const NVNT_##name chk_##name __attribute__((unused)) = h_##name;                       \
++    NVN_ENTRY_IMPL static const nvn_impl e_##name = {#name, (void *)h_##name}; \
++    static ret h_##name(__VA_ARGS__)
++// 无原型的新版接口：不做签名检查
++// Newer interfaces without prototypes: no signature check
++#define NVN_NOPROTO(name, ret, ...)                                                               \
++    static ret h_##name(__VA_ARGS__);                                                             \
++    NVN_ENTRY_IMPL static const nvn_impl e_##name = {#name, (void *)h_##name}; \
++    static ret h_##name(__VA_ARGS__)
++
++
++// TOTK: entry points the game asks nvnDeviceGetProcAddress / nvnBootstrapLoader for that are not in main's
++// name table (no counting thunk). They are returned directly by nvn_lookup.
++#define NVN_EXTRA(name, ret, ...)                                                                 \
++    static ret x_##name(__VA_ARGS__);                                                             \
++    NVN_ENTRY_EXTRA static const nvn_impl ex_##name = {#name, (void *)x_##name}; \
++    static ret x_##name(__VA_ARGS__)
+ 
+ // [Windows port] nvn_registry.c
+ const nvn_impl *nvn_registry_impls(unsigned *n);
+diff --git a/src/gfx/nvn/nvn_registry.c b/src/gfx/nvn/nvn_registry.c
+index a40f3d5..3e239d4 100644
+--- a/src/gfx/nvn/nvn_registry.c
++++ b/src/gfx/nvn/nvn_registry.c
+@@ -5,6 +5,22 @@
+ #include "../host/hle.h"
+ #include "nvn_impl.h"
+ 
++#ifdef __ELF__
++extern const nvn_impl __start_totk_nvni[], __stop_totk_nvni[];
++extern const nvn_impl __start_totk_nvnx[], __stop_totk_nvnx[];
++static const nvn_impl *elf_range(const nvn_impl *first, const nvn_impl *stop, unsigned *n) {
++    uintptr_t begin = (uintptr_t)first, end = (uintptr_t)stop;
++    if (end < begin || (end - begin) % sizeof(*first) ||
++        (end - begin) / sizeof(*first) > 65536)
++        runtime_fail("invalid ELF NVN registry extent");
++    *n = (unsigned)((end - begin) / sizeof(*first));
++    for (unsigned i = 0; i < *n; i++)
++        if (!first[i].name || !first[i].fn) runtime_fail("invalid ELF NVN registry entry");
++    return first;
++}
++const nvn_impl *nvn_registry_impls(unsigned *n) { return elf_range(__start_totk_nvni, __stop_totk_nvni, n); }
++const nvn_impl *nvn_registry_extras(unsigned *n) { return elf_range(__start_totk_nvnx, __stop_totk_nvnx, n); }
++#else
+ // The linker sorts .nvni$a < .nvni$m (NVN / NVN_NOPROTO entries) < .nvni$z by the text after '$'; likewise .nvnx.
+ __attribute__((section(".nvni$a"), used)) static const nvn_impl impls_start[1];
+ __attribute__((section(".nvni$z"), used)) static const nvn_impl impls_stop[1];
+@@ -21,6 +37,8 @@ static const nvn_impl *range(const nvn_impl *a, const nvn_impl *b, unsigned *n)
+ const nvn_impl *nvn_registry_impls(unsigned *n) { return range(impls_start, impls_stop, n); }
+ const nvn_impl *nvn_registry_extras(unsigned *n) { return range(extras_start, extras_stop, n); }
+ 
++#endif
++
+ // The native implementation of an NVN name (the thunks call it).
+ void *nvn_impl_fn(const char *name, int extra) {
+     unsigned n;
 diff --git a/src/gfx/nvn/totk_timeline_win.c b/src/gfx/nvn/totk_timeline_win.c
 index d605714..8c6f8a2 100644
 --- a/src/gfx/nvn/totk_timeline_win.c
@@ -252,7 +478,7 @@ index d605714..8c6f8a2 100644
  void totk_tl(int kind, uint64_t a, uint64_t b) {
      if (!totk_tl_on()) return;
 diff --git a/src/gfx/nvn/totk_vpool_win.c b/src/gfx/nvn/totk_vpool_win.c
-index eb34d3d..53795c5 100644
+index eb34d3d..0b7ae54 100644
 --- a/src/gfx/nvn/totk_vpool_win.c
 +++ b/src/gfx/nvn/totk_vpool_win.c
 @@ -9,7 +9,12 @@
@@ -313,6 +539,16 @@ index eb34d3d..53795c5 100644
      o->host = NULL; o->mem = o->game_mem; o->span = 0;
      return 1;
  }
+@@ -145,7 +168,8 @@ int totk_vpool_dirty_since(uintptr_t va, uint64_t len, uint64_t stamp) {
+             const vpage *p = page < t->npages ? &t->pages[page] : NULL;
+             if (p && p->phys) {
+                 const uint8_t *cpu = (const uint8_t *)p->phys->mem + p->off + in;
+-                found = nvn_dirty_tracked(cpu, n) && nvn_dirty_since(cpu, n, stamp);
++                found = (nvn_dirty_tracked(cpu, n) && nvn_dirty_since(cpu, n, stamp)) ||
++                        nvn_dirty_marked_since(cpu, n, stamp) > 0;
+             }
+             done += n;
+         }
 diff --git a/src/gfx/vkb_audit.c b/src/gfx/vkb_audit.c
 index 06248b1..abb9545 100644
 --- a/src/gfx/vkb_audit.c
@@ -328,6 +564,7 @@ index 06248b1..abb9545 100644
  #include <stdlib.h>
  #include <string.h>
 diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
+index 5a0a707..55b90fb 100644
 --- a/src/gfx/vkb_bc7.c
 +++ b/src/gfx/vkb_bc7.c
 @@ -6,17 +6,32 @@
@@ -363,7 +600,7 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
  
  #include "compat/gfx_compat.h"
  #include "host/hle.h"
-@@ -43,7 +58,10 @@
+@@ -43,7 +58,10 @@ vkb_bc7_key vkb_bc7_key_of(const uint8_t *blocks, size_t n, uint32_t w, uint32_t
  typedef struct { uint64_t a, b, off; uint32_t len, fmt; } rec_t;   // also the record in bc7.idx (fmt: VKB_BC_*)
  static rec_t *g_tab;
  static size_t g_cap, g_n;
@@ -375,7 +612,7 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
  // bc7.pack as it was when opened, mapped read-only: a read is a copy, no file call and no lock (a texture has hundreds
  // of surfaces; fseek + fread each, under g_mu, was much of an upload). The pages are the system's file cache, as the
  // reads were: no memory of the game's, dropped by the system when it needs the RAM. Blocks appended later (encoded in
-@@ -60,7 +78,9 @@
+@@ -60,7 +78,9 @@ static rec_t *slot(uint64_t a, uint64_t b) {   // g_mu held, g_cap a power of tw
      return &g_tab[h];
  }
  static void put(const rec_t *r) {   // g_mu held
@@ -385,7 +622,7 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
          rec_t *old = g_tab;
          size_t n = g_cap;
          g_cap = g_cap ? g_cap * 2 : 1 << 16;
-@@ -76,37 +96,121 @@
+@@ -76,37 +96,121 @@ static const char *dir(void) {
      const char *d = getenv("TOTK_BC7_DIR");
      return d && *d ? d : "data/textures";
  }
@@ -462,9 +699,6 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
 -        if ((int64_t)(r.off + r.len) > pack_size) break;   // the blocks of an interrupted write: dropped
 -        put(&r);
 -        good += sizeof r;
--    }
--    _fseeki64(g_idx, good, SEEK_SET);
--    snprintf(path, sizeof path, "%s/bc7.pack", d);
 +    const char *d = dir(), *cache = getenv("TOTK_BC7_CACHE_DIR");
 +    g_overlay = cache && *cache;
 +    FILE *base_idx = NULL;
@@ -503,7 +737,9 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
 +    if (pack_size > 0 && pack_size <= SIZE_MAX) {
 +        g_map = linux_map_readonly(path, (size_t)pack_size, &mapped_size);
 +        if (g_map) g_map_size = pack_size; // never map the growing delta
-+    }
+     }
+-    _fseeki64(g_idx, good, SEEK_SET);
+-    snprintf(path, sizeof path, "%s/bc7.pack", d);
 +#else
      HANDLE f = pack_size > 0 ? CreateFileA(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
                                             FILE_ATTRIBUTE_NORMAL, NULL) : INVALID_HANDLE_VALUE;
@@ -529,7 +765,7 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
  }
  
  int vkb_bc7_lookup(vkb_bc7_key k, int *fmt, size_t *len) {
-@@ -125,8 +229,11 @@
+@@ -125,8 +229,11 @@ int vkb_bc7_read(vkb_bc7_key k, uint8_t *out, size_t n) {
      int ok = open_files() && g_cap;
      rec_t r = {0};
      if (ok) { r = *slot(k.a, k.b); ok = (r.a || r.b) && r.len == n; }
@@ -543,7 +779,7 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
      if (ok) g_hits++; else g_misses++;
      pthread_mutex_unlock(&g_mu);
      if (mapped) memcpy(out, g_map + r.off, n);   // (the mapped part is never written again)
-@@ -134,15 +241,22 @@
+@@ -134,16 +241,23 @@ int vkb_bc7_read(vkb_bc7_key k, uint8_t *out, size_t n) {
  }
  void vkb_bc7_store(vkb_bc7_key k, const uint8_t *data, size_t n) { vkb_bc_store(k, data, n, VKB_BC_7); }
  void vkb_bc_store(vkb_bc7_key k, const uint8_t *data, size_t n, int fmt) {
@@ -557,7 +793,6 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
 -            _fseeki64(g_idx, 0, SEEK_END);
 -            if (fwrite(&r, sizeof r, 1, g_idx) == 1) { fflush(g_idx); put(&r); }
 -        }
--    }
 +        uint64_t end;
 +        if (!file_size(g_pack, &end) || n > (BC7_DELTA - 1) - end) goto write_fail;
 +        rec_t r = {k.a, k.b, end, (uint32_t)n, (uint32_t)fmt};
@@ -565,15 +800,16 @@ diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
 +            _fseeki64(g_idx, 0, SEEK_END) || fwrite(&r, sizeof r, 1, g_idx) != 1 || fflush(g_idx)) goto write_fail;
 +        if (g_overlay) r.off |= BC7_DELTA;
 +        put(&r); // publish only after both streams flush successfully
-+    }
-+    pthread_mutex_unlock(&g_mu);
+     }
+     pthread_mutex_unlock(&g_mu);
 +    return;
 +write_fail:
 +    g_open = -1; // no more writes or lookups after a partial write; validate on restart
-     pthread_mutex_unlock(&g_mu);
++    pthread_mutex_unlock(&g_mu);
  }
  
-@@ -162,7 +276,11 @@
+ // ---- encoding in the background (a miss: next time it is there)
+@@ -162,7 +276,11 @@ static int quality(void) {   // TOTK_BC7_QUALITY=0..4 (bc7enc's uber level; back
  static void *encoder(void *unused) {
      (void)unused;
      pthread_setname_np("totk-bc7");
@@ -876,7 +1112,7 @@ index d609baf..48c815c 100644
      g_n = count;
      VLOG("shader pack %s: %zu shaders, %.0f MiB", path, g_n, g_size / 1048576.0);
 diff --git a/src/gfx/vkb_tex.c b/src/gfx/vkb_tex.c
-index 437e678..86293c2 100644
+index 437e678..3d4d1e3 100644
 --- a/src/gfx/vkb_tex.c
 +++ b/src/gfx/vkb_tex.c
 @@ -7,7 +7,9 @@
@@ -889,6 +1125,104 @@ index 437e678..86293c2 100644
  
  #include "compat/gfx_compat.h"
  #include "host/hle.h"
+@@ -19,6 +21,7 @@
+ #include "nvn/totk_vpool.h"
+ #include "vkb_audit.h"
+ #include "vkb_lock.h"
++#include "cpu_texture_shadow.h"
+ 
+ #define VLOG(...) LOG("[vk] " __VA_ARGS__)
+ 
+@@ -111,6 +114,8 @@ VkFormat vkb_format(int f, VkImageAspectFlags *aspect, int *astc) {
+ #define VIEWS 16   // per texture: levels of a mip chain drawn one by one, layers, formats, shader types
+ typedef struct entry {
+     vkb_image im; VkImageView view[VIEWS]; uint8_t view_key[VIEWS][17]; int nviews;
++    uint64_t notice_checked;                // explicit flush epoch checked with dirty_checked
++    nd_cpu_shadow cpu_atlas;                // exact bytes, never a guessed clean bit
+     int refs, shaped;                       // serials holding it; in the shape index (it has memory)
+     uint64_t released, released_stamp;      // aside since this present / dirty-tracking generation
+     uint8_t has_layout, layout[8];
+@@ -192,8 +197,10 @@ static void entry_drop(entry *e) {   // g_mu held: out of the indexes, destroyed
+     if (e->twin) {
+         for (int i = 0; i < e->twin->nviews; i++) vkb_destroy_later(e->twin->view[i], VK_NULL_HANDLE, VK_NULL_HANDLE);
+         vkb_destroy_later(VK_NULL_HANDLE, e->twin->im.img, e->twin->im.mem);
++        nd_shadow_release(&e->twin->cpu_atlas);
+         free(e->twin);
+     }
++    nd_shadow_release(&e->cpu_atlas);
+     free(e);
+ }
+ 
+@@ -466,7 +473,8 @@ vkb_image *vkb_image_of(const tex_t *t) {
+         if (k < g_naside) memmove(&g_aside[k], &g_aside[k + 1], (size_t)(--g_naside - k) * sizeof g_aside[0]);
+         nvn_texlayout L;
+         nvn_tex_layout(&e->im.d, &L);
+-        int wrote = nvn_dirty_tracked(e->im.storage, L.size) && nvn_dirty_since(e->im.storage, L.size, e->released_stamp);
++        int wrote = (nvn_dirty_tracked(e->im.storage, L.size) && nvn_dirty_since(e->im.storage, L.size, e->released_stamp)) ||
++                    nvn_dirty_marked_since(e->im.storage, L.size, e->released_stamp) > 0;
+         if (wrote) { e->im.gpu_written = 0; e->im.upload_stamp = 0; }
+         if (vkb_rt_log_d(&e->im.d))
+             VLOG("[rtlog] image %llu taken back by texture %llu: %s, present %llu", (unsigned long long)e->im.serial, (unsigned long long)t->serial,
+@@ -720,23 +728,42 @@ void vkb_tex_release(const tex_t *t) {
+ // check per texture per submission is enough; a texture found changed is uploaded before its next use (the pass ends
+ // for it). Without this, textures the CPU updates while drawn every frame (the font atlas: new glyphs, the save slot
+ // thumbnails) kept their first contents.
++static int cpu_atlas_shadow_needed(const vkb_image *im, size_t size) {
++    return im->cpu_visible && !im->gpu_written && !im->vpool_gen &&
++        (im->d.format == 0x01 || im->d.format == 0x02) &&
++        im->levels == 1 && im->layers == 1 && im->depth == 1 &&
++        size && size <= ND_SHADOW_MAX && !nvn_dirty_tracked(im->storage, size);
++}
+ int vkb_tex_stale(vkb_image *im) {
+     uint64_t sub = mtl_last_fence() + 1;
+     if (!im->upload_stamp || im->gpu_written || !im->storage) return 0;
+     if (im->cpu_written) return 1;
+     if (im->vpool_gen && im->vpool_gen != totk_vpool_generation()) return 1;   // a virtual pool's mapping changed
+-    if (__atomic_load_n(&im->dirty_checked, __ATOMIC_ACQUIRE) != sub) {
++    entry *image_entry = (entry *)im;
++    uint64_t notice = nvn_dirty_notice_epoch();
++    if (__atomic_load_n(&im->dirty_checked, __ATOMIC_ACQUIRE) != sub ||
++        __atomic_load_n(&image_entry->notice_checked, __ATOMIC_ACQUIRE) != notice) {
+         int mt = vkb_mt_recording();
+         if (mt) {   // one thread checks; the others wait for its answer
+             vkb_lock(&g_mu, LK_IMAGES);
+-            if (im->dirty_checked == sub) { pthread_mutex_unlock(&g_mu); return im->stale; }
++            if (im->dirty_checked == sub && image_entry->notice_checked == notice) { pthread_mutex_unlock(&g_mu); return im->stale; }
+         }
+         nvn_texlayout L;
+         nvn_tex_layout(&im->d, &L);
+         // a virtual pool: the physical pages behind it; [temporary] untracked memory (CPU-no-access pools hold GPU data)
+         // counts as unchanged: uploaded once
+         int v = im->vpool_gen ? totk_vpool_dirty_since((uintptr_t)im->storage, L.size, im->upload_stamp) : -1;
++        int pending_notice = im->stale;
+         im->stale = v >= 0 ? v : nvn_dirty_tracked(im->storage, L.size) && nvn_dirty_since(im->storage, L.size, im->upload_stamp);
++        if (!im->stale && (pending_notice || image_entry->notice_checked != notice) &&
++            nvn_dirty_marked_since(im->storage, L.size, im->upload_stamp) > 0) im->stale = 1;
++        // Coherent CPU writes need not call FlushMappedRange. Without OS write
++        // watch, compare with the exact atlas bytes uploaded last time.
++        if (!im->stale && cpu_atlas_shadow_needed(im, L.size) &&
++            nd_shadow_changed(&image_entry->cpu_atlas, im->storage, L.size)) im->stale = 1;
++        // Publish the epoch sampled BEFORE the query: a concurrent later flush
++        // must force another check rather than being accidentally acknowledged.
++        __atomic_store_n(&image_entry->notice_checked, notice, __ATOMIC_RELEASE);
+         static long long log_serial = -1;   // TOTK_VK_STALE_LOG=<texture serial>: the check's answers (development)
+         if (log_serial == -1) { const char *e = getenv("TOTK_VK_STALE_LOG"); log_serial = e ? atoll(e) : 0; }
+         if (log_serial && (long long)im->serial == log_serial)
+@@ -1097,6 +1124,14 @@ static int tex_upload(VkCommandBuffer cb, vkb_image *im) {
+         src = gathered;
+         im->vpool_gen = gen;
+     }
++    if (!gathered && cpu_atlas_shadow_needed(im, L.size)) {
++        const uint8_t *snapshot = nd_shadow_capture(&((entry *)im)->cpu_atlas, src, L.size);
++        if (snapshot) src = snapshot;  // upload exactly what later comparisons use
++        static _Atomic int logs;
++        if (atomic_fetch_add(&logs, 1) < 8)
++            VLOG("CPU atlas %llu: %zu bytes, %s", (unsigned long long)im->serial, (size_t)L.size,
++                 snapshot ? "exact shadow" : "no snapshot: conservatively re-uploaded");
++    }
+     int srgb = d->format >= 0x87 && d->format <= 0x94;
+     if (im->astc && vkb_bc7_on() && bpb == 16) {
+         astc_upload(cb, im, src, bw, bh, srgb);
 diff --git a/src/host/audio_renderer.c b/src/host/audio_renderer.c
 index 85036bf..a2af4a0 100644
 --- a/src/host/audio_renderer.c
@@ -1062,6 +1396,33 @@ index 5722e98..ec8cb4b 100644
  }
  HLE_FUNC("_ZN2nn4time13ClockSnapshotC1Ev", time_snapshot_init) { memset(snap(c->x[0]), 0, sizeof(ClockSnapshot)); }
  HLE_FUNC("_ZN2nn4time13ClockSnapshot29CreateWithStandardSystemClockEPS1_", time_snapshot_create) {
+diff --git a/src/host/shared_font.c b/src/host/shared_font.c
+index 20e8cc1..ad6beb8 100644
+--- a/src/host/shared_font.c
++++ b/src/host/shared_font.c
+@@ -37,7 +37,7 @@ static void load(void) {
+         fseek(f[i], 0, SEEK_END);
+         sizes[i] = (uint64_t)ftell(f[i]);
+         fseek(f[i], 0, SEEK_SET);
+-        need(sizes[i] > 8 && sizes[i] < (64u << 20), "shared font size");
++        need(sizes[i] >= 12 && sizes[i] < (64u << 20), "shared font size");
+         total += sizes[i];
+     }
+     region = malloc(total);
+@@ -46,9 +46,11 @@ static void load(void) {
+     for (int i = 0; i < SHARED_FONT_COUNT; i++) {
+         need(fread(region + at, 1, sizes[i], f[i]) == sizes[i], "shared font read");
+         fclose(f[i]);
+-        // BFTTF header: magic and size, each XORed with the same key; the magic decodes to 0x18029a7f.
+-        uint32_t key = be32(region + at) ^ 0x18029a7fu, n = be32(region + at + 4) ^ key;
++        // BFTTF header: magic and size, each XORed with the same key; the magic decodes to 0x7f9a0218.
++        uint32_t key = be32(region + at) ^ 0x7f9a0218u, n = be32(region + at + 4) ^ key;
+         need(n == sizes[i] - 8, "shared font BFTTF header");
++        uint32_t first = be32(region + at + 8) ^ key;
++        need(first == 0x00010000u || first == 0x4f54544fu, "shared font sfnt signature");
+         offsets[i] = at + 8;
+         font_bytes[i] = n;
+         at += sizes[i];
 diff --git a/src/runtime/platform/linux_compat.h b/src/runtime/platform/linux_compat.h
 index 806f1bf..12bc7ca 100644
 --- a/src/runtime/platform/linux_compat.h
@@ -1363,143 +1724,3 @@ index e6a8474..fd45354 100644
  
  
  def env():
-
-diff --git a/src/host/shared_font.c b/src/host/shared_font.c
---- a/src/host/shared_font.c
-+++ b/src/host/shared_font.c
-@@ -37,7 +37,7 @@
-         fseek(f[i], 0, SEEK_END);
-         sizes[i] = (uint64_t)ftell(f[i]);
-         fseek(f[i], 0, SEEK_SET);
--        need(sizes[i] > 8 && sizes[i] < (64u << 20), "shared font size");
-+        need(sizes[i] >= 12 && sizes[i] < (64u << 20), "shared font size");
-         total += sizes[i];
-     }
-     region = malloc(total);
-@@ -46,9 +46,11 @@
-     for (int i = 0; i < SHARED_FONT_COUNT; i++) {
-         need(fread(region + at, 1, sizes[i], f[i]) == sizes[i], "shared font read");
-         fclose(f[i]);
--        // BFTTF header: magic and size, each XORed with the same key; the magic decodes to 0x18029a7f.
--        uint32_t key = be32(region + at) ^ 0x18029a7fu, n = be32(region + at + 4) ^ key;
-+        // BFTTF header: magic and size, each XORed with the same key; the magic decodes to 0x7f9a0218.
-+        uint32_t key = be32(region + at) ^ 0x7f9a0218u, n = be32(region + at + 4) ^ key;
-         need(n == sizes[i] - 8, "shared font BFTTF header");
-+        uint32_t first = be32(region + at + 8) ^ key;
-+        need(first == 0x00010000u || first == 0x4f54544fu, "shared font sfnt signature");
-         offsets[i] = at + 8;
-         font_bytes[i] = n;
-         at += sizes[i];
-diff --git a/src/gfx/nvn/nvn_impl.h b/src/gfx/nvn/nvn_impl.h
---- a/src/gfx/nvn/nvn_impl.h
-+++ b/src/gfx/nvn/nvn_impl.h
-@@ -1,34 +1,43 @@
--// NVN implementation registration macros shared by hle_nvn.c and TOTK extension files.
--// [Windows port] Registered in PE sections .nvni$m / .nvnx$m between the markers of nvn_registry.c.
--#pragma once
--#include "nvn_protos.h"
--
--// TOTK: NVN entry points that wait for the GPU, the display or other threads give up the caller's virtual core for
--// their duration (runtime/threads.c), as the Horizon thread would block there.
--int runtime_core_away(void);
--void runtime_core_back(int *away);
--#define NVN_BLOCKING() __attribute__((cleanup(runtime_core_back))) int totk_core_away_ = runtime_core_away()
--
--typedef struct { const char *name; void *fn; } nvn_impl;
--#define NVN(name, ret, ...)                                                                       \
--    static ret h_##name(__VA_ARGS__);                                                             \
--    static const NVNT_##name chk_##name __attribute__((unused)) = h_##name;                       \
--    __attribute__((used, section(".nvni$m"))) static const nvn_impl e_##name = {#name, (void *)h_##name}; \
--    static ret h_##name(__VA_ARGS__)
--// 无原型的新版接口：不做签名检查
--// Newer interfaces without prototypes: no signature check
--#define NVN_NOPROTO(name, ret, ...)                                                               \
--    static ret h_##name(__VA_ARGS__);                                                             \
--    __attribute__((used, section(".nvni$m"))) static const nvn_impl e_##name = {#name, (void *)h_##name}; \
--    static ret h_##name(__VA_ARGS__)
--
--
--// TOTK: entry points the game asks nvnDeviceGetProcAddress / nvnBootstrapLoader for that are not in main's
--// name table (no counting thunk). They are returned directly by nvn_lookup.
--#define NVN_EXTRA(name, ret, ...)                                                                 \
--    static ret x_##name(__VA_ARGS__);                                                             \
--    __attribute__((used, section(".nvnx$m"))) static const nvn_impl ex_##name = {#name, (void *)x_##name}; \
--    static ret x_##name(__VA_ARGS__)
-+// NVN implementation registration macros shared by hle_nvn.c and TOTK extension files.
-+// [Windows port] Registered in PE sections .nvni$m / .nvnx$m between the markers of nvn_registry.c.
-+#pragma once
-+#include "nvn_protos.h"
-+
-+// TOTK: NVN entry points that wait for the GPU, the display or other threads give up the caller's virtual core for
-+// their duration (runtime/threads.c), as the Horizon thread would block there.
-+int runtime_core_away(void);
-+void runtime_core_back(int *away);
-+#define NVN_BLOCKING() __attribute__((cleanup(runtime_core_back))) int totk_core_away_ = runtime_core_away()
-+
-+typedef struct { const char *name; void *fn; } nvn_impl;
-+#ifdef __ELF__
-+// ELF does not sort PE $ subsections. Named retained sections expose exact
-+// __start/__stop ranges and survive --gc-sections (LLVM lld start-stop-gc).
-+#define NVN_ENTRY_IMPL __attribute__((used, retain, section("totk_nvni"), aligned(__alignof__(nvn_impl))))
-+#define NVN_ENTRY_EXTRA __attribute__((used, retain, section("totk_nvnx"), aligned(__alignof__(nvn_impl))))
-+#else
-+#define NVN_ENTRY_IMPL __attribute__((used, section(".nvni$m")))
-+#define NVN_ENTRY_EXTRA __attribute__((used, section(".nvnx$m")))
-+#endif
-+#define NVN(name, ret, ...)                                                                       \
-+    static ret h_##name(__VA_ARGS__);                                                             \
-+    static const NVNT_##name chk_##name __attribute__((unused)) = h_##name;                       \
-+    NVN_ENTRY_IMPL static const nvn_impl e_##name = {#name, (void *)h_##name}; \
-+    static ret h_##name(__VA_ARGS__)
-+// 无原型的新版接口：不做签名检查
-+// Newer interfaces without prototypes: no signature check
-+#define NVN_NOPROTO(name, ret, ...)                                                               \
-+    static ret h_##name(__VA_ARGS__);                                                             \
-+    NVN_ENTRY_IMPL static const nvn_impl e_##name = {#name, (void *)h_##name}; \
-+    static ret h_##name(__VA_ARGS__)
-+
-+
-+// TOTK: entry points the game asks nvnDeviceGetProcAddress / nvnBootstrapLoader for that are not in main's
-+// name table (no counting thunk). They are returned directly by nvn_lookup.
-+#define NVN_EXTRA(name, ret, ...)                                                                 \
-+    static ret x_##name(__VA_ARGS__);                                                             \
-+    NVN_ENTRY_EXTRA static const nvn_impl ex_##name = {#name, (void *)x_##name}; \
-+    static ret x_##name(__VA_ARGS__)
- 
- // [Windows port] nvn_registry.c
- const nvn_impl *nvn_registry_impls(unsigned *n);
-diff --git a/src/gfx/nvn/nvn_registry.c b/src/gfx/nvn/nvn_registry.c
---- a/src/gfx/nvn/nvn_registry.c
-+++ b/src/gfx/nvn/nvn_registry.c
-@@ -5,6 +5,22 @@
- #include "../host/hle.h"
- #include "nvn_impl.h"
- 
-+#ifdef __ELF__
-+extern const nvn_impl __start_totk_nvni[], __stop_totk_nvni[];
-+extern const nvn_impl __start_totk_nvnx[], __stop_totk_nvnx[];
-+static const nvn_impl *elf_range(const nvn_impl *first, const nvn_impl *stop, unsigned *n) {
-+    uintptr_t begin = (uintptr_t)first, end = (uintptr_t)stop;
-+    if (end < begin || (end - begin) % sizeof(*first) ||
-+        (end - begin) / sizeof(*first) > 65536)
-+        runtime_fail("invalid ELF NVN registry extent");
-+    *n = (unsigned)((end - begin) / sizeof(*first));
-+    for (unsigned i = 0; i < *n; i++)
-+        if (!first[i].name || !first[i].fn) runtime_fail("invalid ELF NVN registry entry");
-+    return first;
-+}
-+const nvn_impl *nvn_registry_impls(unsigned *n) { return elf_range(__start_totk_nvni, __stop_totk_nvni, n); }
-+const nvn_impl *nvn_registry_extras(unsigned *n) { return elf_range(__start_totk_nvnx, __stop_totk_nvnx, n); }
-+#else
- // The linker sorts .nvni$a < .nvni$m (NVN / NVN_NOPROTO entries) < .nvni$z by the text after '$'; likewise .nvnx.
- __attribute__((section(".nvni$a"), used)) static const nvn_impl impls_start[1];
- __attribute__((section(".nvni$z"), used)) static const nvn_impl impls_stop[1];
-@@ -20,6 +36,8 @@
- }
- const nvn_impl *nvn_registry_impls(unsigned *n) { return range(impls_start, impls_stop, n); }
- const nvn_impl *nvn_registry_extras(unsigned *n) { return range(extras_start, extras_stop, n); }
-+
-+#endif
- 
- // The native implementation of an NVN name (the thunks call it).
- void *nvn_impl_fn(const char *name, int extra) {

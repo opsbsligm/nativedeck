@@ -10,11 +10,10 @@ diff --git a/src/gfx/vkb_tex.c b/src/gfx/vkb_tex.c
  #include "tex/bc7.h"
  #include "tex/nvn_deswizzle.h"
  #include "nvn/totk_vpool.h"
-@@ -1038,6 +1040,51 @@
+@@ -1063,6 +1065,50 @@
           im->d.format, im->width, im->height, im->depth, im->levels, im->layers, size / 1048576.0, vpool ? ", in a virtual pool" : "",
           im->astc ? ", ASTC" : "", dt / 1e6, why);
  }
-+
 +// Exact original ASTC identity, checked before either cached BC7 or CPU decoding.
 +// Authored art is compiled in; no runtime font/image path or new compatibility layer.
 +const char ultrs_steamdeck_art_v1[] = "nativedeck-steamdeck-art-v1-3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f-unified-inclined-v1";
@@ -62,8 +61,8 @@ diff --git a/src/gfx/vkb_tex.c b/src/gfx/vkb_tex.c
  static int tex_upload(VkCommandBuffer cb, vkb_image *im) {
      if (!im->storage || im->gpu_written) return 0;
      const nvn_texdesc *d = &im->d;
-@@ -1100,6 +1147,12 @@
-         im->vpool_gen = gen;
+@@ -1133,6 +1179,12 @@
+                  snapshot ? "exact shadow" : "no snapshot: conservatively re-uploaded");
      }
      int srgb = d->format >= 0x87 && d->format <= 0x94;
 +    if (deck_controller_upload(cb, im, src, bw, bh, bpb)) {

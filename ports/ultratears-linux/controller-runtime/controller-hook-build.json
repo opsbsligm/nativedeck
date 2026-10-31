@@ -42,8 +42,8 @@
   "header_sha256": "3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f",
   "runtime_font_dependency": false,
   "hardware_validated": false,
-  "runtime_before_sha256": "acc9512e092c9225c0f8c85afb422827a99f5f428e8cae8c0d41c8d72486160c",
-  "runtime_after_sha256": "0ce0984af2948eb3929fe14f46d587447587c2057d66c8b4038ce7f044f37e5b",
+  "runtime_before_sha256": "8f508ddc17d878663ce289e858940abd6e9fe6aedb3c75a2723b241cb8291711",
+  "runtime_after_sha256": "ffb24c05aa993c2912772d2f68128f5f576c87c116b2ad4df5d6fbab38f11e54",
   "original_source_unchanged": true,
   "applied_to_live_source": false,
   "previous_installed_runtime_sha256": "03a9d35bc95a572adbc203ac790942a43b4355f40ad3001b9a14c14f977b3c4e",
@@ -52,5 +52,7 @@
   "expected_elf_marker": "nativedeck-steamdeck-art-v1-3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f-unified-inclined-v1",
   "schema": 1,
   "format": "nd-deck-run-v1",
-  "game_asset_input": false
+  "game_asset_input": false,
+  "explicit_flush_notification_integrated": true,
+  "cpu_atlas_shadow_integrated": true
 }

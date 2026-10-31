@@ -22,3 +22,6 @@ ports/ultratears-linux/cache-tests/LICENSE -text whitespace=cr-at-eol
 ports/ultratears-linux/controller-art/vendor/** -text whitespace=cr-at-eol
 # Literal unified-diff context and EOF markers are part of the checked patch.
 ports/ultratears-linux/cache-tests/vkb_bc7.patch -text -whitespace
+# Verbatim MIT dependency sources and literal patch context are hash-bound.
+ports/ultratears-linux/xbox/vendor/** -text whitespace=-blank-at-eol
+ports/ultratears-linux/xbox/xbox-stick-icons-f1d00772.patch -text -whitespace

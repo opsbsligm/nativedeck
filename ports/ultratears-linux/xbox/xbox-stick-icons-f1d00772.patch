@@ -1,0 +1,172 @@
+--- a/make_button_icons.py
++++ b/make_button_icons.py
+@@ -20,7 +20,7 @@
+             positions, so ZL = A, left stick = Z Q S D. The launcher can serve it only while
+             no controller is connected (mods/<version>-keyboard, app/launcher.m).
+   xbox      the buttons in the place a controller presses them (controllers follow the Switch's physical layout):
+-            A B X Y = B A Y X, L R = LB RB, ZL ZR = LT RT, + - = Menu and View, the d-pad as a cross.
++            A B X Y = B A Y X, L R = LB RB, ZL ZR = LT RT, + - = Menu and View, the d-pad as a cross; LS/RS with motion arrows or a separate click indicator.
+   playstation  DualSense / DualShock symbols by position like xbox: A B X Y = Circle Cross Triangle Square,
+             L R = L1 R1, ZL ZR = L2 R2, + - = Options and Create, the d-pad as a cross.
+   playstation-label  the same, but A B X Y = Cross Circle Square Triangle, for TOTK_FACE_BUTTONS=label or a
+@@ -287,6 +287,34 @@
+     return advance, draw
+ 
+ 
++def xbox_stick(g, label, directions=(), press=False, advance=640):
++    """Xbox stick label plus motion arrows; a press points down ABOVE the label.
++
++    Motion arrows sit below the label, so down motion and clicking are distinct.
++    These PUA identities were checked against the player's External.bfotf;
++    E048/E04A (power/home), E066 (console) and E067 (settings) are not sticks.
++    """
++    def draw(pen):
++        cx = advance / 2
++        circle(pen, cx, CY, R)
++        if press:
++            g.hole(pen, label, cx, CY - 75, 175, 350)
++            arrow_hole(pen, '↓', cx, CY + 150, 155)
++        elif directions:
++            g.hole(pen, label, cx, CY + 85, 175, 350)
++            if len(directions) == 4:
++                for direction, x, y in (('↑', cx, CY - 50), ('↓', cx, CY - 195),
++                                        ('←', cx - 120, CY - 122), ('→', cx + 120, CY - 122)):
++                    arrow_hole(pen, direction, x, y, 110)
++            else:
++                for i, direction in enumerate(directions):
++                    x = cx + (i - (len(directions) - 1) / 2) * 160
++                    arrow_hole(pen, direction, x, CY - 125, 155)
++        else:
++            g.hole(pen, label, cx, CY, R * 0.95, R * 1.3)
++    return advance, draw
++
++
+ def xbox_style(g):
+     def face(letter, advance=640):
+         def draw(pen):
+@@ -332,7 +360,16 @@
+         0xE04B: menu(), 0xE04C: view(),
+         0xE049: dpad('up', 'down', 'left', 'right'), 0xE060: dpad('up'), 0xE061: dpad('down'),
+         0xE062: dpad('left'), 0xE063: dpad('right'), 0xE064: dpad('up', 'down'), 0xE065: dpad('left', 'right'),
+-        0xE052: stick(g, 'LS', up=True), 0xE05E: stick(g, 'LS'),
++        # Paired original PUA: left is even, right is odd. Preserve motion vs click.
++        0xE050: xbox_stick(g, 'LS', ('↓',)), 0xE051: xbox_stick(g, 'RS', ('↓',)),
++        0xE052: xbox_stick(g, 'LS', ('↑',)), 0xE053: xbox_stick(g, 'RS', ('↑',)),
++        0xE054: xbox_stick(g, 'LS', ('←', '→')), 0xE055: xbox_stick(g, 'RS', ('←', '→')),
++        0xE056: xbox_stick(g, 'LS', press=True), 0xE057: xbox_stick(g, 'RS', press=True),
++        0xE058: xbox_stick(g, 'LS', ('→',)), 0xE059: xbox_stick(g, 'RS', ('→',)),
++        0xE05A: xbox_stick(g, 'LS', ('←',)), 0xE05B: xbox_stick(g, 'RS', ('←',)),
++        0xE05C: xbox_stick(g, 'LS', ('↑', '↓')), 0xE05D: xbox_stick(g, 'RS', ('↑', '↓')),
++        0xE05E: xbox_stick(g, 'LS'), 0xE05F: xbox_stick(g, 'RS'),
++        0xE068: xbox_stick(g, 'RS', ('↑', '↓', '←', '→')),
+     }
+ 
+ 
+--- /dev/null
++++ b/test_xbox_sticks.py
+@@ -0,0 +1,105 @@
++"""Public, ROM-free outline and CFF regression tests. Run: python -m unittest -v test_xbox_sticks"""
++import io
++import unittest
++from fontTools.fontBuilder import FontBuilder
++from fontTools.pens.recordingPen import RecordingPen
++from fontTools.pens.t2CharStringPen import T2CharStringPen
++from fontTools.pens.boundsPen import BoundsPen
++from fontTools.pens.areaPen import AreaPen
++from fontTools.ttLib import TTFont
++import make_button_icons as m
++
++
++def synthetic_font(cps):
++    """Small distinct polygon outlines, generated here; no game font or outlines."""
++    fb = FontBuilder(1000, isTTF=False)
++    cmap = {cp: f'u{cp:04X}' for cp in cps}
++    order = ['.notdef', *cmap.values()]
++    fb.setupGlyphOrder(order)
++    fb.setupCharacterMap(cmap)
++    strings = {}
++    for i, name in enumerate(order):
++        p = T2CharStringPen(640, None)
++        # Asymmetric shape exercises bounds, scaling, contour reversal and CFF serialization.
++        m.polygon(p, [(40, 20), (350 + i % 9 * 8, 20), (430, 480), (100, 585)])
++        strings[name] = p.getCharString()
++    fb.setupCFF('SyntheticXboxTest', {'FullName': 'SyntheticXboxTest', 'FamilyName': 'SyntheticXboxTest', 'Weight': 'Regular'}, strings, {})
++    fb.setupHorizontalMetrics({name: (640, 40) for name in order})
++    fb.setupHorizontalHeader(ascent=800, descent=-200)
++    fb.setupNameTable({'familyName': 'SyntheticXboxTest', 'styleName': 'Regular'})
++    fb.setupOS2(sTypoAscender=800, sTypoDescender=-200, usWinAscent=800, usWinDescent=200)
++    fb.setupPost()
++    out = io.BytesIO(); fb.save(out)
++    return out.getvalue()
++
++
++class XboxStickTest(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.text = TTFont(io.BytesIO(synthetic_font(range(32, 127))))
++        cls.g = m.Glyphs([cls.text])
++        cls.icons = m.xbox_style(cls.g)
++
++    def test_exact_scope(self):
++        expected = set(range(0xE040, 0xE048)) | {0xE049, 0xE04B, 0xE04C} | set(range(0xE050, 0xE066)) | {0xE068}
++        self.assertEqual(set(self.icons), expected)
++        self.assertEqual(len(self.icons), 34)
++        self.assertTrue(set(m.HUD_TEXTURES.values()) <= expected)
++
++    def test_side_direction_and_press_semantics(self):
++        class Probe:
++            def __init__(self): self.labels = []
++            def hole(self, pen, label, *args): self.labels.append(label)
++        directions = [('↓',), ('↑',), ('←', '→'), (), ('→',), ('←',), ('↑', '↓'), ()]
++        from unittest.mock import patch
++        for cp in [*range(0xE050, 0xE060), 0xE068]:
++            probe = Probe(); calls = []
++            real = m.arrow_hole
++            def arrow(pen, d, x, y, size):
++                calls.append((d, x, y)); real(pen, d, x, y, size)
++            with patch.object(m, 'arrow_hole', arrow):
++                m.xbox_style(probe)[cp][1](RecordingPen())
++            self.assertEqual(probe.labels, ['RS' if cp == 0xE068 or cp & 1 else 'LS'])
++            want = ('↑', '↓', '←', '→') if cp == 0xE068 else ('↓',) if cp in (0xE056, 0xE057) else directions[(cp - 0xE050) // 2]
++            self.assertEqual(tuple(c[0] for c in calls), want)
++            self.assertTrue(all((y > m.CY) == (cp in (0xE056, 0xE057)) for _, _, y in calls))
++
++    def test_outline_bounds_winding_and_distinct_motion(self):
++        recordings = []
++        for cp in [*range(0xE050, 0xE060), 0xE068]:
++            advance, draw = self.icons[cp]
++            rec = RecordingPen(); draw(rec); recordings.append(repr(rec.value))
++            bounds = BoundsPen(None); rec.replay(bounds)
++            self.assertEqual(advance, 640)
++            self.assertEqual(bounds.bounds, (37.5, 20.0, 602.5, 585.0))
++            areas = []; part = RecordingPen()
++            for op, args in rec.value:
++                getattr(part, op)(*args)
++                if op == 'closePath':
++                    area = AreaPen(None); part.replay(area); areas.append(area.value); part = RecordingPen()
++            self.assertGreater(areas[0], 0)
++            self.assertTrue(all(a < 0 for a in areas[1:]), (hex(cp), areas))
++        self.assertEqual(len(set(recordings)), 17)
++
++    def test_cff_redraw_preserves_unrelated_glyphs_and_metrics(self):
++        cps = range(0xE040, 0xE093)
++        before = synthetic_font(cps)
++        after, count = m.redraw(before, [self.text], 'xbox')
++        self.assertEqual(count, 34)
++        old, new = TTFont(io.BytesIO(before)), TTFont(io.BytesIO(after))
++        for cp, name in old.getBestCmap().items():
++            a, b = RecordingPen(), RecordingPen()
++            old.getGlyphSet()[name].draw(a); new.getGlyphSet()[name].draw(b)
++            if cp in self.icons:
++                self.assertNotEqual(a.value, b.value)
++                box = BoundsPen(new.getGlyphSet()); new.getGlyphSet()[name].draw(box)
++                self.assertEqual(new['hmtx'][name], (self.icons[cp][0], round(box.bounds[0])))
++            else:
++                self.assertEqual(a.value, b.value)
++                self.assertEqual(old['hmtx'][name], new['hmtx'][name])
++        encoded = m.bfotf_encode(after, 0x12345678)
++        self.assertEqual(m.bfotf_decode(encoded), (after, 0x12345678))
++
++
++if __name__ == '__main__':
++    unittest.main()

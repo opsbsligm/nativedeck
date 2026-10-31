@@ -114,6 +114,7 @@ def prepare(romfs, tools, destination, python):
     from ultratears_bundle import GAME, publish_no_replace
     romfs,tools=Path(romfs).resolve(),Path(tools).resolve()
     check_tools(tools)
+    from xbox34_tools import derive_tools, fonttools_path
     destination=new_destination(destination)
     source=[regular_inside(romfs,n) for n in ('index.json','runtime-index.bin','romfs.bin')]
     before=[p.stat() for p in source]
@@ -123,10 +124,14 @@ def prepare(romfs, tools, destination, python):
     env=dict(os.environ)
     for key in ('PYTHONOPTIMIZE','PYTHONPATH','PYTHONHOME'):env.pop(key,None)
     env['PYTHONNOUSERSITE']='1'
-    subprocess.run([str(python),'-c','from compression import zstd; import fontTools'],env=env,check=True)
+    env['PYTHONDONTWRITEBYTECODE']='1'
+    env['PYTHONPATH']=str(fonttools_path())
+    subprocess.run([str(python),'-S','-c','from compression import zstd; import fontTools'],env=env,check=True)
     stage=Path(tempfile.mkdtemp(prefix='.xbox-prompts-',dir=destination.parent))
+    effective=Path(tempfile.mkdtemp(prefix='.xbox34-tools-',dir=destination.parent))
     try:
-        subprocess.run([str(python),str(tools/'make_button_icons.py'),str(stage),
+        derivation=derive_tools(tools,effective,check_tools)
+        subprocess.run([str(python),'-S',str(effective/'make_button_icons.py'),str(stage),
                         '--romfs',str(romfs),'--version','v143','--style','xbox'],env=env,check=True)
         rows=manifest(stage)
         if any((a.st_size,a.st_mtime_ns,a.st_ino)!=(b.st_size,b.st_mtime_ns,b.st_ino)
@@ -135,10 +140,11 @@ def prepare(romfs, tools, destination, python):
         record={'schema':1,'kind':'ultratears-xbox-ui','version':'1.4.3','tool_commit':COMMIT,
                 'input_mapping':'position','resources':rows,
                 'coverage':['four regional icon fonts','eight gameplay HUD textures','resource-size table'],
-                'tutorial_images_complete':False,'hardware_validated':False}
+                'tutorial_images_complete':False,'hardware_validated':False,'tool_derivation':derivation}
         (stage/'xbox-ui.json').write_text(json.dumps(record,indent=2)+'\n')
         publish_no_replace(stage,destination)
     finally:
+        if effective.exists():shutil.rmtree(effective)
         if stage.exists():shutil.rmtree(stage)
     return {'prepared':str(destination),'hardware_validated':False,'all_xbox_prompts_validated':False}
 
@@ -199,7 +205,8 @@ if __name__=='__main__':
     sub=p.add_subparsers(dest='action',required=True)
     fetch=sub.add_parser('fetch-tools');fetch.add_argument('--destination',type=Path,required=True)
     build=sub.add_parser('prepare')
-    for name in ('romfs','tools','destination'):build.add_argument('--'+name,type=Path,required=True)
+    for name in ('romfs','destination'):build.add_argument('--'+name,type=Path,required=True)
+    build.add_argument('--tools',type=Path,default=PIN.parent/'vendor/macnativegames-f1d00772',help='Pristine pinned tools; defaults to offline vendor')
     build.add_argument('--python',type=Path,default=Path(sys.executable))
     args=p.parse_args()
     try:
