@@ -1,0 +1,14 @@
+{
+  "license": "GPL-3.0-or-later",
+  "upstream": "https://github.com/kuraeow/ultratears",
+  "fixture": "fixture/src/gfx/vkb_bc7.c",
+  "source_sha256": "b95a7fe77f8315d2878d1774a6b821ccfa8854e26bcab1f44304a2b21b0161f1",
+  "patch": "vkb_bc7.patch",
+  "patch_sha256": "17e7d1de58d5a66e1ff0bb329ca5b9d4289a01862856ba32a6218b3e6fa65c95",
+  "candidate_sha256": "aedc87dfb7d3e81675275dabd1c9ed8bcd7d8ab488c57861165ea73434e3b188",
+  "expected_test_groups": 34,
+  "upstream_commit": "0c9ce8afd4c3ab81c33200917af51fb9807aeef0",
+  "production_fixture": "fixture/upstream/src/gfx/vkb_bc7.c",
+  "production_fixture_sha256": "536c49d3dec157105fb240b4c8329abb027b5153d2618b7ee3af2e5066db38d2",
+  "production_patch": "../linux.patch"
+}

@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "format": "nd-deck-run-v1",
+  "width": 580,
+  "height": 340,
+  "authored_bitmaps": {
+    "front": {
+      "rgba_sha256": "ce04c2a5a30053698fd73e864fc3b8a0655f5503d4ce8d95241405d833c225ef",
+      "runs": 7768,
+      "bytes": 788800
+    },
+    "inclined": {
+      "rgba_sha256": "5f49626b1c0c6a7f0ec4df406b173e1fbb7022a8cd22cd1a8e95d90ed0746729",
+      "runs": 11876,
+      "bytes": 788800
+    }
+  },
+  "target_identities": [
+    {
+      "linear_sha256": "f8090bf1dba07e128deb24f35287b4eb2f74470db037835e0f980a9a40a320a8",
+      "view": 2
+    },
+    {
+      "linear_sha256": "394488664f2e1fa0fd8c898a2f6757a5fc012c295551e487e4bf37dc5da8af98",
+      "view": 1
+    },
+    {
+      "linear_sha256": "2b9240133388bb52b107ac15ece79f15ff0cb10a00e381a80913f4ff1c436145",
+      "view": 2
+    },
+    {
+      "linear_sha256": "46bc67f54026e30cbe773a7a3afc347a6516d6ce1d27f8b271d65622982d47ca",
+      "view": 1
+    },
+    {
+      "linear_sha256": "8e8bc0e26ea1c0347075af88efb87e3c0b576f3a4232de4722d436f2d4d0164b",
+      "view": 2
+    },
+    {
+      "linear_sha256": "804596d69e2d6b87fff9bc5d1bea845381bb8cd1e6791f44114e96ef34c7d1de",
+      "view": 1
+    }
+  ],
+  "header_sha256": "3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f",
+  "runtime_font_dependency": false,
+  "game_asset_input": false,
+  "hardware_validated": false
+}

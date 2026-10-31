@@ -328,15 +328,28 @@ index 06248b1..abb9545 100644
  #include <stdlib.h>
  #include <string.h>
 diff --git a/src/gfx/vkb_bc7.c b/src/gfx/vkb_bc7.c
-index 5a0a707..91db0f3 100644
 --- a/src/gfx/vkb_bc7.c
 +++ b/src/gfx/vkb_bc7.c
-@@ -11,12 +11,18 @@
+@@ -6,17 +6,32 @@
+ // (tex/bc7key.c) - the same bytes whichever way the game lays the texture out in memory, so the build can fill the cache
+ // from the RomFS (next step) and the game finds the entries. Until then the cache fills as textures are met: a miss is
+ // decoded as before and encoded to BC7 in the background for the next time.
++// Optional TOTK_BC7_CACHE_DIR on Linux: read-only TOTK_BC7_DIR base + writable delta.
+ // Files (TOTK_BC7_DIR, default data/textures): bc7.pack (the blocks, appended) and bc7.idx (32-byte records: key,
+ // offset, length, format - 0 BC7, 1 BC1; appended after the blocks are written, so an entry always has its data).
  // BC1: the interface's 12x12 ASTC maps when opaque (tools/bc7build: a texture is BC1 only if none of its texels is
  // transparent; half the bytes of BC7, and 12x12 ASTC holds less detail than BC1 keeps). Nothing from the game is
  // in the repository or a build: the cache is made on the player's machine from the player's copy (README.md, Legal).
 +#ifdef _WIN32
  #include <direct.h>
++#endif
++// Overlay adaptation: GPL-3.0-or-later, same as upstream ultratears.
++#include <limits.h>
++#ifdef __linux__
++#include <sys/stat.h>
++#include <sys/file.h>
++#include <fcntl.h>
++#include <unistd.h>
 +#endif
  #include <stdatomic.h>
  #include <stdio.h>
@@ -350,24 +363,217 @@ index 5a0a707..91db0f3 100644
  
  #include "compat/gfx_compat.h"
  #include "host/hle.h"
-@@ -98,11 +104,16 @@ static int open_files(void) {   // g_mu held
-     }
-     _fseeki64(g_idx, good, SEEK_SET);
-     snprintf(path, sizeof path, "%s/bc7.pack", d);
+@@ -43,7 +58,10 @@
+ typedef struct { uint64_t a, b, off; uint32_t len, fmt; } rec_t;   // also the record in bc7.idx (fmt: VKB_BC_*)
+ static rec_t *g_tab;
+ static size_t g_cap, g_n;
+-static FILE *g_pack, *g_idx;
++static FILE *g_pack, *g_idx, *g_base;
++#define BC7_DELTA (UINT64_C(1) << 63)
++_Static_assert(sizeof(rec_t) == 32, "BC7 disk ABI");
++static int g_overlay;
+ // bc7.pack as it was when opened, mapped read-only: a read is a copy, no file call and no lock (a texture has hundreds
+ // of surfaces; fseek + fread each, under g_mu, was much of an upload). The pages are the system's file cache, as the
+ // reads were: no memory of the game's, dropped by the system when it needs the RAM. Blocks appended later (encoded in
+@@ -60,7 +78,9 @@
+     return &g_tab[h];
+ }
+ static void put(const rec_t *r) {   // g_mu held
++    if (g_n >= SIZE_MAX / 2 - 1) die("BC7 index overflow");
+     if ((g_n + 1) * 2 > g_cap) {
++        if (g_cap > SIZE_MAX / 2 / sizeof *g_tab) die("BC7 index overflow");
+         rec_t *old = g_tab;
+         size_t n = g_cap;
+         g_cap = g_cap ? g_cap * 2 : 1 << 16;
+@@ -76,37 +96,121 @@
+     const char *d = getenv("TOTK_BC7_DIR");
+     return d && *d ? d : "data/textures";
+ }
+-static int open_files(void) {   // g_mu held
++// A malformed index invalidates the whole cache; never append past a torn record.
++static int load_index(FILE *idx, uint64_t size, uint64_t tag) {
++    rec_t r;
++    size_t n;
++    rewind(idx);
++    while ((n = fread(&r, 1, sizeof r, idx)) != 0) {
++        if (n != sizeof r || !(r.a || r.b) || !r.len ||
++            (r.fmt != VKB_BC_7 && r.fmt != VKB_BC_1) ||
++            r.off >= BC7_DELTA || r.off > size || r.len > size - r.off) return 0;
++        r.off |= tag;  // memory only: disk records always contain an ordinary offset
++        put(&r);      // base first, then delta; latest disk record wins
++    }
++    return !ferror(idx);
++}
++static int file_size(FILE *f, uint64_t *out) {
++    if (_fseeki64(f, 0, SEEK_END)) return 0;
++    int64_t n = _ftelli64(f);
++    if (n < 0 || (uint64_t)n >= BC7_DELTA) return 0;
++    *out = (uint64_t)n;
++    return 1;
++}
++static int path_of(char path[512], const char *d, const char *name) {
++    int n = snprintf(path, 512, "%s/%s", d, name);
++    return n >= 0 && n < 512;
++}
++static int make_dir(const char *d) {
++    char path[512];
++    if (!*d || strlen(d) >= sizeof path - 16) return 0;
++    strcpy(path, d);
++    for (char *p = path + 1; *p; p++) if (*p == '/' || *p == '\\') {
++        char c = *p; *p = 0; _mkdir(path); *p = c;
++    }
++    _mkdir(path);
++    return 1;
++}
 +#ifdef __linux__
-+    size_t mapped_size;
-+    if (pack_size > 0) g_map = linux_map_readonly(path, (size_t)pack_size, &mapped_size);
++static int same_file(FILE *a, FILE *b) {
++    struct stat x, y;
++    return fstat(fileno(a), &x) || fstat(fileno(b), &y) ||
++           (x.st_dev == y.st_dev && x.st_ino == y.st_ino);
++}
++static FILE *delta_file(const char *path) {
++    int fd = open(path, O_RDWR | O_CREAT | O_NOFOLLOW | O_CLOEXEC, 0600);
++    if (fd < 0) return NULL;
++    struct stat st;
++    if (fstat(fd, &st) || !S_ISREG(st.st_mode) || flock(fd, LOCK_EX | LOCK_NB)) {
++        close(fd); return NULL;
++    }
++    FILE *f = fdopen(fd, "r+b");
++    if (!f) close(fd);
++    return f;
++}
++#endif
++static int open_files(void) {   // g_mu held; no writable fallback in overlay mode
+     if (g_open) return g_open > 0;
+     g_open = -1;
+     char path[512];
+-    const char *d = dir();
+-    for (char *p = strcpy(path, d) + 1; *p; p++) if (*p == '/' || *p == '\\') { char c = *p; *p = 0; _mkdir(path); *p = c; }
+-    _mkdir(path);
+-    snprintf(path, sizeof path, "%s/bc7.pack", d);
+-    if (!(g_pack = fopen(path, "r+b")) && !(g_pack = fopen(path, "w+b"))) { VLOG("BC7 cache: cannot open %s", path); return 0; }
+-    _fseeki64(g_pack, 0, SEEK_END);
+-    int64_t pack_size = _ftelli64(g_pack);
+-    snprintf(path, sizeof path, "%s/bc7.idx", d);
+-    if (!(g_idx = fopen(path, "r+b")) && !(g_idx = fopen(path, "w+b"))) { VLOG("BC7 cache: cannot open %s", path); return 0; }
+-    rec_t r;
+-    int64_t good = 0;
+-    while (fread(&r, sizeof r, 1, g_idx) == 1) {
+-        if ((int64_t)(r.off + r.len) > pack_size) break;   // the blocks of an interrupted write: dropped
+-        put(&r);
+-        good += sizeof r;
+-    }
+-    _fseeki64(g_idx, good, SEEK_SET);
+-    snprintf(path, sizeof path, "%s/bc7.pack", d);
++    const char *d = dir(), *cache = getenv("TOTK_BC7_CACHE_DIR");
++    g_overlay = cache && *cache;
++    FILE *base_idx = NULL;
++    uint64_t pack_size, delta_size;
++    if (!path_of(path, d, "bc7.pack")) goto fail;
++    if (g_overlay) {
++#ifdef __linux__
++        g_base = fopen(path, "rb");
++        if (!g_base || !file_size(g_base, &pack_size) ||
++            !path_of(path, d, "bc7.idx") || !(base_idx = fopen(path, "rb"))) goto fail;
++        if (!load_index(base_idx, pack_size, 0) || !make_dir(cache)) goto fail;
++        struct stat x, y;
++        if (stat(d, &x) || stat(cache, &y) ||
++            (x.st_dev == y.st_dev && x.st_ino == y.st_ino)) goto fail;
++        if (!path_of(path, cache, "bc7.pack") || !(g_pack = delta_file(path)) ||
++            !path_of(path, cache, "bc7.idx") || !(g_idx = delta_file(path))) goto fail;
++        if (same_file(g_pack, g_idx) || same_file(g_pack, g_base) || same_file(g_pack, base_idx) ||
++            same_file(g_idx, g_base) || same_file(g_idx, base_idx)) goto fail;
++        if (!file_size(g_pack, &delta_size) ||
++            !load_index(g_idx, delta_size, BC7_DELTA)) goto fail;
++        fclose(base_idx); base_idx = NULL;
++#else
++        VLOG("BC7 overlay requires Linux file identity/locking support");
++        goto fail;
++#endif
++    } else {
++        if (!make_dir(d)) goto fail;
++        if (!(g_pack = fopen(path, "r+b")) && !(g_pack = fopen(path, "w+b"))) goto fail;
++        if (!file_size(g_pack, &pack_size) || !path_of(path, d, "bc7.idx")) goto fail;
++        if (!(g_idx = fopen(path, "r+b")) && !(g_idx = fopen(path, "w+b"))) goto fail;
++        if (!load_index(g_idx, pack_size, 0)) goto fail;
++    }
++    if (!path_of(path, d, "bc7.pack")) goto fail;
++#ifdef __linux__
++    size_t mapped_size = 0;
++    if (pack_size > 0 && pack_size <= SIZE_MAX) {
++        g_map = linux_map_readonly(path, (size_t)pack_size, &mapped_size);
++        if (g_map) g_map_size = pack_size; // never map the growing delta
++    }
 +#else
      HANDLE f = pack_size > 0 ? CreateFileA(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
                                             FILE_ATTRIBUTE_NORMAL, NULL) : INVALID_HANDLE_VALUE;
-     HANDLE m = f != INVALID_HANDLE_VALUE ? CreateFileMappingA(f, NULL, PAGE_READONLY, (DWORD)((uint64_t)pack_size >> 32), (DWORD)pack_size, NULL) : NULL;
+-    HANDLE m = f != INVALID_HANDLE_VALUE ? CreateFileMappingA(f, NULL, PAGE_READONLY, (DWORD)((uint64_t)pack_size >> 32), (DWORD)pack_size, NULL) : NULL;
++    HANDLE m = f != INVALID_HANDLE_VALUE ? CreateFileMappingA(f, NULL, PAGE_READONLY, (DWORD)(pack_size >> 32), (DWORD)pack_size, NULL) : NULL;
      if (f != INVALID_HANDLE_VALUE) CloseHandle(f);
      if (m) { g_map = MapViewOfFile(m, FILE_MAP_READ, 0, 0, (SIZE_T)pack_size); CloseHandle(m); }
+-    if (g_map) g_map_size = (uint64_t)pack_size;
+-    VLOG("BC7 cache %s: %zu surfaces, %.1f MiB%s", d, g_n, pack_size / 1048576.0, g_map ? " (mapped)" : "");
++    if (g_map) g_map_size = pack_size;
 +#endif
-     if (g_map) g_map_size = (uint64_t)pack_size;
-     VLOG("BC7 cache %s: %zu surfaces, %.1f MiB%s", d, g_n, pack_size / 1048576.0, g_map ? " (mapped)" : "");
++    VLOG("BC7 cache %s: %zu surfaces%s", d, g_n, g_overlay ? " (read-only base + delta)" : "");
      g_open = 1;
-@@ -162,7 +173,11 @@ static int quality(void) {   // TOTK_BC7_QUALITY=0..4 (bc7enc's uber level; back
+     return 1;
++fail:
++    if (base_idx) fclose(base_idx);
++    if (g_base) { fclose(g_base); g_base = NULL; }
++    if (g_pack) { fclose(g_pack); g_pack = NULL; }
++    if (g_idx) { fclose(g_idx); g_idx = NULL; }
++    free(g_tab); g_tab = NULL; g_cap = g_n = 0;
++    VLOG("BC7 cache disabled: invalid/unavailable files or base/cache alias");
++    return 0;
+ }
+ 
+ int vkb_bc7_lookup(vkb_bc7_key k, int *fmt, size_t *len) {
+@@ -125,8 +229,11 @@
+     int ok = open_files() && g_cap;
+     rec_t r = {0};
+     if (ok) { r = *slot(k.a, k.b); ok = (r.a || r.b) && r.len == n; }
+-    int mapped = ok && r.off + n <= g_map_size;
+-    if (ok && !mapped) ok = !_fseeki64(g_pack, (int64_t)r.off, SEEK_SET) && fread(out, 1, n, g_pack) == n;
++    int delta = !!(r.off & BC7_DELTA);
++    r.off &= ~BC7_DELTA;
++    int mapped = ok && !delta && r.off <= g_map_size && n <= g_map_size - r.off;
++    FILE *f = g_overlay && !delta ? g_base : g_pack;
++    if (ok && !mapped) ok = !_fseeki64(f, (int64_t)r.off, SEEK_SET) && fread(out, 1, n, f) == n;
+     if (ok) g_hits++; else g_misses++;
+     pthread_mutex_unlock(&g_mu);
+     if (mapped) memcpy(out, g_map + r.off, n);   // (the mapped part is never written again)
+@@ -134,15 +241,22 @@
+ }
+ void vkb_bc7_store(vkb_bc7_key k, const uint8_t *data, size_t n) { vkb_bc_store(k, data, n, VKB_BC_7); }
+ void vkb_bc_store(vkb_bc7_key k, const uint8_t *data, size_t n, int fmt) {
++    if (!(k.a || k.b) || !data || !n || n > UINT32_MAX ||
++        (fmt != VKB_BC_7 && fmt != VKB_BC_1)) return;
+     pthread_mutex_lock(&g_mu);
+     if (open_files() && !(g_cap && (slot(k.a, k.b)->a || slot(k.a, k.b)->b))) {
+-        _fseeki64(g_pack, 0, SEEK_END);
+-        rec_t r = {k.a, k.b, (uint64_t)_ftelli64(g_pack), (uint32_t)n, (uint32_t)fmt};
+-        if (fwrite(data, 1, n, g_pack) == n && !fflush(g_pack)) {
+-            _fseeki64(g_idx, 0, SEEK_END);
+-            if (fwrite(&r, sizeof r, 1, g_idx) == 1) { fflush(g_idx); put(&r); }
+-        }
+-    }
++        uint64_t end;
++        if (!file_size(g_pack, &end) || n > (BC7_DELTA - 1) - end) goto write_fail;
++        rec_t r = {k.a, k.b, end, (uint32_t)n, (uint32_t)fmt};
++        if (fwrite(data, 1, n, g_pack) != n || fflush(g_pack) ||
++            _fseeki64(g_idx, 0, SEEK_END) || fwrite(&r, sizeof r, 1, g_idx) != 1 || fflush(g_idx)) goto write_fail;
++        if (g_overlay) r.off |= BC7_DELTA;
++        put(&r); // publish only after both streams flush successfully
++    }
++    pthread_mutex_unlock(&g_mu);
++    return;
++write_fail:
++    g_open = -1; // no more writes or lookups after a partial write; validate on restart
+     pthread_mutex_unlock(&g_mu);
+ }
+ 
+@@ -162,7 +276,11 @@
  static void *encoder(void *unused) {
      (void)unused;
      pthread_setname_np("totk-bc7");
@@ -1157,3 +1363,143 @@ index e6a8474..fd45354 100644
  
  
  def env():
+
+diff --git a/src/host/shared_font.c b/src/host/shared_font.c
+--- a/src/host/shared_font.c
++++ b/src/host/shared_font.c
+@@ -37,7 +37,7 @@
+         fseek(f[i], 0, SEEK_END);
+         sizes[i] = (uint64_t)ftell(f[i]);
+         fseek(f[i], 0, SEEK_SET);
+-        need(sizes[i] > 8 && sizes[i] < (64u << 20), "shared font size");
++        need(sizes[i] >= 12 && sizes[i] < (64u << 20), "shared font size");
+         total += sizes[i];
+     }
+     region = malloc(total);
+@@ -46,9 +46,11 @@
+     for (int i = 0; i < SHARED_FONT_COUNT; i++) {
+         need(fread(region + at, 1, sizes[i], f[i]) == sizes[i], "shared font read");
+         fclose(f[i]);
+-        // BFTTF header: magic and size, each XORed with the same key; the magic decodes to 0x18029a7f.
+-        uint32_t key = be32(region + at) ^ 0x18029a7fu, n = be32(region + at + 4) ^ key;
++        // BFTTF header: magic and size, each XORed with the same key; the magic decodes to 0x7f9a0218.
++        uint32_t key = be32(region + at) ^ 0x7f9a0218u, n = be32(region + at + 4) ^ key;
+         need(n == sizes[i] - 8, "shared font BFTTF header");
++        uint32_t first = be32(region + at + 8) ^ key;
++        need(first == 0x00010000u || first == 0x4f54544fu, "shared font sfnt signature");
+         offsets[i] = at + 8;
+         font_bytes[i] = n;
+         at += sizes[i];
+diff --git a/src/gfx/nvn/nvn_impl.h b/src/gfx/nvn/nvn_impl.h
+--- a/src/gfx/nvn/nvn_impl.h
++++ b/src/gfx/nvn/nvn_impl.h
+@@ -1,34 +1,43 @@
+-// NVN implementation registration macros shared by hle_nvn.c and TOTK extension files.
+-// [Windows port] Registered in PE sections .nvni$m / .nvnx$m between the markers of nvn_registry.c.
+-#pragma once
+-#include "nvn_protos.h"
+-
+-// TOTK: NVN entry points that wait for the GPU, the display or other threads give up the caller's virtual core for
+-// their duration (runtime/threads.c), as the Horizon thread would block there.
+-int runtime_core_away(void);
+-void runtime_core_back(int *away);
+-#define NVN_BLOCKING() __attribute__((cleanup(runtime_core_back))) int totk_core_away_ = runtime_core_away()
+-
+-typedef struct { const char *name; void *fn; } nvn_impl;
+-#define NVN(name, ret, ...)                                                                       \
+-    static ret h_##name(__VA_ARGS__);                                                             \
+-    static const NVNT_##name chk_##name __attribute__((unused)) = h_##name;                       \
+-    __attribute__((used, section(".nvni$m"))) static const nvn_impl e_##name = {#name, (void *)h_##name}; \
+-    static ret h_##name(__VA_ARGS__)
+-// 无原型的新版接口：不做签名检查
+-// Newer interfaces without prototypes: no signature check
+-#define NVN_NOPROTO(name, ret, ...)                                                               \
+-    static ret h_##name(__VA_ARGS__);                                                             \
+-    __attribute__((used, section(".nvni$m"))) static const nvn_impl e_##name = {#name, (void *)h_##name}; \
+-    static ret h_##name(__VA_ARGS__)
+-
+-
+-// TOTK: entry points the game asks nvnDeviceGetProcAddress / nvnBootstrapLoader for that are not in main's
+-// name table (no counting thunk). They are returned directly by nvn_lookup.
+-#define NVN_EXTRA(name, ret, ...)                                                                 \
+-    static ret x_##name(__VA_ARGS__);                                                             \
+-    __attribute__((used, section(".nvnx$m"))) static const nvn_impl ex_##name = {#name, (void *)x_##name}; \
+-    static ret x_##name(__VA_ARGS__)
++// NVN implementation registration macros shared by hle_nvn.c and TOTK extension files.
++// [Windows port] Registered in PE sections .nvni$m / .nvnx$m between the markers of nvn_registry.c.
++#pragma once
++#include "nvn_protos.h"
++
++// TOTK: NVN entry points that wait for the GPU, the display or other threads give up the caller's virtual core for
++// their duration (runtime/threads.c), as the Horizon thread would block there.
++int runtime_core_away(void);
++void runtime_core_back(int *away);
++#define NVN_BLOCKING() __attribute__((cleanup(runtime_core_back))) int totk_core_away_ = runtime_core_away()
++
++typedef struct { const char *name; void *fn; } nvn_impl;
++#ifdef __ELF__
++// ELF does not sort PE $ subsections. Named retained sections expose exact
++// __start/__stop ranges and survive --gc-sections (LLVM lld start-stop-gc).
++#define NVN_ENTRY_IMPL __attribute__((used, retain, section("totk_nvni"), aligned(__alignof__(nvn_impl))))
++#define NVN_ENTRY_EXTRA __attribute__((used, retain, section("totk_nvnx"), aligned(__alignof__(nvn_impl))))
++#else
++#define NVN_ENTRY_IMPL __attribute__((used, section(".nvni$m")))
++#define NVN_ENTRY_EXTRA __attribute__((used, section(".nvnx$m")))
++#endif
++#define NVN(name, ret, ...)                                                                       \
++    static ret h_##name(__VA_ARGS__);                                                             \
++    static const NVNT_##name chk_##name __attribute__((unused)) = h_##name;                       \
++    NVN_ENTRY_IMPL static const nvn_impl e_##name = {#name, (void *)h_##name}; \
++    static ret h_##name(__VA_ARGS__)
++// 无原型的新版接口：不做签名检查
++// Newer interfaces without prototypes: no signature check
++#define NVN_NOPROTO(name, ret, ...)                                                               \
++    static ret h_##name(__VA_ARGS__);                                                             \
++    NVN_ENTRY_IMPL static const nvn_impl e_##name = {#name, (void *)h_##name}; \
++    static ret h_##name(__VA_ARGS__)
++
++
++// TOTK: entry points the game asks nvnDeviceGetProcAddress / nvnBootstrapLoader for that are not in main's
++// name table (no counting thunk). They are returned directly by nvn_lookup.
++#define NVN_EXTRA(name, ret, ...)                                                                 \
++    static ret x_##name(__VA_ARGS__);                                                             \
++    NVN_ENTRY_EXTRA static const nvn_impl ex_##name = {#name, (void *)x_##name}; \
++    static ret x_##name(__VA_ARGS__)
+ 
+ // [Windows port] nvn_registry.c
+ const nvn_impl *nvn_registry_impls(unsigned *n);
+diff --git a/src/gfx/nvn/nvn_registry.c b/src/gfx/nvn/nvn_registry.c
+--- a/src/gfx/nvn/nvn_registry.c
++++ b/src/gfx/nvn/nvn_registry.c
+@@ -5,6 +5,22 @@
+ #include "../host/hle.h"
+ #include "nvn_impl.h"
+ 
++#ifdef __ELF__
++extern const nvn_impl __start_totk_nvni[], __stop_totk_nvni[];
++extern const nvn_impl __start_totk_nvnx[], __stop_totk_nvnx[];
++static const nvn_impl *elf_range(const nvn_impl *first, const nvn_impl *stop, unsigned *n) {
++    uintptr_t begin = (uintptr_t)first, end = (uintptr_t)stop;
++    if (end < begin || (end - begin) % sizeof(*first) ||
++        (end - begin) / sizeof(*first) > 65536)
++        runtime_fail("invalid ELF NVN registry extent");
++    *n = (unsigned)((end - begin) / sizeof(*first));
++    for (unsigned i = 0; i < *n; i++)
++        if (!first[i].name || !first[i].fn) runtime_fail("invalid ELF NVN registry entry");
++    return first;
++}
++const nvn_impl *nvn_registry_impls(unsigned *n) { return elf_range(__start_totk_nvni, __stop_totk_nvni, n); }
++const nvn_impl *nvn_registry_extras(unsigned *n) { return elf_range(__start_totk_nvnx, __stop_totk_nvnx, n); }
++#else
+ // The linker sorts .nvni$a < .nvni$m (NVN / NVN_NOPROTO entries) < .nvni$z by the text after '$'; likewise .nvnx.
+ __attribute__((section(".nvni$a"), used)) static const nvn_impl impls_start[1];
+ __attribute__((section(".nvni$z"), used)) static const nvn_impl impls_stop[1];
+@@ -20,6 +36,8 @@
+ }
+ const nvn_impl *nvn_registry_impls(unsigned *n) { return range(impls_start, impls_stop, n); }
+ const nvn_impl *nvn_registry_extras(unsigned *n) { return range(extras_start, extras_stop, n); }
++
++#endif
+ 
+ // The native implementation of an NVN name (the thunks call it).
+ void *nvn_impl_fn(const char *name, int extra) {

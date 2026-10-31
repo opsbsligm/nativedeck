@@ -1,0 +1,56 @@
+{
+  "authored_bitmaps": {
+    "front": {
+      "rgba_sha256": "ce04c2a5a30053698fd73e864fc3b8a0655f5503d4ce8d95241405d833c225ef",
+      "runs": 7768,
+      "bytes": 788800
+    },
+    "inclined": {
+      "rgba_sha256": "5f49626b1c0c6a7f0ec4df406b173e1fbb7022a8cd22cd1a8e95d90ed0746729",
+      "runs": 11876,
+      "bytes": 788800
+    }
+  },
+  "target_identities": [
+    {
+      "linear_sha256": "f8090bf1dba07e128deb24f35287b4eb2f74470db037835e0f980a9a40a320a8",
+      "view": 2
+    },
+    {
+      "linear_sha256": "394488664f2e1fa0fd8c898a2f6757a5fc012c295551e487e4bf37dc5da8af98",
+      "view": 1
+    },
+    {
+      "linear_sha256": "2b9240133388bb52b107ac15ece79f15ff0cb10a00e381a80913f4ff1c436145",
+      "view": 2
+    },
+    {
+      "linear_sha256": "46bc67f54026e30cbe773a7a3afc347a6516d6ce1d27f8b271d65622982d47ca",
+      "view": 1
+    },
+    {
+      "linear_sha256": "8e8bc0e26ea1c0347075af88efb87e3c0b576f3a4232de4722d436f2d4d0164b",
+      "view": 2
+    },
+    {
+      "linear_sha256": "804596d69e2d6b87fff9bc5d1bea845381bb8cd1e6791f44114e96ef34c7d1de",
+      "view": 1
+    }
+  ],
+  "width": 580,
+  "height": 340,
+  "header_sha256": "3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f",
+  "runtime_font_dependency": false,
+  "hardware_validated": false,
+  "runtime_before_sha256": "acc9512e092c9225c0f8c85afb422827a99f5f428e8cae8c0d41c8d72486160c",
+  "runtime_after_sha256": "0ce0984af2948eb3929fe14f46d587447587c2057d66c8b4038ce7f044f37e5b",
+  "original_source_unchanged": true,
+  "applied_to_live_source": false,
+  "previous_installed_runtime_sha256": "03a9d35bc95a572adbc203ac790942a43b4355f40ad3001b9a14c14f977b3c4e",
+  "display_art": "unified-steamdeck-inclined",
+  "render_view": 2,
+  "expected_elf_marker": "nativedeck-steamdeck-art-v1-3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f-unified-inclined-v1",
+  "schema": 1,
+  "format": "nd-deck-run-v1",
+  "game_asset_input": false
+}

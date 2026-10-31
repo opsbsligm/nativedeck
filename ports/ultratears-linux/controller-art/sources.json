@@ -1,0 +1,45 @@
+[
+  {
+    "path": "vendor/glyphs.upstream.c",
+    "url": "https://raw.githubusercontent.com/Revivedx/SavageWindRecomp/4249c880bc6b09ad0207fc3f6e7595346f08d232/runtime/nvn/glyphs.c",
+    "sha256": "3ca4a8d24269643581672efaf4157bea3759a11b42e0bae98c8d5e83b982cc12",
+    "bytes": 36066
+  },
+  {
+    "path": "vendor/imstb_truetype.h",
+    "url": "https://raw.githubusercontent.com/Revivedx/SavageWindRecomp/4249c880bc6b09ad0207fc3f6e7595346f08d232/third_party/imgui/imstb_truetype.h",
+    "sha256": "87f08919ae8e7223451d0e9d06b62829075d3e920c9e6ad436db9d7e7427ffce",
+    "bytes": 199485
+  },
+  {
+    "path": "vendor/LICENSE.imgui.txt",
+    "url": "https://raw.githubusercontent.com/Revivedx/SavageWindRecomp/4249c880bc6b09ad0207fc3f6e7595346f08d232/third_party/imgui/LICENSE.txt",
+    "sha256": "c80c5789748d955c4a650562baa0d750494e2c7128c2ca66aaebe2e3c4e198bf",
+    "bytes": 1083
+  },
+  {
+    "path": "vendor/FiraSans-SemiBold.ttf",
+    "url": "https://raw.githubusercontent.com/Revivedx/SavageWindRecomp/4249c880bc6b09ad0207fc3f6e7595346f08d232/third_party/fonts/FiraSans/FiraSans-SemiBold.ttf",
+    "sha256": "db0321f83eb3e9f527b8af384a1b3fefdc1039cf2b06fd39b3f61492bda9561c",
+    "bytes": 489028
+  },
+  {
+    "path": "vendor/OFL.FiraSans.txt",
+    "url": "https://raw.githubusercontent.com/Revivedx/SavageWindRecomp/4249c880bc6b09ad0207fc3f6e7595346f08d232/third_party/fonts/FiraSans/OFL.txt",
+    "sha256": "8f24842e9174beda18a556c2ae7d54f5dc444340c19a3a9ef77e23bca366adbd",
+    "bytes": 4370
+  },
+  {
+    "path": "vendor/LICENSE.SavageWind.txt",
+    "url": "https://raw.githubusercontent.com/Revivedx/SavageWindRecomp/4249c880bc6b09ad0207fc3f6e7595346f08d232/LICENSE",
+    "sha256": "dd43b1a9e7b006ba06f9bb9290a5c38a3ea175dae0f1dba63305a6245f7513b7",
+    "bytes": 1494
+  },
+  {
+    "path": "vendor/botw_xbox_diagram.original.inc",
+    "sha256": "d74755ad1a88d3650103c081bcd733ba09d484db80986c54cee1c40038fe0608",
+    "bytes": 4229,
+    "license": "No standalone license declaration in original; authorship and upstream notices preserved in NOTICE.md",
+    "source_reference": "owner-provided authored Steam Deck drawing botw_xbox_diagram.inc; retained as vendor/botw_xbox_diagram.original.inc"
+  }
+]

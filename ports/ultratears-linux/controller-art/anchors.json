@@ -1,0 +1,502 @@
+{
+  "schema": 2,
+  "coordinate_system": "pixels, top-left origin, x right, y down",
+  "game_layout_validated": false,
+  "pixel_format": "RGBA8 straight alpha",
+  "front_source": [
+    576,
+    288
+  ],
+  "front_offset": [
+    2,
+    26
+  ],
+  "inclined_projection": {
+    "input": "original 576x288 front",
+    "x": "290+(x-288)*(0.94+0.04*y/288)",
+    "y": "72+0.75*y",
+    "sampling": "inverse map pixel centers, alpha-weighted bilinear"
+  },
+  "resource_mapping": {
+    "Controller_Console^w": "front",
+    "Controller_Grip^w": "front",
+    "Controller_Pro^w": "front",
+    "Controller_Console1^w": "inclined",
+    "Controller_Grip1^w": "inclined",
+    "Controller_Pro1^w": "inclined"
+  },
+  "front": {
+    "width": 580,
+    "height": 340,
+    "anchors": [
+      {
+        "id": "left_stick",
+        "label": "LS",
+        "source": [
+          88,
+          88
+        ],
+        "pixel": [
+          90,
+          114
+        ]
+      },
+      {
+        "id": "right_stick",
+        "label": "RS",
+        "source": [
+          470,
+          88
+        ],
+        "pixel": [
+          472,
+          114
+        ]
+      },
+      {
+        "id": "dpad_center",
+        "label": "D-pad",
+        "source": [
+          38,
+          79
+        ],
+        "pixel": [
+          40,
+          105
+        ]
+      },
+      {
+        "id": "view",
+        "label": "View",
+        "source": [
+          126,
+          54
+        ],
+        "pixel": [
+          128,
+          80
+        ]
+      },
+      {
+        "id": "menu",
+        "label": "Menu",
+        "source": [
+          450,
+          54
+        ],
+        "pixel": [
+          452,
+          80
+        ]
+      },
+      {
+        "id": "face_south",
+        "label": "A",
+        "source": [
+          517,
+          106
+        ],
+        "pixel": [
+          519,
+          132
+        ]
+      },
+      {
+        "id": "face_east",
+        "label": "B",
+        "source": [
+          535,
+          89
+        ],
+        "pixel": [
+          537,
+          115
+        ]
+      },
+      {
+        "id": "face_west",
+        "label": "X",
+        "source": [
+          499,
+          89
+        ],
+        "pixel": [
+          501,
+          115
+        ]
+      },
+      {
+        "id": "face_north",
+        "label": "Y",
+        "source": [
+          517,
+          71
+        ],
+        "pixel": [
+          519,
+          97
+        ]
+      },
+      {
+        "id": "left_touchpad",
+        "label": "",
+        "source": [
+          70,
+          173
+        ],
+        "pixel": [
+          72,
+          199
+        ]
+      },
+      {
+        "id": "right_touchpad",
+        "label": "",
+        "source": [
+          506,
+          173
+        ],
+        "pixel": [
+          508,
+          199
+        ]
+      },
+      {
+        "id": "steam",
+        "label": "STEAM",
+        "source": [
+          119,
+          231
+        ],
+        "pixel": [
+          121,
+          257
+        ]
+      },
+      {
+        "id": "quick_access",
+        "label": "...",
+        "source": [
+          457,
+          231
+        ],
+        "pixel": [
+          459,
+          257
+        ]
+      }
+    ]
+  },
+  "inclined": {
+    "width": 580,
+    "height": 340,
+    "anchors": [
+      {
+        "id": "left_stick",
+        "label": "LS",
+        "source": [
+          88,
+          88
+        ],
+        "pixel": [
+          99.55555555555557,
+          138
+        ]
+      },
+      {
+        "id": "right_stick",
+        "label": "RS",
+        "source": [
+          470,
+          88
+        ],
+        "pixel": [
+          463.30444444444447,
+          138
+        ]
+      },
+      {
+        "id": "dpad_center",
+        "label": "D-pad",
+        "source": [
+          38,
+          79
+        ],
+        "pixel": [
+          52.25694444444446,
+          131.25
+        ]
+      },
+      {
+        "id": "view",
+        "label": "View",
+        "source": [
+          126,
+          54
+        ],
+        "pixel": [
+          136.50500000000002,
+          112.5
+        ]
+      },
+      {
+        "id": "menu",
+        "label": "Menu",
+        "source": [
+          450,
+          54
+        ],
+        "pixel": [
+          443.495,
+          112.5
+        ]
+      },
+      {
+        "id": "face_south",
+        "label": "A",
+        "source": [
+          517,
+          106
+        ],
+        "pixel": [
+          508.63138888888886,
+          151.5
+        ]
+      },
+      {
+        "id": "face_east",
+        "label": "B",
+        "source": [
+          535,
+          89
+        ],
+        "pixel": [
+          525.2331944444445,
+          138.75
+        ]
+      },
+      {
+        "id": "face_west",
+        "label": "X",
+        "source": [
+          499,
+          89
+        ],
+        "pixel": [
+          490.9481944444444,
+          138.75
+        ]
+      },
+      {
+        "id": "face_north",
+        "label": "Y",
+        "source": [
+          517,
+          71
+        ],
+        "pixel": [
+          507.5181944444444,
+          125.25
+        ]
+      },
+      {
+        "id": "left_touchpad",
+        "label": "",
+        "source": [
+          70,
+          173
+        ],
+        "pixel": [
+          79.84194444444447,
+          201.75
+        ]
+      },
+      {
+        "id": "right_touchpad",
+        "label": "",
+        "source": [
+          506,
+          173
+        ],
+        "pixel": [
+          500.1580555555555,
+          201.75
+        ]
+      },
+      {
+        "id": "steam",
+        "label": "STEAM",
+        "source": [
+          119,
+          231
+        ],
+        "pixel": [
+          125.71791666666667,
+          245.25
+        ]
+      },
+      {
+        "id": "quick_access",
+        "label": "...",
+        "source": [
+          457,
+          231
+        ],
+        "pixel": [
+          454.28208333333333,
+          245.25
+        ]
+      },
+      {
+        "id": "left_trigger",
+        "label": "L2/LT",
+        "source": null,
+        "pixel": [
+          58,
+          53
+        ]
+      },
+      {
+        "id": "right_trigger",
+        "label": "R2/RT",
+        "source": null,
+        "pixel": [
+          522,
+          53
+        ]
+      },
+      {
+        "id": "left_bumper",
+        "label": "L1/LB",
+        "source": null,
+        "pixel": [
+          58,
+          79
+        ]
+      },
+      {
+        "id": "right_bumper",
+        "label": "R1/RB",
+        "source": null,
+        "pixel": [
+          522,
+          79
+        ]
+      }
+    ]
+  },
+  "top": {
+    "width": 576,
+    "height": 100,
+    "anchors": [
+      {
+        "id": "left_trigger",
+        "label": "L2/LT",
+        "source": [
+          46,
+          25
+        ],
+        "pixel": [
+          46,
+          25
+        ]
+      },
+      {
+        "id": "right_trigger",
+        "label": "R2/RT",
+        "source": [
+          529,
+          25
+        ],
+        "pixel": [
+          529,
+          25
+        ]
+      },
+      {
+        "id": "left_bumper",
+        "label": "L1/LB",
+        "source": [
+          46,
+          49
+        ],
+        "pixel": [
+          46,
+          49
+        ]
+      },
+      {
+        "id": "right_bumper",
+        "label": "R1/RB",
+        "source": [
+          530,
+          49
+        ],
+        "pixel": [
+          530,
+          49
+        ]
+      },
+      {
+        "id": "volume_down",
+        "label": "-",
+        "source": [
+          124,
+          49
+        ],
+        "pixel": [
+          124,
+          49
+        ]
+      },
+      {
+        "id": "volume_up",
+        "label": "+",
+        "source": [
+          146,
+          49
+        ],
+        "pixel": [
+          146,
+          49
+        ]
+      },
+      {
+        "id": "usb_c",
+        "label": "USB-C",
+        "source": [
+          373,
+          50
+        ],
+        "pixel": [
+          373,
+          50
+        ]
+      },
+      {
+        "id": "headphone_jack",
+        "label": "",
+        "source": [
+          426,
+          49
+        ],
+        "pixel": [
+          426,
+          49
+        ]
+      },
+      {
+        "id": "power",
+        "label": "",
+        "source": [
+          467,
+          49
+        ],
+        "pixel": [
+          467,
+          49
+        ]
+      }
+    ]
+  }
+}

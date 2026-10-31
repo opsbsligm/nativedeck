@@ -1,0 +1,218 @@
+{
+  "schema": 2,
+  "view": "inclined",
+  "coordinate_system": "pixels, top-left origin, x right, y down",
+  "pixel_format": "RGBA8 straight alpha",
+  "game_layout_validated": false,
+  "source_canvas": [
+    576,
+    288
+  ],
+  "transform": {
+    "input": "original 576x288 front",
+    "x": "290+(x-288)*(0.94+0.04*y/288)",
+    "y": "72+0.75*y",
+    "sampling": "inverse map pixel centers, alpha-weighted bilinear"
+  },
+  "resources": [
+    "Controller_Console1^w",
+    "Controller_Grip1^w",
+    "Controller_Pro1^w"
+  ],
+  "width": 580,
+  "height": 340,
+  "anchors": [
+    {
+      "id": "left_stick",
+      "label": "LS",
+      "source": [
+        88,
+        88
+      ],
+      "pixel": [
+        99.55555555555557,
+        138
+      ]
+    },
+    {
+      "id": "right_stick",
+      "label": "RS",
+      "source": [
+        470,
+        88
+      ],
+      "pixel": [
+        463.30444444444447,
+        138
+      ]
+    },
+    {
+      "id": "dpad_center",
+      "label": "D-pad",
+      "source": [
+        38,
+        79
+      ],
+      "pixel": [
+        52.25694444444446,
+        131.25
+      ]
+    },
+    {
+      "id": "view",
+      "label": "View",
+      "source": [
+        126,
+        54
+      ],
+      "pixel": [
+        136.50500000000002,
+        112.5
+      ]
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "source": [
+        450,
+        54
+      ],
+      "pixel": [
+        443.495,
+        112.5
+      ]
+    },
+    {
+      "id": "face_south",
+      "label": "A",
+      "source": [
+        517,
+        106
+      ],
+      "pixel": [
+        508.63138888888886,
+        151.5
+      ]
+    },
+    {
+      "id": "face_east",
+      "label": "B",
+      "source": [
+        535,
+        89
+      ],
+      "pixel": [
+        525.2331944444445,
+        138.75
+      ]
+    },
+    {
+      "id": "face_west",
+      "label": "X",
+      "source": [
+        499,
+        89
+      ],
+      "pixel": [
+        490.9481944444444,
+        138.75
+      ]
+    },
+    {
+      "id": "face_north",
+      "label": "Y",
+      "source": [
+        517,
+        71
+      ],
+      "pixel": [
+        507.5181944444444,
+        125.25
+      ]
+    },
+    {
+      "id": "left_touchpad",
+      "label": "",
+      "source": [
+        70,
+        173
+      ],
+      "pixel": [
+        79.84194444444447,
+        201.75
+      ]
+    },
+    {
+      "id": "right_touchpad",
+      "label": "",
+      "source": [
+        506,
+        173
+      ],
+      "pixel": [
+        500.1580555555555,
+        201.75
+      ]
+    },
+    {
+      "id": "steam",
+      "label": "STEAM",
+      "source": [
+        119,
+        231
+      ],
+      "pixel": [
+        125.71791666666667,
+        245.25
+      ]
+    },
+    {
+      "id": "quick_access",
+      "label": "...",
+      "source": [
+        457,
+        231
+      ],
+      "pixel": [
+        454.28208333333333,
+        245.25
+      ]
+    },
+    {
+      "id": "left_trigger",
+      "label": "L2/LT",
+      "source": null,
+      "pixel": [
+        58,
+        53
+      ]
+    },
+    {
+      "id": "right_trigger",
+      "label": "R2/RT",
+      "source": null,
+      "pixel": [
+        522,
+        53
+      ]
+    },
+    {
+      "id": "left_bumper",
+      "label": "L1/LB",
+      "source": null,
+      "pixel": [
+        58,
+        79
+      ]
+    },
+    {
+      "id": "right_bumper",
+      "label": "R1/RB",
+      "source": null,
+      "pixel": [
+        522,
+        79
+      ]
+    }
+  ]
+}

@@ -16,3 +16,9 @@ patches/botw-sdk7-20261029/*.patch -text whitespace=-blank-at-eol
 ports/ultratears-linux/linux.patch -text whitespace=-blank-at-eol
 # Native port validation evidence is ordinary UTF-8 text.
 ports/ultratears-linux/evidence/*.txt text diff
+# Preserve pinned public fixtures/licenses; checkout must not change their SHA.
+ports/ultratears-linux/cache-tests/fixture/** -text whitespace=cr-at-eol
+ports/ultratears-linux/cache-tests/LICENSE -text whitespace=cr-at-eol
+ports/ultratears-linux/controller-art/vendor/** -text whitespace=cr-at-eol
+# Literal unified-diff context and EOF markers are part of the checked patch.
+ports/ultratears-linux/cache-tests/vkb_bc7.patch -text -whitespace

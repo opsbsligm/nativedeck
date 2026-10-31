@@ -2,7 +2,7 @@
 
 本目录是对公开项目 [kuraeow/ultratears](https://github.com/kuraeow/ultratears) 的可重放移植补丁，固定提交 `0c9ce8afd4c3ab81c33200917af51fb9807aeef0`。复用其 ARM64→C 重编译器、NVN/Vulkan 后端、主机服务及已有 Linux 平台实现。保留上游 GPL-3.0-or-later 与各第三方组件署名；完整许可证见 LICENSE 和上游 third_party/licenses。
 
-**当前产物是生产运行时代码静态库，不是可玩的《王国之泪》。** 库已在 Deck 的 Ubuntu 24.04 容器编译，链接审计只剩三个真实游戏模块的九个函数表符号。未用空表补成游戏，也未启动第二个 GPU 游戏。`hardware_validated=false` 仍指游戏实跑未通过。
+**当前交付是公开源码、可重放移植补丁、图示renderer/RLE、运行时图示hook及私有布局构造工具。** 不分发游戏输入或生成游戏代码。实际游戏加载问题由主线程修复；本目录的历史静态库/协议检查不代表当前游戏已可玩。`hardware_validated=false`。
 
 ## 本次实现与证据
 
@@ -39,9 +39,9 @@ python3 tools/audit_linux_runtime.py --build /home/deck/native-recomp/ports/ultr
 
 `libultratears-runtime-audit.so` 仅作链接审计，禁止执行或冒充游戏安装。容器内依赖解析已验证；SteamOS 宿主的最终完整游戏依赖打包尚待完成。
 
-## 真实游戏构建入口（待输入及验收）
+## 真实游戏构建入口（私有输入；实机验收待完成）
 
-`tools/setup.py` 仍是上游 Windows 流程。Linux 使用新增入口，不调用 Windows 安装器或下载器。需要用户本地解密、应用 1.4.3 更新的 `exefs/` 与 `romfs/`；本轮定向核查未找到完整有效输入。构建时先关闭占用资源的游戏，预留至少数十 GiB 于项目数据目录，禁止在 Mac `/tmp` 存放大产物。
+`tools/setup.py` 仍是上游 Windows 流程。Linux 使用新增入口，不调用 Windows 安装器或下载器。需要用户本地解密、应用 1.4.3 更新的 `exefs/` 与 `romfs/`；输入只在调用方私有环境核验，本公开树不声明它们当前存在或缺失。构建时先关闭占用资源的游戏，预留至少数十 GiB 于项目数据目录，禁止在 Mac `/tmp` 存放大产物。
 
 ```sh
 python3 tools/prepare_linux_game.py --dump /absolute/local-dump --data /absolute/project-data --stage check
@@ -52,7 +52,7 @@ python3 tools/build_linux.py --target game --exefs /absolute/local-dump/exefs --
 
 Lifter 的 Python 依赖为上游 capstone/lz4/unicorn，仅在构建分析阶段使用。运行时游戏不依赖这些 Python 包。
 
-着色器与纹理沿用上游工具，新增 Linux 路径；以下完整流水线尚未用真实输入验收：
+着色器与纹理沿用上游工具，新增Linux路径；真实1.4.3输入已完成28667个着色器转换打包和纹理预编码：
 
 ```sh
 python3 tools/build_xlate.py --rid linux-x64 --dotnet /absolute/project-dotnet/dotnet --out /absolute/project-translator --cache /absolute/project-cache --jobs 1
@@ -65,12 +65,28 @@ python3 tools/bc7_build.py --romfs /absolute/project-data/romfs --cache /absolut
 
 ## 剩余交付边界
 
-真实 1.4.3 CPU 代码与资源构建、真实游戏着色器转换、完整 Linux 链接/宿主依赖打包、Vulkan 真正创建设备与游戏渲染、存档和稳定性都尚未验收。简中可用语言代码为 `TOTK_LANG=zh-Hans`，但中文字库与全部画面未验证。Xbox 提示需要实际资源和输入行为一起对齐，目前尚未实现，不能仅改按钮映射就宣布图标完成。
+真实1.4.3已完成282702函数、1432生成单元加三表的完整编译，并在SteamOS宿主使用RADV VANGOGH进入开场地下场景。键盘映射的移动和系统菜单、中文标题/读档/系统画面、读取自动存档、手动保存“已保存”均已实测；自主SteamDeck图和引线已实际显示。过渡动画早期截图存在空白，稳定画面中文字完整，不能把过渡帧当成已确定的字体故障；当前正进行关闭临时R8强刷的对照。Xbox图标仍需补齐RS等提示；全部物理按键、动画音画、能力与稳定性验收未完成。
 
-最终安装仍采用自包含目录和 `run.sh`，直接启动原生 x86-64 ELF；本轮未改 Steam 库、Steam/Decky 插件、系统设置或当前 BOTW 会话。串流按用户要求从验收中跳过。后续须各项通过后才能宣布移植完成并加入掌机模式。
+Clang18对两个复杂生成单元的CodeGenPrepare产物未通过LLVM自身IR校验；`--compile-overrides`允许精确源SHA绑定的`["-mllvm","-disable-cgp"]`，保留O1及其他编译单元。早期调度/分配恢复和O0对照也保留为明确白名单；O0标记为实验对照。生成游戏代码始终留在私有数据目录。
+
+最终安装采用自包含目录和`run.sh`，直接启动原生x86-64 ELF；未改Steam库、Steam/Decky插件或系统设置。用户已授权保存、校验备份并退出BOTW，该操作已完成。TOTK首轮试玩的17文件也已备份读回，退出后内容一致。串流按用户要求跳过；整体实机门禁通过后才能宣布完成并加入掌机模式。
 
 ## Linux 着色器工具的补充验证
 
 `prepare_dotnet_linux.py` 从微软官方 .NET 10 release metadata 选择 Linux x64 SDK，逐字节核对 SHA-512，在当前项目 deps 目录解包，拒绝覆盖已有 SDK，不装系统包。此次固定证据为 SDK 10.0.403。`build-native-shaders.sh` 使用已有容器、单 CPU / nice19 / 每进程512 MiB托管堆限制构建公开翻译器；CLR 的虚拟地址空间上限为8 GiB，不能将它误认为实际内存占用。运行时 C/C++ 构建的2 GiB地址限制保持不变。
 
-已在 SteamOS 宿主直接启动 `ultrs-shaders --serve`，对不存在的合成代码文件返回预期 fail 并正常退出；没有执行真实游戏着色器或 GPU 游戏。SDK pin、二进制SHA-256和明确验证边界分别见 `evidence/dotnet-sdk-pin.json` 与 `evidence/shader-translator-build.json`。SDK与工具二进制留在Deck项目目录，未提交仓库。
+早期合成请求验证保留在`evidence/dotnet-sdk-pin.json`与`evidence/shader-translator-build.json`。2026-10-31已进一步完成28667个真实游戏着色器转换，并实际进入Vulkan游戏场景；这些结果尚不等于完整渲染正确性。SDK、工具二进制与生成GPU资源留在Deck项目目录，未提交仓库。
+
+## 控制器公共源码入口
+
+- `controller-art/`：自主renderer v2、锚点、RLE生成器及公开图形测试。
+- `controller-runtime/`：六个精确纹理身份统一inclined上传的patch、RLE头和对应proof；通过`tools/native_review/apply_ultratears_controller.py`在Linux移植后应用。
+- `controller-layout/`：通用renderer锚点API与私有UI patch构造器；公共7项单测不读取游戏文件，私有输入/输出必须留在仓外。
+
+源码/自绘像素/格式核验与真实Vulkan上传和游戏操作验收分开记录；本次没有将后者标为完成。
+
+## 不可变资源与可写纹理缓存
+
+`TOTK_BC7_DIR`指向安装包内只读预烘焙资源，Linux启动器同时将`TOTK_BC7_CACHE_DIR`设为本游戏用户缓存子目录。新增纹理只写增量pack/idx，不复制8GB基准包，也不让运行时修改安装清单保护的文件。无效/截断索引、目录或文件别名、并发写锁冲突均关闭这组缓存；不会猜测修复原数据。
+
+`cache-tests/`将原始公开fixture应用真实生产Linux补丁，与独立缓存补丁重建结果按SHA绑定，再运行34组原生C回归与4项篡改/完整性检查；不需要网络或游戏资源。它们验证缓存I/O，不替代真实游戏验收。

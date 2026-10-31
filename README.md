@@ -3,12 +3,16 @@
 > Switch AArch64 游戏 → Steam Deck x86-64 **原生**运行（静态重编译，无模拟器、无 Wine/Proton/DXVK 兼容层）
 
 - **task_id**：`nativedeck-20261024` · **scene**：homelab
-- **当前阶段**：只读调研已闭合，真机实测待挂账解除
-- **hardware_validated**：`false`（Deck 上尚未实跑任何上游发布物或重编译产物）
+- **当前阶段**：TOTK 1.4.3原生ELF已进入开场地下场景；移动、系统菜单、稳定画面的中文、读档和手动保存已实测，正在继续手柄/图标与完整游玩验收。
+- **hardware_validated**：`false`（整体交付尚未验收；3D首次启动通过不代表中文、全部手柄功能、动画和稳定性已通过）
 - **仓库**：<https://gitlab.example.com:8445/codex/nativedeck>（private · 默认分支 `main` 受保护）
   克隆：`git clone https://gitlab.example.com:8445/codex/nativedeck.git`
 
-## 一句话结论
+## 历史调研结论（2026-10-24）
+
+本节保留历史调研，不能替代当前工程状态或性能验收。当前公开实现入口见`ports/ultratears-linux/`与`tools/native_review/`。
+
+2026-10-31本机实测使用UltraTears固定提交的Linux源码移植，自包含目录和`run.sh`直接启动x86-64 ELF。早期第三方项目与60FPS宣称不作为本机验收依据；当前开场短时观察约30FPS，尚未完成持续性能测试。
 
 **能实现。** 三条活跃实现全部产出普通 Linux x86-64 原生 ELF，加载期与运行期均无翻译器介入。TOTK 在 Steam Deck 上已被第三方实测约 60fps；Deck 的四项硬门槛（AVX2 / Vulkan 1.3 / glibc ≥2.35 / SDL3 ≥3.4）现场全部达标。安装形态为 **AppImage**，SteamOS 无 `.deb`。
 
@@ -42,8 +46,8 @@
 - 本仓不存放 `prod.keys`、master key、游戏镜像或任何 Nintendo 版权内容
 - 对 Deck 的一切写操作需先解除挂账并逐项批准；部署遵循「纯新增、可回滚」
 
-## 恢复推进
+## 当前推进边界
 
-挂账解除后按 `作战计划.md` 顺序执行 V1 → V1.5 → V2 → V3 → V4 → V5-V7，每次只推进一项。
+原作战计划和挂账记录保留为历史材料；当前已获授权开展原生移植、项目目录内构建部署与实机验证。未修改Steam/Decky/系统插件，串流按用户要求跳过。
 
-本仓只承载调研与取证产物，不含游戏数据；Git 历史与 `STATUS.md` 轮次日志为追加式，构成可核对的进度事实源。
+本仓包含公开源码移植补丁、原生工具与研究/取证材料，不含私有游戏输入或生成游戏产物；Git 历史与 `STATUS.md` 轮次日志为追加式，构成可核对的进度事实源。

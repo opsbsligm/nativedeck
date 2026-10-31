@@ -1,0 +1,77 @@
+diff --git a/src/gfx/vkb_tex.c b/src/gfx/vkb_tex.c
+--- a/src/gfx/vkb_tex.c
++++ b/src/gfx/vkb_tex.c
+@@ -16,6 +16,8 @@
+ #include "vkb.h"
+ #include "nvn/nvn_dirty.h"
+ #include "tex/astc.h"
++#include "platform/linux_io.h"
++#include "totk_deck_bitmaps.h"
+ #include "tex/bc7.h"
+ #include "tex/nvn_deswizzle.h"
+ #include "nvn/totk_vpool.h"
+@@ -1038,6 +1040,51 @@
+          im->d.format, im->width, im->height, im->depth, im->levels, im->layers, size / 1048576.0, vpool ? ", in a virtual pool" : "",
+          im->astc ? ", ASTC" : "", dt / 1e6, why);
+ }
++
++// Exact original ASTC identity, checked before either cached BC7 or CPU decoding.
++// Authored art is compiled in; no runtime font/image path or new compatibility layer.
++const char ultrs_steamdeck_art_v1[] = "nativedeck-steamdeck-art-v1-3c843d31847ea01e9cddc58e407f9665ab64c030a30def184885601b2135088f-unified-inclined-v1";
++static uint8_t deck_rgba[2][ND_DECK_BYTES];
++static pthread_once_t deck_art_once = PTHREAD_ONCE_INIT;
++static void deck_art_init(void) {
++    if (nd_deck_unpack(1, deck_rgba[0], sizeof deck_rgba[0]) ||
++        nd_deck_unpack(2, deck_rgba[1], sizeof deck_rgba[1])) die("Steam Deck authored artwork");
++}
++static int deck_controller_upload(VkCommandBuffer cb, vkb_image *im, const uint8_t *src,
++                                  int bw, int bh, int bpb) {
++    const char *enabled = getenv("TOTK_STEAMDECK_UI");
++    if (enabled && !strcmp(enabled, "0")) return 0; // Requires restarting the game.
++    if (!im->astc || im->width != ND_DECK_W || im->height != ND_DECK_H ||
++        im->depth != 1 || im->levels != 1 || im->layers != 1 || bw != 4 || bh != 4 || bpb != 16 ||
++        im->aspect != VK_IMAGE_ASPECT_COLOR_BIT ||
++        (im->format != VK_FORMAT_R8G8B8A8_UNORM && im->format != VK_FORMAT_R8G8B8A8_SRGB)) return 0;
++    enum { PITCH = ((ND_DECK_W+3)/4)*16, ROWS = (ND_DECK_H+3)/4, BLOCK_BYTES = PITCH*ROWS };
++    uint8_t *blocks = malloc(BLOCK_BYTES);
++    if (!blocks) return 0;
++    char sha[65];
++    int ok = !nvn_deswizzle(&im->d, 0, 0, src, blocks, PITCH) &&
++             linux_sha256_hex(blocks, BLOCK_BYTES, NULL, 0, sha);
++    int view = ok ? nd_deck_source_view(sha) : 0;
++    free(blocks);
++    if (!view) return 0; // Equal dimensions alone never select an unrelated texture.
++    view = 2; // One complete view exposes the face, sticks, D-pad and all four shoulders.
++    pthread_once(&deck_art_once, deck_art_init);
++    VkBuffer buffer;
++    VkDeviceSize offset;
++    uint8_t *pixels = vkb_ring_alloc(ND_DECK_BYTES, 16, &buffer, &offset);
++    memcpy(pixels, deck_rgba[view-1], ND_DECK_BYTES);
++    vkb_image_use(cb, im, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_PIPELINE_STAGE_2_COPY_BIT,
++                  VK_ACCESS_2_TRANSFER_WRITE_BIT);
++    VkBufferImageCopy copy = {.bufferOffset=offset, .bufferRowLength=ND_DECK_W,
++        .bufferImageHeight=ND_DECK_H, .imageSubresource={VK_IMAGE_ASPECT_COLOR_BIT,0,0,1},
++        .imageExtent={ND_DECK_W,ND_DECK_H,1}};
++    vk.vkCmdCopyBufferToImage(cb, buffer, im->img, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copy);
++    static _Atomic int messages;
++    if (atomic_fetch_add(&messages, 1) < 12)
++        VLOG("[deck-ui] %s artwork on image %llu", view==1 ? "front" : "inclined", (unsigned long long)im->serial);
++    return 1;
++}
++
+ static int tex_upload(VkCommandBuffer cb, vkb_image *im) {
+     if (!im->storage || im->gpu_written) return 0;
+     const nvn_texdesc *d = &im->d;
+@@ -1100,6 +1147,12 @@
+         im->vpool_gen = gen;
+     }
+     int srgb = d->format >= 0x87 && d->format <= 0x94;
++    if (deck_controller_upload(cb, im, src, bw, bh, bpb)) {
++        slow_upload_log(im, why, up_t0, L.size, gathered != NULL);
++        free(gathered);
++        __atomic_store_n(&im->uploading, 0, __ATOMIC_RELEASE);
++        return 1;
++    }
+     if (im->astc && vkb_bc7_on() && bpb == 16) {
+         astc_upload(cb, im, src, bw, bh, srgb);
+         slow_upload_log(im, why, up_t0, L.size, gathered != NULL);
