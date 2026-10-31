@@ -60,6 +60,14 @@ def write_filtered_keys(path, keys):
             out.write(name+' = '+value+'\n')
 
 
+def private_stage(parent):
+    stage = Path(tempfile.mkdtemp(prefix='.totk-100-extract-', dir=parent))
+    if stage.stat().st_mode & 0o077:
+        shutil.rmtree(stage)
+        raise PermissionError('Extraction staging directory is accessible to other users')
+    return stage
+
+
 def validate_extraction(folder, pin):
     expected = pin['exefs_sha256']
     actual = {}
@@ -104,8 +112,7 @@ def prepare(nca, keys_file, hactool, destination, check_only=False):
     destination.parent.mkdir(parents=True, exist_ok=True)
     if shutil.disk_usage(destination.parent).free < 22*1024**3:
         raise ValueError('At least 22 GiB free is required for extracted data')
-    stage = Path(tempfile.mkdtemp(prefix='.totk-100-extract-', dir=destination.parent))
-    os.chmod(stage, 0o700)
+    stage = private_stage(destination.parent)
     private_keys = stage/'keys.filtered'
     try:
         write_filtered_keys(private_keys, keys)

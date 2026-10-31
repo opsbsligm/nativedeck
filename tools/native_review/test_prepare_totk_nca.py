@@ -4,15 +4,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from prepare_totk_nca import PIN, REQUIRED_CONTENT_ID, read_keys, validate_extraction, write_filtered_keys
+from prepare_totk_nca import PIN, REQUIRED_CONTENT_ID, private_stage, read_keys, validate_extraction, write_filtered_keys
 
 
 class NativeNcaInputs(unittest.TestCase):
     def test_private_key_filter_is_exclusive_and_owner_only(self):
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp)/'filtered'
             old = os.umask(0)
             try:
+                stage = private_stage(Path(tmp))
+                self.assertEqual(stage.stat().st_mode & 0o777, 0o700)
+                path = stage/'filtered'
                 write_filtered_keys(path, {'header_key': '12'*32})
             finally:
                 os.umask(old)
