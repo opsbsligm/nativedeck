@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PIN = ROOT/'ports/totk-recomp-linux/expected-v1.0.0.json'
 REQUIRED_NCA_BYTES = 17148870656
 REQUIRED_CONTENT_ID = '9d827368992a2faafa9062aa5458b7ec'
+KEYS_LIMIT = 1024*1024
 
 
 def digest(path):
@@ -29,8 +30,14 @@ def digest(path):
 
 
 def read_keys(path):
+    if not path.is_file():
+        raise ValueError('Use a regular key file')
+    with path.open('rb') as source:
+        payload = source.read(KEYS_LIMIT+1)
+    if len(payload) > KEYS_LIMIT:
+        raise ValueError('Key file exceeds the 1 MiB limit')
     keys = {}
-    for line in path.read_text().splitlines():
+    for line in payload.decode('utf-8').splitlines():
         line = line.split('#', 1)[0].strip()
         if not line:
             continue

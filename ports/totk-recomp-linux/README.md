@@ -27,7 +27,9 @@ python3 tools/native_review/prepare_totk_nca.py \
   --destination "$HOME/native-recomp/totk-card-build/data"
 ```
 
-Key names are case insensitive. Generation 0E application material is
+Key input must be a regular UTF-8 text file no larger than 1 MiB; the read
+itself is bounded before decoding so a misselected game archive cannot
+exhaust memory. Key names are case insensitive. Generation 0E application material is
 required; a complete master-key derivation input is also accepted. Older
 keysets fail before any large file is hashed, copied or extracted.
 `--check-only` checks material presence and size, not content integrity or

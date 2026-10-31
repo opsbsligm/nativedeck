@@ -4,10 +4,18 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from prepare_totk_nca import PIN, REQUIRED_CONTENT_ID, private_stage, read_keys, validate_extraction, write_filtered_keys
+from prepare_totk_nca import KEYS_LIMIT, PIN, REQUIRED_CONTENT_ID, private_stage, read_keys, validate_extraction, write_filtered_keys
 
 
 class NativeNcaInputs(unittest.TestCase):
+    def test_oversized_key_selection_is_rejected_before_parsing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'wrong-key-input'
+            with path.open('wb') as out:
+                out.truncate(KEYS_LIMIT*2)
+            with self.assertRaisesRegex(ValueError, '1 MiB limit'):
+                read_keys(path)
+
     def test_private_key_filter_is_exclusive_and_owner_only(self):
         with tempfile.TemporaryDirectory() as tmp:
             old = os.umask(0)
