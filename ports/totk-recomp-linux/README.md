@@ -41,6 +41,23 @@ Continue with the existing recompiler's `--skip-extract` and
 the checked input and generation records. Compilation, native linking and
 the game launch remain separate acceptance steps.
 
+Before rebuilding, apply the Deck runtime profile to the existing 1.0.0
+source after backing up `runtime/hle_oe.cpp` and `tools/linux/run.sh`:
+
+```sh
+python3 tools/native_review/apply_totk_deck_profile.py \
+  "$HOME/native-recomp/src/totk-recomp"
+```
+
+The original language interface always returned `en-US`, regardless of
+`TOTK_LANG`. The profile makes that interface return the selected supported
+language, defaults to `zh-Hans`, and safely rejects unknown/oversized codes.
+It defaults the launcher to 30 FPS and clears `TOTK_PAD_LABELS`, whose mere
+presence (including the value `0`) would change position-based input.
+This does not supply missing Chinese font/game resources or validate their
+appearance. A native C++ test checks the actual language packing function;
+the runtime source unit must also compile before rebuilding the game.
+
 ## Steam Deck acceptance
 
 The default position mapping observed in both native runtimes is:
