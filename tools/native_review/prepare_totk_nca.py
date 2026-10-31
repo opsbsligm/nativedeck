@@ -54,6 +54,12 @@ def read_keys(path):
     return keys
 
 
+def write_filtered_keys(path, keys):
+    with open(path, 'x', opener=lambda p, f: os.open(p, f, 0o600)) as out:
+        for name, value in sorted(keys.items()):
+            out.write(name+' = '+value+'\n')
+
+
 def validate_extraction(folder, pin):
     expected = pin['exefs_sha256']
     actual = {}
@@ -102,9 +108,7 @@ def prepare(nca, keys_file, hactool, destination, check_only=False):
     os.chmod(stage, 0o700)
     private_keys = stage/'keys.filtered'
     try:
-        with private_keys.open('x', opener=lambda p, f: os.open(p, f, 0o600)) as out:
-            for name, value in sorted(keys.items()):
-                out.write(name+' = '+value+'\n')
+        write_filtered_keys(private_keys, keys)
         for name in ('exefs', 'romfs'):
             (stage/name).mkdir()
         print('Verifying and extracting local content; estimated peak 18 GiB', flush=True)

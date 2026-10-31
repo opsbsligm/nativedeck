@@ -1,12 +1,26 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
 
-from prepare_totk_nca import PIN, REQUIRED_CONTENT_ID, read_keys, validate_extraction
+from prepare_totk_nca import PIN, REQUIRED_CONTENT_ID, read_keys, validate_extraction, write_filtered_keys
 
 
 class NativeNcaInputs(unittest.TestCase):
+    def test_private_key_filter_is_exclusive_and_owner_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'filtered'
+            old = os.umask(0)
+            try:
+                write_filtered_keys(path, {'header_key': '12'*32})
+            finally:
+                os.umask(old)
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+            with self.assertRaises(FileExistsError):
+                write_filtered_keys(path, {'header_key': '34'*32})
+            self.assertEqual(path.read_text(), 'header_key = '+'12'*32+'\n')
+
     def test_shipped_profile_has_the_complete_reference_module_set(self):
         pin = json.loads(PIN.read_text())
         self.assertEqual(pin['program_nca'], REQUIRED_CONTENT_ID+'.nca')
