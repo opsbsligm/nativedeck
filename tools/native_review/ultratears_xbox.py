@@ -133,6 +133,10 @@ def prepare(romfs, tools, destination, python):
         derivation=derive_tools(tools,effective,check_tools)
         subprocess.run([str(python),'-S',str(effective/'make_button_icons.py'),str(stage),
                         '--romfs',str(romfs),'--version','v143','--style','xbox'],env=env,check=True)
+        context = subprocess.run([str(python), '-S', str(Path(__file__).with_name('xbox_context_labels.py')),
+                                  '--romfs', str(romfs), '--stage', str(stage), '--tools', str(tools)],
+                                 env=env, check=True, stdout=subprocess.PIPE, text=True)
+        context_proof = json.loads(context.stdout)
         rows=manifest(stage)
         if any((a.st_size,a.st_mtime_ns,a.st_ino)!=(b.st_size,b.st_mtime_ns,b.st_ino)
                for a,b in zip(before,[p.stat() for p in source])):
@@ -140,7 +144,8 @@ def prepare(romfs, tools, destination, python):
         record={'schema':1,'kind':'ultratears-xbox-ui','version':'1.4.3','tool_commit':COMMIT,
                 'input_mapping':'position','resources':rows,
                 'coverage':['four regional icon fonts','eight gameplay HUD textures','resource-size table'],
-                'tutorial_images_complete':False,'hardware_validated':False,'tool_derivation':derivation}
+                'tutorial_images_complete':False,'hardware_validated':False,'tool_derivation':derivation,
+                'context_labels':context_proof}
         (stage/'xbox-ui.json').write_text(json.dumps(record,indent=2)+'\n')
         publish_no_replace(stage,destination)
     finally:

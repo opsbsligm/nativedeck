@@ -61,6 +61,7 @@ class CompileOverrides(unittest.TestCase):
         self.exefs = self.root / 'not-read-exefs'
         self.document = {'schema': 1, 'kind': 'ultratears-compile-overrides',
                          'files': {'main/main_7.c': self.entry(self.sources[1])}}
+        (self.generated/'manifest-linux.json').write_text('{"fixture":true}\n')
         self.save()
 
     def entry(self, path):
@@ -74,7 +75,7 @@ class CompileOverrides(unittest.TestCase):
         return build.load_compile_overrides(self.config, self.generated, self.sources)
 
     def invoke(self, module=build, overrides=False, generate_only=True,
-               target='game', verify_error=None):
+               target='game', verify_error=None, ninja_code=0, ninja_effect=None):
         argv = ['build_linux.py', '--target', target, '--out', str(self.out),
                 '--generated', str(self.generated), '--exefs', str(self.exefs), '--jobs', '2']
         if overrides:
@@ -93,7 +94,9 @@ class CompileOverrides(unittest.TestCase):
             stack.enter_context(patch.object(module.platform, 'machine', return_value='x86_64'))
             stack.enter_context(patch.object(sys, 'platform', 'linux'))
             stack.enter_context(patch.object(sys, 'argv', argv))
-            ninja = stack.enter_context(patch.object(module.subprocess, 'call', return_value=0))
+            ninja = stack.enter_context(patch.object(module.subprocess, 'call',
+                                                      return_value=ninja_code, side_effect=ninja_effect))
+            stack.enter_context(patch.object(module, 'check_exefs', return_value={'checked': 'fixture'}))
             stack.enter_context(contextlib.redirect_stdout(output))
             stack.enter_context(contextlib.redirect_stderr(error))
             try:
@@ -329,7 +332,7 @@ class CompileOverrides(unittest.TestCase):
 
     def test_tmpdir_child_only_and_local_directory(self):
         old_environment = dict(os.environ)
-        code, output, _, _, ninja, _ = self.invoke(overrides=True, generate_only=False)
+        code, output, _, _, ninja, _ = self.invoke(target='runtime', generate_only=False)
         self.assertEqual(code, 0)
         ninja.assert_called_once()
         self.assertEqual(ninja.call_args.args[0], ['ninja', '-f', str(self.out/'build.ninja'), '-j', '2', '-k', '0'])
@@ -340,6 +343,84 @@ class CompileOverrides(unittest.TestCase):
         self.assertEqual(dict(os.environ), old_environment)
         self.assertTrue((self.out/'tmp').is_dir())
         self.assertEqual(json.loads(output)['ninja_tmpdir'], str(self.out/'tmp'))
+
+    def create_record_inputs(self):
+        self.out.mkdir(exist_ok=True)
+        target = self.out/'ultratears'
+        target.write_bytes(b'synthetic linked output, not a game executable\n')
+        for module, count in (('main', 7), ('subsdk0', 3), ('sdk', 11)):
+            table = self.generated/module/(module+'_table.c')
+            table.parent.mkdir(exist_ok=True)
+            table.write_text('const uint64_t '+module+'_fn_count = '+str(count)+';\n')
+        return target
+
+    def finish_record(self, target, manifest_sha=None, override_sha=None):
+        manifest_sha = manifest_sha or build.digest(self.generated/'manifest-linux.json')
+        override_sha = override_sha or build.digest(self.config)
+        with patch.object(build, 'verify_generated', return_value=self.sources), \
+                patch.object(build, 'check_exefs', return_value={'checked': 'fixture'}):
+            return build.write_game_build_record(target, self.generated, self.exefs,
+                                                  manifest_sha, self.config, override_sha)
+
+    def test_successful_game_build_restores_installable_provenance(self):
+        target = self.create_record_inputs()
+        code, _, _, verify, ninja, _ = self.invoke(overrides=True, generate_only=False)
+        self.assertEqual(code, 0)
+        self.assertEqual(verify.call_count, 2)
+        ninja.assert_called_once()
+        record = json.loads(target.with_suffix('.build.json').read_text())
+        self.assertEqual(record['binary_sha256'], build.digest(target))
+        self.assertEqual(record['generated_manifest_sha256'], build.digest(self.generated/'manifest-linux.json'))
+        self.assertEqual(record['function_counts'], {'main': 7, 'subsdk0': 3, 'sdk': 11})
+        self.assertEqual(record['compile_overrides_sha256'], build.digest(self.config))
+        self.assertEqual(record['compile_overrides_files'], ['main/main_7.c'])
+        self.assertFalse(record['hardware_validated'])
+        self.assertFalse(list(self.out.glob('.build-record-*')))
+
+    def test_failed_build_invalidates_previous_receipt(self):
+        target = self.create_record_inputs()
+        target.with_suffix('.build.json').write_text('{"stale":true}')
+        code, _, _, verify, _, _ = self.invoke(generate_only=False, ninja_code=1)
+        self.assertEqual(code, 1)
+        self.assertEqual(verify.call_count, 1)
+        self.assertFalse(target.with_suffix('.build.json').exists())
+
+    def test_manifest_changed_during_build_refuses_receipt(self):
+        target = self.create_record_inputs()
+        before = build.digest(self.generated/'manifest-linux.json')
+        (self.generated/'manifest-linux.json').write_text('{"changed":true}')
+        with self.assertRaisesRegex(ValueError, 'Generated input changed'):
+            self.finish_record(target, manifest_sha=before)
+        self.assertFalse(target.with_suffix('.build.json').exists())
+
+    def test_overrides_changed_during_build_refuses_receipt(self):
+        target = self.create_record_inputs()
+        before = build.digest(self.config)
+        self.config.write_text(self.config.read_text()+'\n')
+        with self.assertRaisesRegex(ValueError, 'Compile overrides changed'):
+            self.finish_record(target, override_sha=before)
+        self.assertFalse(target.with_suffix('.build.json').exists())
+
+    def test_postbuild_generated_verification_failure_refuses_receipt(self):
+        target = self.create_record_inputs()
+        def modify(*args, **kwargs):
+            self.sources[1].write_text('unexpected change during build')
+            return 0
+        code, _, _, _, _, _ = self.invoke(overrides=True, generate_only=False, ninja_effect=modify)
+        self.assertIn('SHA-256 mismatch', str(code))
+        self.assertFalse(target.with_suffix('.build.json').exists())
+
+    def test_empty_function_table_or_missing_binary_cannot_receive_receipt(self):
+        target = self.create_record_inputs()
+        table = self.generated/'sdk/sdk_table.c'
+        table.write_text('const uint64_t sdk_fn_count = 0;\n')
+        with self.assertRaisesRegex(ValueError, 'empty game function count'):
+            self.finish_record(target)
+        table.write_text('const uint64_t sdk_fn_count = 11;\n')
+        target.unlink()
+        with self.assertRaisesRegex(ValueError, 'regular executable'):
+            self.finish_record(target)
+        self.assertFalse(target.with_suffix('.build.json').exists())
 
     def test_symlink_tmpdir_rejected_before_ninja(self):
         self.out.mkdir()

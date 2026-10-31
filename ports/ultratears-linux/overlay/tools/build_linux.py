@@ -15,8 +15,9 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 
-from linux_inputs import verify_generated
+from linux_inputs import UPSTREAM, check_exefs, digest, verify_generated
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -112,6 +113,47 @@ def load_compile_overrides(path, generated, verified_sources):
     return selected, hashlib.sha256(raw).hexdigest()
 
 
+def write_game_build_record(target, generated, exefs, manifest_sha256,
+                            overrides_path, overrides_sha256):
+    """Publish provenance only after rechecking the actual successful build inputs."""
+    sources = verify_generated(generated, exefs)
+    if digest(generated/'manifest-linux.json') != manifest_sha256:
+        raise ValueError('Generated input changed during compilation; refusing build record')
+    selected, actual_overrides = load_compile_overrides(overrides_path, generated, sources)
+    if actual_overrides != overrides_sha256:
+        raise ValueError('Compile overrides changed during compilation; refusing build record')
+    if target.is_symlink() or not target.is_file():
+        raise ValueError('Successful game build did not produce a regular executable')
+    counts = {}
+    for module in ('main', 'subsdk0', 'sdk'):
+        text = (generated/module/(module+'_table.c')).read_text()
+        matches = re.findall(r'const uint64_t '+module+r'_fn_count\s*=\s*(\d+)\s*;', text)
+        if len(matches) != 1 or int(matches[0]) <= 0:
+            raise ValueError('Missing or empty game function count: '+module)
+        counts[module] = int(matches[0])
+    record = {'schema': 1, 'kind': 'ultratears-linux-build', 'version': '1.4.3',
+              'upstream': UPSTREAM, 'binary_sha256': digest(target), 'exefs': check_exefs(exefs),
+              'generated_manifest_sha256': manifest_sha256, 'function_counts': counts,
+              'compile_overrides_sha256': overrides_sha256,
+              'compile_overrides_files': sorted(p.relative_to(generated.resolve()).as_posix()
+                                                for p in selected),
+              'compile_overrides_experimental': any(r == ('-O0',) for r in selected.values()),
+              'hardware_validated': False}
+    output = target.with_suffix('.build.json')
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', prefix='.build-record-', suffix='.json',
+                                         dir=target.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+            json.dump(record, stream, indent=2); stream.write('\n')
+            stream.flush(); os.fsync(stream.fileno())
+        os.replace(temporary, output)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+    return record
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--target', choices=['runtime', 'game'], default='runtime')
@@ -130,11 +172,13 @@ def main():
         ap.error('--compile-overrides requires --target game')
     sources = [(ROOT/p).resolve() for p in source_lists()]
     generated = []
+    generated_stamp = None
     if args.target == 'game':
         if not args.generated or not args.exefs:
             ap.error('game requires --generated and --exefs from checked local 1.4.3 input')
         try:
             generated = verify_generated(args.generated, args.exefs)
+            generated_stamp = digest(args.generated/'manifest-linux.json')
         except (OSError, ValueError) as e:
             ap.error(str(e))
     try:
@@ -204,8 +248,18 @@ def main():
                                                         for p in recovery),
                       'ninja_tmpdir': str(temporary)}), flush=True)
     if not args.generate_only:
-        raise SystemExit(subprocess.call(['ninja', '-f', str(build), '-j', str(args.jobs), '-k', '0'],
-                                         env={**os.environ, 'TMPDIR': str(temporary)}))
+        if args.target == 'game':
+            # A failed new build must not leave an old receipt next to a changed ELF.
+            target.with_suffix('.build.json').unlink(missing_ok=True)
+        code = subprocess.call(['ninja', '-f', str(build), '-j', str(args.jobs), '-k', '0'],
+                               env={**os.environ, 'TMPDIR': str(temporary)})
+        if code == 0 and args.target == 'game':
+            try:
+                write_game_build_record(target, args.generated, args.exefs, generated_stamp,
+                                        args.compile_overrides, overrides_sha256)
+            except (OSError, ValueError) as error:
+                raise SystemExit(str(error))
+        raise SystemExit(code)
 
 
 if __name__ == '__main__':
