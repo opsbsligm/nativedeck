@@ -2,7 +2,7 @@
 import hashlib
 import struct
 import unittest
-from xbox_context_labels import LABELS, MEMBER, patch_archive, patch_layout
+from xbox_context_labels import LABELS, MEMBER, patch_archive, patch_layout, patch_messages
 
 
 def layout(labels=None):
@@ -22,7 +22,55 @@ def layout(labels=None):
     return bytes(header)+b''.join(sections)
 
 
+def messages(labels=None):
+    labels = dict(LABELS if labels is None else labels)
+    labels['unrelated_dialogue'] = ('A', 'A')
+    entries=[];strings=[]
+    for i,(name,pair) in enumerate(labels.items()):
+        entries.append(bytes([len(name)])+name.encode()+struct.pack('<I',i))
+        strings.append(pair[0].encode('utf-16le')+b'\0\0')
+    lbl=struct.pack('<III',1,len(entries),12)+b''.join(entries)
+    cursor=4+len(strings)*4;offsets=[]
+    for string in strings:offsets.append(cursor);cursor+=len(string)
+    txt=struct.pack('<I',len(strings))+struct.pack('<'+str(len(strings))+'I',*offsets)+b''.join(strings)
+    result=bytearray(32);result[:10]=b'MsgStdBn\xff\xfe';result[12]=1
+    struct.pack_into('<H',result,14,2)
+    for tag,body in ((b'LBL1',lbl),(b'TXT2',txt)):
+        result.extend(tag+struct.pack('<I',len(body))+bytes(8)+body)
+        result.extend(bytes(-len(result)%16))
+    struct.pack_into('<I',result,18,len(result))
+    return bytes(result)
+
+
 class ContextLabels(unittest.TestCase):
+    def test_runtime_localization_overrides_receive_the_same_mapping(self):
+        before=messages();after,proof=patch_messages(before)
+        self.assertEqual(proof['code_units_changed'],16)
+        self.assertFalse(proof['dialogue_changed'])
+        allowed={i for row in proof['changes'] for i in (row['offset'],row['offset']+1)}
+        self.assertTrue({i for i,(a,b) in enumerate(zip(before,after)) if a!=b}<=allowed)
+        self.assertEqual(len(after),len(before))
+        # An unrelated string also containing "A" is deliberately left untouched.
+        self.assertEqual(before[-8:], b'A\0\0\0\0\0\0\0')
+        self.assertEqual(after[-8:],before[-8:])
+        self.assertEqual({r['pane']:r['after'] for r in proof['changes']},
+                         {name:pair[1] for name,pair in LABELS.items()})
+
+    def test_missing_or_wrong_localized_labels_fail_closed(self):
+        missing=dict(LABELS);missing.pop('T_B_00')
+        with self.assertRaisesRegex(ValueError,'incomplete'):patch_messages(messages(missing))
+        wrong=dict(LABELS);wrong['T_X_00']=('Q','Y')
+        with self.assertRaisesRegex(ValueError,'Unexpected localized'):patch_messages(messages(wrong))
+        changed,_=patch_messages(messages())
+        with self.assertRaisesRegex(ValueError,'Unexpected localized'):patch_messages(changed)
+
+    def test_malformed_message_headers_and_text_extents_fail_closed(self):
+        for offset,fmt,value in ((12,'B',0),(18,'I',1),(14,'H',99),(36,'I',0xffffffff),
+                                 (52,'I',0xffffffff),(56,'I',0xffffffff)):
+            with self.subTest(offset=offset):
+                bad=bytearray(messages());struct.pack_into('<'+fmt,bad,offset,value)
+                with self.assertRaises((ValueError,UnicodeDecodeError)):patch_messages(bytes(bad))
+
     def test_all_four_physical_positions_and_companion_variant(self):
         original = layout()
         changed, proof = patch_layout(original)

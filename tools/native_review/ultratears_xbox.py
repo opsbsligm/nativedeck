@@ -88,6 +88,7 @@ def fetch_tools(destination):
 
 
 def manifest(root):
+    from xbox_context_labels import MESSAGES
     rows={}
     for line in regular_inside(root,'manifest.tsv').read_text().splitlines():
         if not line or line.startswith('#'):continue
@@ -99,13 +100,15 @@ def manifest(root):
         size=int(length)
         if not 0<size<=LIMIT or not all(re.fullmatch('[0-9a-f]{64}',h) for h in (replacement,original)):
             raise ValueError('Invalid UI size or original digest')
-        if (name not in FONTS and name!=LAYOUT and not re.fullmatch(
+        if (name not in FONTS and name!=LAYOUT and name not in MESSAGES and not re.fullmatch(
                 r'System/Resource/ResourceSizeTable\.Product\.[0-9]+\.Nin_NX_NVN\.rsizetable\.zs',name)):
             raise ValueError('Unexpected non-UI resource: '+name)
         path=regular_inside(root,name)
         if path.stat().st_size!=size or digest(path)!=replacement:raise ValueError('Changed Xbox resource: '+name)
         rows[name]={'bytes':size,'sha256':replacement,'original_sha256':original}
-    if not (FONTS|{LAYOUT})<=rows.keys() or len(rows)!=6 or sum(r['bytes'] for r in rows.values())>2*LIMIT:
+    locale_rows=rows.keys() & MESSAGES
+    if (not (FONTS|{LAYOUT})<=rows.keys() or locale_rows not in (set(),MESSAGES)
+            or len(rows)!=6+len(locale_rows) or sum(r['bytes'] for r in rows.values())>2*LIMIT):
         raise ValueError('Xbox font, HUD and resource-size coverage is incomplete')
     return rows
 

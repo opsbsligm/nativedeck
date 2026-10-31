@@ -21,6 +21,56 @@ LABELS = {
 }
 MEMBER = 'blyt/DoCommand_00.bflyt'
 LAYOUT = 'UI/LayoutArchive/Common.Product.140.Nin_NX_NVN.blarc.zs'
+LOCALES = ('CNzh','EUde','EUen','EUes','EUfr','EUit','EUnl','EUru','JPja','KRko','TWzh','USen','USes','USfr','USpt')
+MESSAGES = {'Mals/'+locale+'.Product.142.sarc.zs' for locale in LOCALES}
+MESSAGE_MEMBER = 'LayoutMsg/DoCommand_00.msbt'
+
+
+def patch_messages(blob):
+    """Patch label IDs, never scan/replace letters in dialogue or arbitrary text."""
+    if (len(blob) < 32 or blob[:10] != b'MsgStdBn\xff\xfe' or blob[12] != 1
+            or struct.unpack_from('<I', blob, 18)[0] != len(blob)):
+        raise ValueError('Expected complete little-endian UTF-16 MSBT')
+    pos = 32; sections = {}
+    for _ in range(struct.unpack_from('<H', blob, 14)[0]):
+        if pos+16 > len(blob):raise ValueError('Truncated message section')
+        tag = blob[pos:pos+4]; size = struct.unpack_from('<I', blob, pos+4)[0]
+        if tag in sections or size > len(blob)-pos-16:raise ValueError('Invalid message section extent')
+        sections[tag] = (pos+16, blob[pos+16:pos+16+size])
+        pos = (pos+16+size+15)&~15
+    if pos != len(blob) or not {b'LBL1',b'TXT2'} <= sections.keys():
+        raise ValueError('Incomplete message label/text sections')
+    text_base, text = sections[b'TXT2']; _, labels = sections[b'LBL1']
+    if len(text)<4 or len(labels)<4:raise ValueError('Truncated message tables')
+    count = struct.unpack_from('<I', text)[0]; groups = struct.unpack_from('<I', labels)[0]
+    if not 0<count<10000 or 4+count*4>len(text) or not 0<groups<10000 or 4+groups*8>len(labels):
+        raise ValueError('Invalid message table counts')
+    offsets = struct.unpack_from('<'+str(count)+'I', text, 4)
+    if offsets[0]<4+count*4 or list(offsets)!=sorted(set(offsets)) or offsets[-1]>=len(text):
+        raise ValueError('Invalid message text offsets')
+    output=bytearray(blob); found=set(); changes=[]; label_names=set(); seen_entries=set()
+    for group in range(groups):
+        number,cursor=struct.unpack_from('<II', labels, 4+8*group)
+        if number>count or (number and cursor<4+groups*8):raise ValueError('Invalid message label bucket')
+        for _ in range(number):
+            if cursor in seen_entries or cursor>=len(labels):raise ValueError('Repeated/truncated message label')
+            seen_entries.add(cursor)
+            length=labels[cursor];cursor+=1
+            if not length or cursor+length+4>len(labels):raise ValueError('Truncated message label entry')
+            name=labels[cursor:cursor+length].decode('ascii');cursor+=length
+            index=struct.unpack_from('<I',labels,cursor)[0];cursor+=4
+            if name in label_names or index>=count:raise ValueError('Duplicate/invalid message label')
+            label_names.add(name)
+            if name not in LABELS:continue
+            before,after=LABELS[name];start=offsets[index];end=offsets[index+1] if index+1<count else len(text)
+            if text[start:end]!=before.encode('utf-16le')+b'\0\0':
+                raise ValueError('Unexpected localized contextual label: '+name)
+            at=text_base+start;output[at:at+2]=after.encode('utf-16le');found.add(name)
+            changes.append({'pane':name,'offset':at,'before':before,'after':after})
+    if found!=set(LABELS):raise ValueError('Localized contextual labels are incomplete')
+    return bytes(output),{'code_units_changed':len(changes),'changes':changes,
+        'before_sha256':hashlib.sha256(blob).hexdigest(),
+        'after_sha256':hashlib.sha256(output).hexdigest(),'dialogue_changed':False}
 
 
 def patch_layout(blob):
@@ -112,8 +162,29 @@ def main():
     if zstd.decompress(encoded, zstd_dict=dictionary) != updated:
         raise ValueError('Contextual UI compression roundtrip failed')
     target.write_bytes(encoded)
+    if not MESSAGES <= index.keys():raise ValueError('The 1.4.3 locale inventory is incomplete')
+    locales={}
+    for name in sorted(MESSAGES):
+        offset,size=index[name]
+        if offset<0 or not 0<size<=4*1024**2:raise ValueError('Invalid locale archive extent')
+        with regular_inside(args.romfs,'romfs.bin').open('rb') as stream:
+            stream.seek(offset); raw=stream.read(size)
+        if len(raw)!=size:raise ValueError('Truncated locale archive')
+        info=zstd.get_frame_info(raw)
+        if not 0<info.decompressed_size<=64*1024**2:raise ValueError('Invalid locale archive size')
+        options={'zstd_dict':dictionaries[info.dictionary_id]} if info.dictionary_id else {}
+        archive=zstd.decompress(raw,**options);members=m.sarc_members(archive)
+        lo,hi=members[MESSAGE_MEMBER]
+        message,local_proof=patch_messages(archive[lo:hi])
+        updated=archive[:lo]+message+archive[hi:]
+        encoded=zstd.compress(updated,level=19,**options)
+        if zstd.decompress(encoded,**options)!=updated:raise ValueError('Locale compression roundtrip failed')
+        target=args.stage/name;target.parent.mkdir(exist_ok=True)
+        if target.exists() or target.is_symlink():raise ValueError('Refuse existing locale override')
+        target.write_bytes(encoded);locales[name]=local_proof
     m.make_mod_manifest.IMAGE_DIR = args.romfs
     m.write_mod_manifest(args.stage, args.romfs, index)
+    proof['localized_labels']=locales
     print(json.dumps(proof))
 
 
