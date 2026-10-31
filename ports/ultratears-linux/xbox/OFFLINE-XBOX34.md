@@ -6,7 +6,7 @@
 
 依赖：Python >=3.14（必须带标准库 compression.zstd）。fontTools 4.68.0 纯 Python .py 源码来自既有本地安装，位于 vendor/fonttools-4.68.0；MIT LICENSE 与 LICENSE.external 均保留。FONTTOOLS.json 逐文件绑定 354 个文件，包括许可证；不含任何字体样本、游戏字体、C 扩展、动态库或二进制构建产物。本轮只验证本工具用到的 API，不承诺这份纯源码包含 fontTools 的所有可选功能。原 requirements.txt 为可选独立安装参考；本生成路径和专用 CI 不运行 pip，也不访问网络。
 
-公共 CI：xbox34-offline 使用 Python 3.14 镜像，执行 python3 -S -B tools/native_review/run_xbox34_ci.py；6 项生成路径/篡改测试 + 子进程 4 项合成轮廓测试，任何失败、缺依赖或 skip 均失败。该 job 不依赖 zstd CLI、编译器、patch、RomFS、key 或字体数据。CI 容器镜像本身需预置/由现有 registry 提供，离线承诺指 job 内的依赖与测试执行，不包含首次取得 CI 镜像。既有 review-tools/SAST/secret_detection 保持原有门禁；新增测试放 ports/.../tests，由专用 runner 显式执行，避免旧 Python job 将新依赖变为 skip。
+公共 CI：xbox34-offline 使用现有 macos shell Runner 上的 /opt/homebrew/bin/python3.15，执行 -S -B tools/native_review/run_xbox34_ci.py；6 项生成路径/篡改测试 + 子进程 4 项合成轮廓测试，任何失败、缺依赖或 skip 均失败。该 job 不依赖 zstd CLI、编译器、patch、RomFS、key 或字体数据，不拉取容器镜像。原 Python3.14 镜像方案被受限 Docker Runner 的 allowed_images 拒绝，未更改 Runner 白名单；这组平台通用的字形测试改用既有 Mac 环境。Linux review-tools 原生构建/安装测试及 SAST、secret_detection 均保留原门禁；新测试由独立 job 显式执行，缺依赖时失败。
 
 本地/CI 验证：
 

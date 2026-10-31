@@ -44,11 +44,10 @@ secret_detection:
 xbox34-offline:
   stage: test
   tags:
-    - gitlab--duo
-  image: python:3.14-slim
+    - macos
   variables:
     PYTHONDONTWRITEBYTECODE: "1"
     XBOX34_TEST_TMP: "$CI_PROJECT_DIR/.xbox34-test-tmp"
   script:
-    - python3 -S -B tools/native_review/run_xbox34_ci.py
+    - /opt/homebrew/bin/python3.15 -S -B tools/native_review/run_xbox34_ci.py
   allow_failure: false
