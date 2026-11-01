@@ -59,6 +59,20 @@ class Xbox34Tools(unittest.TestCase):
         def run(command,**kw):
             commands.append(command)
             if '-c' in command:return realrun(command,**kw)
+            if Path(command[2]).name=='xbox_context_labels.py':
+                self.assertEqual(Path(command[2]),Path(ui.__file__).with_name('xbox_context_labels.py'))
+                args=dict(zip(command[3::2],command[4::2]))
+                self.assertEqual(Path(args['--romfs']),rom)
+                self.assertEqual(Path(args['--tools']),tools.VENDOR)
+                stage=Path(args['--stage'])
+                self.assertTrue((stage/'manifest.tsv').is_file())
+                from xbox_context_labels import MESSAGES
+                with (stage/'manifest.tsv').open('a') as f:
+                    for name in sorted(MESSAGES):
+                        p=stage/name;p.parent.mkdir(exist_ok=True);p.write_bytes(b'synthetic labels '+name.encode())
+                        f.write('\t'.join((name,str(p.stat().st_size),tools.digest(p),'1'*64))+'\n')
+                proof={'code_units_changed':16,'localized_labels':{name:{'code_units_changed':16} for name in MESSAGES}}
+                return subprocess.CompletedProcess(command,0,stdout=json.dumps(proof))
             script=Path(command[2]);stage=Path(command[3])
             self.assertEqual(tools.digest(script),tools.pin()['after']['make_button_icons.py']['sha256'])
             self.assertNotEqual(script.parent,tools.VENDOR)
@@ -75,7 +89,10 @@ class Xbox34Tools(unittest.TestCase):
         record=json.loads((destination/'xbox-ui.json').read_text())
         self.assertEqual(record['tool_derivation']['glyph_count'],34)
         self.assertEqual(record['resources'],ui.manifest(destination))
-        self.assertFalse(record['hardware_validated']);self.assertEqual(len(commands),2)
+        self.assertFalse(record['hardware_validated']);self.assertEqual(len(commands),3)
+        self.assertEqual(record['context_labels']['code_units_changed'],16)
+        self.assertEqual(len(record['context_labels']['localized_labels']),15)
+        self.assertEqual(len(record['resources']),21)
         self.assertEqual((rom/'romfs.bin').read_bytes(),b'synthetic')
         self.assertFalse(any(self.root.glob('.xbox34-tools-*')))
 
