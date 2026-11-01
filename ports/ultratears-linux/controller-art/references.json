@@ -1,0 +1,20 @@
+[
+  {
+    "path": "evidence/official/valve-deck-front-tech-specs.png",
+    "url": "https://cdn.akamai.steamstatic.com/steamdeck/images/tech-specs/tech-specs_1_english.png?v=2",
+    "page": "https://www.steamdeck.com/en/tech/deck",
+    "bytes": 107934,
+    "sha256": "56f3107c84bc1e91bfcbba71cad63540f12cf7a6d70105f7d4697acb50d592c0",
+    "role": "Reference only; not renderer input or redistributed authored art",
+    "license": "Valve copyright; no MIT relicensing"
+  },
+  {
+    "path": "evidence/official/valve-deck-rendering01.jpg",
+    "url": "https://cdn.akamai.steamstatic.com/steamdeck/images/press/renderings/rendering01.jpg",
+    "page": "https://www.steamdeck.com/en/hardware",
+    "bytes": 235395,
+    "sha256": "f3b37edd80152616884a794d85bee2ac58e1e9c0526b8ccd5f5be90bea56796e",
+    "role": "Reference only; not renderer input or redistributed authored art",
+    "license": "Valve copyright; no MIT relicensing"
+  }
+]

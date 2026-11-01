@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "upstream_commit": "f1d00772df1ac3230268f3124bdeb6b7cc81a61c",
+  "upstream_pin_sha256": "b669cd053d2582c9afc1cba384c3bc09006177ec7098b177c0297457c6187013",
+  "patch_sha256": "a741bfe23c199cad2f65001cf15f6dceed313a9a26dd229f14246cce8496bbcd",
+  "after": {
+    "make_button_icons.py": {
+      "bytes": 37927,
+      "sha256": "08124ca241ba3ff6d16d073be008d8852fafca4eef8299e212a24c469a219450"
+    },
+    "test_xbox_sticks.py": {
+      "bytes": 5130,
+      "sha256": "451610707ba8ed111f3b3dcb3bfc2b156e83a95e0df8fb3539194565b6c5622c"
+    }
+  },
+  "fonttools_pin_sha256": "a29ee849a9e19e21d7df0dbb414e9b5226bdb3188d7691d545337b705b28f3c3",
+  "glyph_count": 34
+}

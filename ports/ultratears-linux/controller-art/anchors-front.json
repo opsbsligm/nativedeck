@@ -1,0 +1,182 @@
+{
+  "schema": 2,
+  "view": "front",
+  "coordinate_system": "pixels, top-left origin, x right, y down",
+  "pixel_format": "RGBA8 straight alpha",
+  "game_layout_validated": false,
+  "source_canvas": [
+    576,
+    288
+  ],
+  "transform": {
+    "translation": [
+      2,
+      26
+    ]
+  },
+  "resources": [
+    "Controller_Console^w",
+    "Controller_Grip^w",
+    "Controller_Pro^w"
+  ],
+  "width": 580,
+  "height": 340,
+  "anchors": [
+    {
+      "id": "left_stick",
+      "label": "LS",
+      "source": [
+        88,
+        88
+      ],
+      "pixel": [
+        90,
+        114
+      ]
+    },
+    {
+      "id": "right_stick",
+      "label": "RS",
+      "source": [
+        470,
+        88
+      ],
+      "pixel": [
+        472,
+        114
+      ]
+    },
+    {
+      "id": "dpad_center",
+      "label": "D-pad",
+      "source": [
+        38,
+        79
+      ],
+      "pixel": [
+        40,
+        105
+      ]
+    },
+    {
+      "id": "view",
+      "label": "View",
+      "source": [
+        126,
+        54
+      ],
+      "pixel": [
+        128,
+        80
+      ]
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "source": [
+        450,
+        54
+      ],
+      "pixel": [
+        452,
+        80
+      ]
+    },
+    {
+      "id": "face_south",
+      "label": "A",
+      "source": [
+        517,
+        106
+      ],
+      "pixel": [
+        519,
+        132
+      ]
+    },
+    {
+      "id": "face_east",
+      "label": "B",
+      "source": [
+        535,
+        89
+      ],
+      "pixel": [
+        537,
+        115
+      ]
+    },
+    {
+      "id": "face_west",
+      "label": "X",
+      "source": [
+        499,
+        89
+      ],
+      "pixel": [
+        501,
+        115
+      ]
+    },
+    {
+      "id": "face_north",
+      "label": "Y",
+      "source": [
+        517,
+        71
+      ],
+      "pixel": [
+        519,
+        97
+      ]
+    },
+    {
+      "id": "left_touchpad",
+      "label": "",
+      "source": [
+        70,
+        173
+      ],
+      "pixel": [
+        72,
+        199
+      ]
+    },
+    {
+      "id": "right_touchpad",
+      "label": "",
+      "source": [
+        506,
+        173
+      ],
+      "pixel": [
+        508,
+        199
+      ]
+    },
+    {
+      "id": "steam",
+      "label": "STEAM",
+      "source": [
+        119,
+        231
+      ],
+      "pixel": [
+        121,
+        257
+      ]
+    },
+    {
+      "id": "quick_access",
+      "label": "...",
+      "source": [
+        457,
+        231
+      ],
+      "pixel": [
+        459,
+        257
+      ]
+    }
+  ]
+}

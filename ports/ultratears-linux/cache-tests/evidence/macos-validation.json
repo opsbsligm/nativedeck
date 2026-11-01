@@ -1,0 +1,23 @@
+{
+  "platform": "darwin",
+  "native_arch": "x86_64",
+  "mode": "integrity-only",
+  "production_patch_bound": true,
+  "candidate_sha256": "aedc87dfb7d3e81675275dabd1c9ed8bcd7d8ab488c57861165ea73434e3b188",
+  "passed": 0,
+  "tests": [],
+  "integrity_checks_passed": 4,
+  "integrity_checks": [
+    "reject deliberate fixture drift",
+    "reject deliberate patch drift",
+    "reject deliberate candidate drift",
+    "reject deliberate nonapplicable-hunk drift"
+  ],
+  "skipped": 0,
+  "temporary_files_cleaned": true,
+  "bridge_test_count": 3,
+  "bridge_passed": 2,
+  "bridge_skipped": 1,
+  "bridge_output": "test_linux_native_34_groups (tools.native_review.test_bc7_overlay_native.BC7OverlayNativeTests) ... skipped 'Native Linux C execution; portable binding/integrity still run'\ntest_production_binding_and_public_integrity (tools.native_review.test_bc7_overlay_native.BC7OverlayNativeTests) ... ok\ntest_public_python_parses (tools.native_review.test_bc7_overlay_native.BC7OverlayNativeTests) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.567s\n\nOK (skipped=1)\n",
+  "game_hardware_validated": false
+}

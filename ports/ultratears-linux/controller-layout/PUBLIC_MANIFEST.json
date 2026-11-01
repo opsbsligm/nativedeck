@@ -1,0 +1,44 @@
+{
+  "version": 4,
+  "private_inputs_included": false,
+  "game_resources_included": false,
+  "original_resource_bytes_included": false,
+  "embedded_machine_paths": false,
+  "files": [
+    {
+      "name": "README.md",
+      "bytes": 6514,
+      "sha256": "cdd490fafa075cbc0d46d68201a2ab2e1d8f3e15883ae3bf7696ee5e8041f2a4"
+    },
+    {
+      "name": "anchor_contract.py",
+      "bytes": 4005,
+      "sha256": "8ff30e647b4d22568af9058b929381b4996e02cdc0ce869fe042e53355055c2f"
+    },
+    {
+      "name": "build_controller_patch.py",
+      "bytes": 15927,
+      "sha256": "f24ee27127baaeee923bc25e8e24de6e9bf172bf83ed113992133d5f1ade3f84"
+    },
+    {
+      "name": "resource_layout.py",
+      "bytes": 13438,
+      "sha256": "bdcc67afb69770ee7170c4f7be8af9c076eee5fccc71bfe42bc2796ca88c244b"
+    },
+    {
+      "name": "test_anchor_contract.py",
+      "bytes": 2291,
+      "sha256": "ad94199ef150f4bb2c03674619053d31318f25ee3716b638e9652633da58903d"
+    },
+    {
+      "name": "test_controller_patch.py",
+      "bytes": 6564,
+      "sha256": "781acddb49e2e6fccfd75658ce40bccdb0017ffbe2cd9170e92411f0fb9017da"
+    },
+    {
+      "name": "verify_controller_patch.py",
+      "bytes": 15379,
+      "sha256": "71932835818cbc31c23229c92803288c01be42d8cb45ed5f9f7f24699e7618de"
+    }
+  ]
+}

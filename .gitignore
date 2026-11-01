@@ -9,3 +9,10 @@ __pycache__/
 *.keys
 *.bfttf
 swgame.so
+
+# Private controller inputs/patches are never public delivery artifacts.
+/private/
+/.controller-private/
+/build/controller-layout*/
+/ports/ultratears-linux/controller-art/build/
+/ports/ultratears-linux/controller-art/controller-art-check-*/

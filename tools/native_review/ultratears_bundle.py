@@ -58,6 +58,7 @@ export TOTK_SHADER_BIN="$app_data/cache/compiled.bin"
 export TOTK_ROMFS="$here/data/romfs"
 export TOTK_SHADER_PACK="$here/data/shaders/translated.pack"
 export TOTK_BC7_DIR="$here/data/textures"
+export TOTK_BC7_CACHE_DIR="$app_data/cache/textures"
 export TOTK_SHARED_FONTS="$here/data/fonts"
 export TOTK_LANG="${TOTK_LANG:-zh-Hans}"
 export TOTK_OPERATION_MODE="${TOTK_OPERATION_MODE:-handheld}"
@@ -153,9 +154,13 @@ def shader_check(pack, jobs):
 def font_check(path):
     regular(path)
     n=path.stat().st_size
-    if not 8<n<64*1024*1024: raise ValueError('Invalid shared font size')
-    with path.open('rb') as f: a,b=struct.unpack('>II',f.read(8))
-    if b^(a^0x18029a7f)!=n-8: raise ValueError('Invalid BFTTF font header: '+path.name)
+    if not 12<=n<64*1024*1024: raise ValueError('Invalid shared font size')
+    with path.open('rb') as f: a,b,first=struct.unpack('>III',f.read(12))
+    # On-disk/shared-memory BFTTF words are big endian. The corresponding
+    # decoded magic is 0x7f9a0218 (MacNativeGames f1d00772 extractor).
+    key=a^0x7f9a0218
+    if b^key!=n-8 or first^key not in (0x00010000,0x4f54544f):
+        raise ValueError('Invalid BFTTF font header/payload: '+path.name)
 
 
 def texture_check(index, pack):

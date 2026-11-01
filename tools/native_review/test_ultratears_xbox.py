@@ -86,6 +86,24 @@ class XboxResources(unittest.TestCase):
             ui.check_tools(source);path.write_text('evil\n')
             with self.assertRaisesRegex(ValueError,'pinned public'):ui.check_tools(source)
 
+    def test_locale_overrides_require_the_complete_exact_inventory(self):
+        from xbox_context_labels import MESSAGES
+        _,mod,_=fixture(self.root)
+        lines=(mod/'manifest.tsv').read_text().splitlines()
+        for i,name in enumerate(sorted(MESSAGES)):
+            path=mod/name;path.parent.mkdir(exist_ok=True)
+            path.write_bytes(b'synthetic localized controller labels')
+            lines.append('\t'.join((name,str(path.stat().st_size),digest(path),'1'*64)))
+            (mod/'manifest.tsv').write_text('\n'.join(lines)+'\n')
+            if i+1<len(MESSAGES):
+                with self.assertRaisesRegex(ValueError,'coverage'):ui.manifest(mod)
+        self.assertEqual(len(ui.manifest(mod)),21)
+        name='Mals/CNzh.Product.999.sarc.zs'
+        path=mod/name;path.write_bytes(b'wrong version')
+        lines.append('\t'.join((name,str(path.stat().st_size),digest(path),'1'*64)))
+        (mod/'manifest.tsv').write_text('\n'.join(lines)+'\n')
+        with self.assertRaisesRegex(ValueError,'Unexpected non-UI'):ui.manifest(mod)
+
     @unittest.skipUnless(sys.platform=='linux','Private ELF packaging requires Linux')
     def test_bundle_bakes_ui_into_own_image_without_modifying_original(self):
         import test_ultratears_bundle as tests

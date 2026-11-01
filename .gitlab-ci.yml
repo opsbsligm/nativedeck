@@ -39,3 +39,15 @@ semgrep-sast:
 secret_detection:
   image: registry.gitlab.com/security-products/secrets@sha256:dd2449c8bf1fdb25c7e81b7128c9ada36e0b4f10c8763bd71c3a2ca8cda9e51a
   allow_failure: false
+
+# Focused ROM-free Xbox34 tests use checked-in public sources, without pip/network.
+xbox34-offline:
+  stage: test
+  tags:
+    - macos
+  variables:
+    PYTHONDONTWRITEBYTECODE: "1"
+    XBOX34_TEST_TMP: "$CI_PROJECT_DIR/.xbox34-test-tmp"
+  script:
+    - /opt/homebrew/bin/python3.15 -S -B tools/native_review/run_xbox34_ci.py
+  allow_failure: false

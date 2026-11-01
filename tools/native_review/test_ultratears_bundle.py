@@ -15,6 +15,10 @@ from native_binary_check import inspect
 import ultratears_bundle as bundle
 from verify_ultratears_bundle import digest, verify
 
+# Frozen BFTTF vector: BE decoded magic 0x7f9a0218, size 4, sfnt 0x00010000,
+# each XORed with synthetic 0x12345678. No system font bytes are distributed.
+FONT_EXAMPLE = bytes.fromhex('6dae5460 1234567c 12355678')
+
 
 class Formats(unittest.TestCase):
     def setUp(self):
@@ -65,10 +69,13 @@ class Formats(unittest.TestCase):
         with self.assertRaises(ValueError):bundle.shader_check(pack,jobs)
 
     def test_fonts_and_texture_extents_are_checked(self):
-        font=self.root/'font.bfttf';font.write_bytes(struct.pack('>II',0x18029a7f,4)+b'test')
+        font=self.root/'font.bfttf';font.write_bytes(FONT_EXAMPLE)
         bundle.font_check(font)
-        font.write_bytes(struct.pack('>II',0x18029a7f,9)+b'test')
-        with self.assertRaises(ValueError):bundle.font_check(font)
+        for bad in (FONT_EXAMPLE[:7]+b'\x7d'+FONT_EXAMPLE[8:],
+                    FONT_EXAMPLE[:-1]+b'\x79', FONT_EXAMPLE[:11],
+                    struct.pack('>III',0x18029a7f,4,0x00010000)):
+            font.write_bytes(bad)
+            with self.assertRaises(ValueError):bundle.font_check(font)
         idx=self.root/'bc7.idx';pack=self.root/'bc7.pack';pack.write_bytes(b'\0'*16)
         idx.write_bytes(struct.pack('<QQQII',1,2,0,16,0));bundle.texture_check(idx,pack)
         idx.write_bytes(struct.pack('<QQQII',1,2,16,16,0))
@@ -126,7 +133,7 @@ class NativeBundle(unittest.TestCase):
         rom,pin=Formats.make_romfs(self);rom.rename(data/'romfs');pin['exefs']=pins
         for d in ('fonts','textures','shaders'):(data/d).mkdir()
         for name in bundle.FONTS:
-            (data/'fonts'/(name+'.bfttf')).write_bytes(struct.pack('>II',0x18029a7f,4)+b'test')
+            (data/'fonts'/(name+'.bfttf')).write_bytes(FONT_EXAMPLE)
         (data/'textures/bc7.pack').write_bytes(b'0'*16)
         (data/'textures/bc7.idx').write_bytes(struct.pack('<QQQII',1,2,0,16,0))
         key='ab'*32;j=b'{}';spv=struct.pack('<5I',0x07230203,0x10000,0,1,0)
