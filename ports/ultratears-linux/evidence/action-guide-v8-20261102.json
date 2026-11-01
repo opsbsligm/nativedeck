@@ -1,0 +1,45 @@
+{
+  "recorded_at": "2026-11-02T01:13:05.832306+08:00",
+  "scope": "TOTK 1.4.3 single-control tutorial guide geometry",
+  "candidate": "private-ui-v8",
+  "static_pattern_count": 3,
+  "static_states_per_pattern": 7,
+  "static_total_states": 21,
+  "static_results": {
+    "A": {
+      "max_marker_error_layout": 7.21400967194859e-06,
+      "max_label_end_drift_layout": 1.2649110635700785e-05,
+      "all_non_target_channels_byte_exact": true,
+      "other_states_geometry_preserved": true
+    },
+    "B": {
+      "max_marker_error_layout": 7.21400967194859e-06,
+      "max_label_end_drift_layout": 1.3601470501559905e-05,
+      "all_non_target_channels_byte_exact": true,
+      "other_states_geometry_preserved": true
+    },
+    "C": {
+      "max_marker_error_layout": 7.21400967194859e-06,
+      "max_label_end_drift_layout": 1.3601470514097538e-05,
+      "all_non_target_channels_byte_exact": true,
+      "other_states_geometry_preserved": true
+    }
+  },
+  "game_elf_sha256": "5c2cd98cbc58b94d0f76a745d2bf83b1219951e1d61884adbec30d437c8a69f2",
+  "real_game_view": {
+    "tutorial": "用武器攻击",
+    "pattern": "A",
+    "frame": 0,
+    "observed_label": "X 攻击",
+    "body": "authored Steam Deck inclined",
+    "marker_observed_on": "face_west / Xbox X",
+    "circle_and_line_visually_verified": true,
+    "evidence_name": "native-action-v8-tutorial-readback-353.png",
+    "evidence_sha256": "a018f102cc0748150746bd424824d7a6bb82f18ce3eb465d43d08334036dff86"
+  },
+  "private_resources_included": false,
+  "all_tutorials_validated": false,
+  "physical_controller_press_tested": false,
+  "hardware_validated": false,
+  "playability_validated": false
+}
