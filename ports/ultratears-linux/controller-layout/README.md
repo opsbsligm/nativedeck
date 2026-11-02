@@ -111,3 +111,25 @@ python3 -B ports/ultratears-linux/controller-layout/test_controller_patch.py \
 
 覆盖可重复构造、已有输出拒绝、越界/缺ID/SHA异常拒绝、权威pixel移动、自定义画布且无source的完整构造和独立验证、可执行表达式拒绝、marker偏移及无关OnOff字节篡改。
 所有变更发生在新增测试副本中；测试结果、私有metadata、游戏文件和生成补丁都不应进入公共提交。
+
+## 独立教程中的单按钮引线
+
+`PaActionGuide_00` 是另一套消费者；上文基本操作页的100项检查不覆盖它。
+`build_action_guide_patch.py` 单独修正 PatternA/B/C 的状态0、3、4、11、14、19、23，
+共21个状态：西侧攻击键X、Menu、View和左摇杆。输入需要以下五个私有文件：
+`blyt/PaActionGuide_00.bflyt`、`blyt/PaController_00.bflyt`，
+以及 `anim/PaActionGuide_00_Pattern{A,B,C}.bflan`。
+
+```sh
+python3 -B ports/ultratears-linux/controller-layout/build_action_guide_patch.py \
+  --input-root "$CONTROLLER_PRIVATE_DIR/action-guide-originals" \
+  --anchors ports/ultratears-linux/controller-art/anchors-inclined.json \
+  --output "$CONTROLLER_PRIVATE_DIR/action-guide-patch"
+```
+
+输出只有三份新动画和清单。集成时重打包Common并增加资源大小表，不覆盖原输入。
+求解器保留每个原引线靠近文字框的端点，移动圆圈并重新计算线段角度、长度与中心位置。
+保持原可见性及所有非目标通道的字节，显式保留左右重复帧边界；插值源曲线拒绝处理。
+它逐个复算21个目标位置，并在其余状态的整数与四分之一帧核对几何未变。
+这是同一工具内的存储几何检查，不是独立运行时证明；`ali1`动态对齐仍需实机画面验收。
+组合键、肩键、十字方向、陀螺仪和其他教程尚不在该补丁的验证范围。
