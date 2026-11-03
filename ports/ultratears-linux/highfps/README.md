@@ -8,11 +8,11 @@
 
 ## 重建
 
-工具针对已存在的私有工作区 `~/native-recomp/work/totk-1.4.3-20261031`。先保留现有 ELF、manifest、构建记录和存档备份，再把本目录文件放入工作区的 `highfps-20261103/`；准备和构建脚本放其父目录，`preserve_codegen.py`与构建脚本放在同一目录。
+工具针对已存在的私有工作区 `~/native-recomp/work/totk-1.4.3-20261031`。先保留现有 ELF、manifest、构建记录和存档备份，再把本目录文件放入工作区的 `highfps-20261103/`；准备和构建脚本放其父目录，`preserve_codegen.py`、`build_codegen_candidate.py`与构建/安装脚本放在同一目录。
 
 1. 使用现有代码生成 Python 环境运行 `prepare_totk_highfps.py`，校验18处指令和原函数生成结果。
 2. 运行 `build_totk_highfps.py` 生成独立 Ninja 文件。该文件只声明候选对象的构建规则，其他对象仅作为输入，禁止触发全量重建。所有1432个数值游戏单元必须使用完整 V8 对象集及其 SHA 绑定的 `-disable-cgp` 策略；不能因为旧对象存在就复用旧对象。五个候选单元继承 V8 编译规则和逐单元参数。V8对象、生成源、策略或编译记录缺失/不一致则失败。
-3. 在已有原生 x86-64 构建容器内，用一项并行任务运行候选 `build.ninja`。新增文件峰值预计不超过1.2GiB，当前安装不随编译改变。
+3. 用 `python3 build_codegen_candidate.py --candidate ~/native-recomp/work/totk-1.4.3-20261031/highfps-20261103` 在已有原生 x86-64 容器内单任务构建，绑定计划、selection、源/头文件、不可变对象与输出ELF；候选ELF或构建回执已存在时拒绝，须使用新目录或先核对归档旧候选。新增文件峰值预计不超过1.2GiB，当前安装不随编译改变。
 4. `test_totk_timing.py` 验证30/60/90/120fps的测量时钟不改变游戏速度，以及异常时间戳、暂停和物理步长限制。该测试不证明实际游戏能力或整体验收通过。
 5. `install_totk_highfps.py` 仅关闭原诊断游戏单元；先按活进程的 XDG 路径备份隔离存档并校验稳定，保留旧 ELF、manifest和构建记录，原子替换后执行资源与原生依赖校验。出错恢复旧文件。
 
@@ -38,6 +38,6 @@ python3 preserve_codegen.py \
   --out "$HOME/native-recomp/work/totk-1.4.3-20261031/cgp-preserved-candidate"
 ```
 
-输出目录必须不存在。脚本验证 V8 ELF/构建记录、策略、完整源摘要和逐单元恢复参数；只把数值游戏对象切到 V8，保留所选计划的全部宿主、六轴、实时输入和计时对象。五个已有解帧源重新编译；其他对象只作为外部链接输入。`codegen-selection.json`绑定对象摘要、原始/候选源、策略与计划，编译前后均应复核，编译仍使用现有容器、单任务和4GiB进程地址上限。对输出 ELF 生成独立构建回执，再停止游戏、锁定入口、备份并原子部署 ELF/构建记录/manifest，执行 bundle 完整校验；安装记录的 `compile_overrides_files`应恢复为1432项，同时保留 `native_highfps`和 `native_gyro`。
+输出目录必须不存在。脚本验证 V8 ELF/构建记录、策略、完整源摘要和逐单元恢复参数；只把数值游戏对象切到 V8，保留所选计划的全部宿主、六轴、实时输入和计时对象。五个已有解帧源重新编译；其他对象只作为外部链接输入。`codegen-selection.json`绑定对象摘要、原始/候选源、策略与计划，编译前后均应复核，编译仍使用现有容器、单任务和4GiB进程地址上限。使用 `build_codegen_candidate.py --candidate <输出目录>`生成受约束的编译回执；安装前必须以 `verify_receipt`核对精确输入和输出，缺失/漂移即拒绝。再停止游戏、锁定入口、备份并原子部署 ELF/构建记录/manifest，执行 bundle 完整校验；安装记录的 `compile_overrides_files`应恢复为1432项，同时保留 `native_highfps`和 `native_gyro`。
 
 `test_preserve_codegen.py`使用不含游戏内容的实际混合计划，覆盖旧对象仍存在、候选继承边级参数、最新宿主对象保留，以及策略丢失、源/候选/ELF变化和缺少对象/链接单元时拒绝。该测试不代替影片后切换和攻击的实机复验。

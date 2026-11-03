@@ -3,12 +3,18 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+import sys
+from unittest import mock
 import unittest
 
 MODULE = Path(__file__).resolve().parents[2] / 'ports/ultratears-linux/highfps/preserve_codegen.py'
 spec = importlib.util.spec_from_file_location('preserve_codegen', MODULE)
 codegen = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(codegen)
+sys.modules['preserve_codegen'] = codegen
+build_spec = importlib.util.spec_from_file_location('build_codegen_candidate', MODULE.with_name('build_codegen_candidate.py'))
+builder = importlib.util.module_from_spec(build_spec)
+build_spec.loader.exec_module(builder)
 
 
 class CodegenTests(unittest.TestCase):
@@ -78,6 +84,57 @@ class CodegenTests(unittest.TestCase):
             second, _ = codegen.preserve_plan(**args)
             self.assertEqual(second.count('rule cc_v8_candidate\n'), 1)
             self.assertIn(str(args['out'] / '0001_main_001.o'), codegen.one_link(second)[1])
+
+    def prepared_build(self, root):
+        args = self.fixture(root)
+        text, selection = codegen.preserve_plan(**args)
+        candidate = args['out']
+        candidate.mkdir()
+        (candidate / 'build.ninja').write_text(text)
+        selection['candidate_plan_sha256'] = codegen.sha(candidate / 'build.ninja')
+        (candidate / 'codegen-selection.json').write_text(json.dumps(selection))
+        return candidate
+
+    def test_build_receipt_binds_before_after_inputs_and_output(self):
+        with tempfile.TemporaryDirectory(prefix='cgp-', dir=Path(__file__).parent) as temp:
+            candidate = self.prepared_build(Path(temp))
+            def compiler(command, **kwargs):
+                self.assertEqual(command[:4], ['distrobox', 'enter', '-n', 'nativedeck-build'])
+                self.assertIn('-j1', command)
+                (candidate / 'ultratears').write_bytes(b'newly-linked-output')
+            builder.build(candidate, runner=compiler)
+            self.assertEqual(builder.verify_receipt(candidate)['binary_sha256'], codegen.sha(candidate / 'ultratears'))
+            # Every path below represents a distinct way to mix stale artifacts.
+            mutations = [candidate / 'ultratears', candidate / 'build.ninja',
+                         candidate / 'codegen-selection.json', Path(temp) / 'patched.c',
+                         Path(temp) / 'v8/0000_main_000.o']
+            for path in mutations:
+                with self.subTest(path=path.name):
+                    original = path.read_bytes()
+                    path.write_bytes(original + b' ')
+                    with self.assertRaises(ValueError):
+                        builder.verify_receipt(candidate)
+                    path.write_bytes(original)
+
+    def test_stale_elf_without_receipt_never_counts_as_new_build(self):
+        with tempfile.TemporaryDirectory(prefix='cgp-', dir=Path(__file__).parent) as temp:
+            candidate = self.prepared_build(Path(temp))
+            (candidate / 'ultratears').write_bytes(b'old-wrong-output')
+            compiler = mock.Mock()
+            with self.assertRaisesRegex(ValueError, 'output already exists'):
+                builder.build(candidate, runner=compiler)
+            compiler.assert_not_called()
+            self.assertFalse((candidate / 'build-receipt.json').exists())
+
+    def test_input_mutation_during_compile_does_not_issue_receipt(self):
+        with tempfile.TemporaryDirectory(prefix='cgp-', dir=Path(__file__).parent) as temp:
+            candidate = self.prepared_build(Path(temp))
+            def compiler(*args, **kwargs):
+                (candidate / 'ultratears').write_bytes(b'output')
+                (Path(temp) / 'patched.c').write_text('concurrent source change')
+            with self.assertRaises(ValueError):
+                builder.build(candidate, runner=compiler)
+            self.assertFalse((candidate / 'build-receipt.json').exists())
 
     def test_missing_workaround_is_rejected_even_when_objects_exist(self):
         with tempfile.TemporaryDirectory(prefix='cgp-', dir=Path(__file__).parent) as temp:

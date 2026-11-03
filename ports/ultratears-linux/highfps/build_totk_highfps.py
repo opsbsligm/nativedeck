@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 import re
-from preserve_codegen import preserve_plan
+from preserve_codegen import preserve_plan, sha
 def require(condition, message='High-fps validation failed'):
     if not condition:
         raise ValueError(message)
@@ -61,5 +61,6 @@ text='\n'.join(kept)+'\n'
 text,selection=preserve_plan(text, trusted=task/'build-cgp-all-v8',
     overrides=task/'compiler-overrides.v8-all-cgp.json', prepared=record, out=out)
 (out/'build.ninja').write_text(text)
+selection['candidate_plan_sha256']=sha(out/'build.ninja')
 (out/'codegen-selection.json').write_text(json.dumps(selection,indent=2)+'\n')
 print('Candidate peak additional files <1.2GiB; one compile job, current deployment preserved.',flush=True)

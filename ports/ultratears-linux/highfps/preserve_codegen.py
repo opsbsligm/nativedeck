@@ -129,12 +129,24 @@ def preserve_plan(text, *, trusted, overrides, prepared, out, expected_chunks=14
     kept.append(['rule cc_v8_candidate', *recovery[0][1:]])
     kept.extend(candidate_rules)
     kept.extend([[f'build {output}: link ' + ' '.join(selected)], ['default ' + output]])
+    mutable_inputs = {}
+    for item in prepared['chunks']:
+        for key in ['original', 'candidate']:
+            mutable_inputs[item[key]] = sha(item[key])
+    for block in kept:
+        if block[0].startswith('build ') and ': cc ' in block[0]:
+            source = block[0].split(': cc ', 1)[1].split()[0]
+            mutable_inputs[source] = sha(source)
+    # Timing declarations are included via absolute paths by the generated patch.
+    for source in list(mutable_inputs):
+        for header in re.findall(r'^#include "(/[^"\n]+)"', Path(source).read_text(), re.MULTILINE):
+            mutable_inputs[header] = sha(header)
     inventory = {'schema': 1, 'numeric_chunks': len(seen), 'recompiled_chunks': sorted(replacements),
                  'trusted_build_record_sha256': sha(build_record),
                  'trusted_plan_sha256': sha(trusted / 'build.ninja'),
                  'compile_overrides_sha256': sha(overrides),
                  'compile_overrides_files': sorted(policy['files']),
-                 'immutable_object_hashes': retained,
+                 'immutable_object_hashes': retained, 'mutable_input_hashes': mutable_inputs,
                  'patched_sources': prepared['chunks'],
                  'baseline_elf_sha256': record['binary_sha256']}
     return '\n'.join('\n'.join(b) for b in kept) + '\n', inventory

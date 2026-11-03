@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import time
+from build_codegen_candidate import verify_receipt
 
 def require(condition, message='High-fps validation failed'):
     if not condition:
@@ -23,6 +24,7 @@ require((candidate/'prepare.json').is_file() and (candidate/'ultratears').stat()
 require(shutil.disk_usage(root).free>2*1024**3, 'High-fps validation failed')
 sys.path.insert(0,str(root/'swr'))
 from botw_launch import save_inventory,backup_saves
+build_receipt=verify_receipt(candidate)
 unit='nd-totk-v143-first-boot-20261031'
 pid=int(subprocess.check_output(['systemctl','--user','show',unit,'-p','MainPID','--value'],text=True))
 require(pid>0 and Path('/proc',str(pid),'exe').resolve()==bundle/'ultratears', 'High-fps validation failed')
@@ -50,6 +52,7 @@ for item in selection['patched_sources']:
 record['compile_overrides_sha256']=selection['compile_overrides_sha256']
 record['compile_overrides_files']=selection['compile_overrides_files']
 record['native_codegen_recovery']={'selection_sha256':sha(candidate/'codegen-selection.json'),
+    'build_receipt_sha256':sha(candidate/'build-receipt.json'),
     'numeric_chunks':selection['numeric_chunks'],'baseline_elf_sha256':selection['baseline_elf_sha256']}
 record['binary_sha256']=newsha
 record['live_input_diagnostic_only']=False
