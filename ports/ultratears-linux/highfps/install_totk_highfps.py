@@ -43,6 +43,9 @@ record['normal_launch_diagnostics_disabled']=True
 record['native_highfps']={'mode':'measured-frame-time','presentation_ceiling':60,
     'verified_opcode_sites':18,'baseline_reemission_matched':True,
     'source_evidence':str(candidate/'prepare.json'),'previous_elf_sha256':sha(bundle/'ultratears')}
+record['native_highfps']['input_sha256']={name:sha(candidate/name)
+    for name in ['prepare.json','build.ninja','nd_totk_timing.c','nd_totk_timing.h','hle_nvn.c']}
+record['native_highfps']['generated_chunks']=json.loads((candidate/'prepare.json').read_text())['chunks']
 changes={'ultratears':(candidate/'ultratears').read_bytes(),
          'build-inputs/build-record.json':(json.dumps(record,indent=2)+'\n').encode()}
 for name,data in changes.items():
