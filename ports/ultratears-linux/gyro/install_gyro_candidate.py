@@ -78,12 +78,14 @@ def main():
         require(inventory(backup / 'profile-userdata') == before, 'Save backup mismatch')
         targets = {'ultratears': BUNDLE / 'ultratears', 'bundle.json': BUNDLE / 'bundle.json',
                    'build-inputs/build-record.json': BUNDLE / 'build-inputs/build-record.json',
-                   'totk-steam.sh': LAUNCHER}
+                   'totk-steam.sh': LAUNCHER,
+                   'totk-motion-session.py': ROOT / 'launchers/totk-motion-session.py'}
         for name, target in targets.items():
             dest = backup / name
             dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(target, dest)
-            require(sha(dest) == sha(target), 'Rollback copy mismatch')
+            if target.exists():
+                shutil.copy2(target, dest)
+                require(sha(dest) == sha(target), 'Rollback copy mismatch')
         record['binary_sha256'] = new_sha
         record['native_gyro'] = {'mode': 'read-only-Deck-IMU-fallback', 'parent_elf_sha256': PARENT,
                                 'source_sha256': prepared['source_hashes'],
@@ -99,6 +101,14 @@ def main():
         manifest_path = REPORT / 'new-bundle.json'
         manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
         candidate_launcher = CANDIDATE / 'totk-steam.sh'
+        helper = CANDIDATE / 'totk-motion-session.py'
+        require(helper.is_file(), 'Motion session lease helper missing')
+        record['native_gyro']['session_helper_sha256'] = sha(helper)
+        # Refresh record and manifest with the launcher helper identity.
+        record_path.write_text(json.dumps(record, indent=2) + '\n')
+        manifest['files']['build-inputs/build-record.json'].update(
+            sha256=sha(record_path), bytes=record_path.stat().st_size)
+        manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
         require('export TOTK_GYRO=1\n' in candidate_launcher.read_text(), 'Normal gyro launch flag missing')
         try:
             for source, target in [(CANDIDATE / 'ultratears', targets['ultratears']),
@@ -106,6 +116,14 @@ def main():
                                    (manifest_path, targets['bundle.json']),
                                    (candidate_launcher, LAUNCHER)]:
                 replace_file(source, target)
+            helper_target = targets['totk-motion-session.py']
+            if helper_target.exists():
+                replace_file(helper, helper_target)
+            else:
+                with helper.open('rb') as incoming, helper_target.open('xb') as outgoing:
+                    shutil.copyfileobj(incoming, outgoing)
+                    outgoing.flush()
+                    os.fsync(outgoing.fileno())
             subprocess.run([sys.executable, str(BUNDLE / 'verify_ultratears_bundle.py'),
                             '--root', str(BUNDLE), '--quiet'], check=True)
             require(sha(BUNDLE / 'ultratears') == new_sha, 'Installed ELF differs')
@@ -113,7 +131,10 @@ def main():
                     'Save inventory changed during install')
         except Exception:
             for name, target in targets.items():
-                replace_file(backup / name, target)
+                if (backup / name).exists():
+                    replace_file(backup / name, target)
+                elif name == 'totk-motion-session.py':
+                    target.unlink(missing_ok=True)
             raise
         receipt = {'at': datetime.now().astimezone().isoformat(), 'elf_sha256': new_sha,
                    'parent_elf_sha256': PARENT, 'save_files': len(before), 'saves_unchanged': True,

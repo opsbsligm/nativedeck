@@ -9,4 +9,4 @@ export TOTK_GYRO=1
 export TOTK_LANG=zh-Hans TOTK_OPERATION_MODE=handheld TOTK_STEAMDECK_UI=1
 export TOTK_FPS60=1 TOTK_REALTIME=1 TOTK_UNCAPPED=1 TOTK_UNCAPPED_HZ=60 TOTK_UNCAPPED_INTERVAL=1
 export TOTK_CLOTH_REALTIME=1 TOTK_HIGHFPS_FIX=1 SDL_VIDEO_DRIVER=x11 SDL_VIDEODRIVER=x11
-exec "$HOME/native-recomp/ultratears/releases/v143-20261031-first/run.sh"
+exec python3 "$HOME/native-recomp/launchers/totk-motion-session.py" "$HOME/native-recomp/ultratears/releases/v143-20261031-first/run.sh"

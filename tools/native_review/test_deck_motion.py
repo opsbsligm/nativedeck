@@ -50,6 +50,8 @@ class DeckMotionTests(unittest.TestCase):
         for offset in range(4):
             p=bytearray(original);p[offset]^=1
             with self.subTest(offset=offset):self.assertEqual(self.run_decode(p)[0],0)
+    def test_disabled_imu_is_not_a_live_sensor(self):
+        self.assertEqual(self.run_decode(self.packet(acc=(0,0,0)))[0],0)
     def test_buttons_are_ignored(self):
         p=self.packet();expected=self.run_decode(p)
         p[8:24]=b'\xff'*16;p[36:64]=b'\xff'*28

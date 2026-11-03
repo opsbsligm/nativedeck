@@ -12,6 +12,9 @@ int nd_deck_motion_decode(const unsigned char *p, size_t bytes,
                           uint32_t *packet, double acc[3], double gyro[3]) {
     if (!p || bytes != 64 || !packet || !acc || !gyro) return 0;
     if (p[0] != 1 || p[1] != 0 || p[2] != 9 || p[3] != 64) return 0;
+    /* Steam can keep status reports flowing with IMU_MODE=0. Zero gravity
+     * on all axes is not a usable orientation sample. Do not fake freshness. */
+    if (!(p[24] | p[25] | p[26] | p[27] | p[28] | p[29])) return 0;
     *packet = (uint32_t)p[4] | (uint32_t)p[5] << 8 | (uint32_t)p[6] << 16 | (uint32_t)p[7] << 24;
     const double gravity_scale = -2.0 / 32768.0;
     const double angular_scale = (2000.0 / 32768.0) * (3.14159265358979323846 / 180.0);
