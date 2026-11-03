@@ -17,6 +17,9 @@ class DeckMotionTests(unittest.TestCase):
         lib=Path(cls.tmp.name)/'decode.so'
         arch=['-arch',platform.machine()] if sys.platform == 'darwin' else []
         subprocess.run(['cc','-std=c11','-shared','-fPIC',*arch,str(source),'-o',str(lib)],check=True)
+        if sys.platform.startswith('linux'):
+            reader=source.with_name('deck_motion_linux.c')
+            subprocess.run(['cc','-std=gnu17','-Wall','-Wextra','-Werror','-c',str(reader),'-o',str(Path(cls.tmp.name)/'reader.o')],check=True)
         cls.lib=ctypes.CDLL(str(lib))
         cls.decode=cls.lib.nd_deck_motion_decode
         cls.decode.argtypes=[ctypes.c_void_p,ctypes.c_size_t,ctypes.POINTER(ctypes.c_uint32),

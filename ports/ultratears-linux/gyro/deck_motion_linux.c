@@ -61,6 +61,7 @@ static int newest_sample(int fd, uint32_t *packet, double acc[3], double gyro[3]
 static void *read_motion(void *unused) {
     (void)unused;
     uint32_t previous = 0; int have_packet = 0;
+    uint64_t flushed_at = 0;
     while (atomic_load_explicit(&running, memory_order_relaxed)) {
         struct pollfd p = { .fd = sensor_fd, .events = POLLIN };
         int ready = poll(&p, 1, 100);
@@ -74,7 +75,18 @@ static void *read_motion(void *unused) {
             /* Drain queued reports and publish only the newest sample with host
              * monotonic time. Replaying old buffered reports would fake freshness. */
             previous = packet; have_packet = 1;
-            runtime_motion_feed(acc, gyro, runtime_now_ns());
+            uint64_t now = runtime_now_ns();
+            runtime_motion_feed(acc, gyro, now);
+            if (!flushed_at) {
+                fprintf(stderr, "[deck-motion] first valid sample: acc (%+.3f %+.3f %+.3f) G\n", acc[0], acc[1], acc[2]);
+            }
+            if (!flushed_at || now - flushed_at >= 30000000000ull) {
+                /* The game redirects stderr to a buffered session log. Make
+                 * existing fusion/game-read counters observable without waiting
+                 * for unrelated rendering messages to fill the stdio buffer. */
+                fflush(stderr);
+                flushed_at = now;
+            }
         }
     }
     runtime_motion_live(0);
