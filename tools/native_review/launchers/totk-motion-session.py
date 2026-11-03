@@ -21,19 +21,23 @@ HIDIOCGFEATURE = 0xC0004807 | (REPORT_BYTES << 16)
 
 
 def setting(fd, value=None):
-    report = bytearray(REPORT_BYTES)
-    report[:6] = bytes([0, 0x89 if value is None else 0x87, 3,
-                        SETTING_IMU_MODE, 0 if value is None else value & 255,
-                        0 if value is None else value >> 8])
-    fcntl.ioctl(fd, HIDIOCSFEATURE, report)
     if value is not None:
+        report = bytearray(REPORT_BYTES)
+        report[:6] = bytes([0, 0x87, 3, SETTING_IMU_MODE, value & 255, value >> 8])
+        fcntl.ioctl(fd, HIDIOCSFEATURE, report)
         return value
-    time.sleep(0.01)
-    reply = bytearray(REPORT_BYTES)
-    fcntl.ioctl(fd, HIDIOCGFEATURE, reply)
-    if reply[:4] != bytes([0, 0x89, 3, SETTING_IMU_MODE]):
-        raise OSError('Unexpected IMU settings response; refusing to change controller')
-    return reply[4] | reply[5] << 8
+    # Steam may interleave its own feature request on this HID interface. Retry
+    # only the bounded read query; never infer a mode from an unrelated reply.
+    for _ in range(5):
+        report = bytearray(REPORT_BYTES)
+        report[:6] = bytes([0, 0x89, 3, SETTING_IMU_MODE, 0, 0])
+        fcntl.ioctl(fd, HIDIOCSFEATURE, report)
+        time.sleep(0.02)
+        reply = bytearray(REPORT_BYTES)
+        fcntl.ioctl(fd, HIDIOCGFEATURE, reply)
+        if reply[:4] == bytes([0, 0x89, 3, SETTING_IMU_MODE]):
+            return reply[4] | reply[5] << 8
+    raise OSError('Unexpected IMU settings responses; refusing to change controller')
 
 
 def open_imu():
@@ -118,10 +122,11 @@ def main():
                     if current == 0 and applied != 0:
                         setting(fd, applied)
                         attempts += 1
+                        if setting(fd) != applied:
+                            raise OSError('Reapplied IMU mode readback mismatch')
                         log('[deck-motion-session] Steam disabled IMU; reapplied sensor lease')
                 except OSError as error:
-                    attempts = 3
-                    log(f'[deck-motion-session] IMU lease check stopped: {error}')
+                    log(f'[deck-motion-session] IMU lease check deferred: {error}')
         return child.returncode if child.returncode >= 0 else 128 - child.returncode
     finally:
         if child is not None and child.poll() is None:

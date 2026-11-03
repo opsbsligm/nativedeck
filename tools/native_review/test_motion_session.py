@@ -19,6 +19,17 @@ class MotionSessionTests(unittest.TestCase):
     def test_unrelated_feature_reply_is_rejected(self):
         with mock.patch.object(lease.fcntl,'ioctl'),mock.patch.object(lease.time,'sleep'):
             with self.assertRaises(OSError):lease.setting(8)
+    def test_interleaved_reply_retries_only_read_queries(self):
+        reads=[]
+        def ioctl(fd,op,data):
+            if op == lease.HIDIOCSFEATURE:
+                self.assertEqual(bytes(data[:6]),bytes([0,0x89,3,0x30,0,0]))
+            else:
+                reads.append(1)
+                if len(reads)==2:data[:6]=bytes([0,0x89,3,0x30,0x18,0])
+        with mock.patch.object(lease.fcntl,'ioctl',side_effect=ioctl),mock.patch.object(lease.time,'sleep'):
+            self.assertEqual(lease.setting(8),0x18)
+        self.assertEqual(len(reads),2)
     def run_session(self,changed=False):
         with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as tmp:
             state={'value':0};writes=[]
