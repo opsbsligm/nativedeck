@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import re
+from preserve_codegen import preserve_plan
 def require(condition, message='High-fps validation failed'):
     if not condition:
         raise ValueError(message)
@@ -56,12 +57,9 @@ for line in lines:
         keep=True
     if keep:kept.append(line)
 text='\n'.join(kept)+'\n'
-# Recovery builds retain an equivalent object in the complete V8 object set.
-# Treat it as an external input; never rebuild the full game as a fallback.
-for token in re.findall(r'\S+\.o',text):
-    if token.startswith(str(task/'build/obj')) and not Path(token).exists():
-        fallback=task/'build-cgp-all-v8/obj'/Path(token).name
-        require(fallback.is_file(), token)
-        text=text.replace(token,str(fallback))
+# Every numeric game object comes from V8, even if a legacy object exists.
+text,selection=preserve_plan(text, trusted=task/'build-cgp-all-v8',
+    overrides=task/'compiler-overrides.v8-all-cgp.json', prepared=record, out=out)
 (out/'build.ninja').write_text(text)
+(out/'codegen-selection.json').write_text(json.dumps(selection,indent=2)+'\n')
 print('Candidate peak additional files <1.2GiB; one compile job, current deployment preserved.',flush=True)

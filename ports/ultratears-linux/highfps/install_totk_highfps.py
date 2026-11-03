@@ -41,6 +41,16 @@ for relative in ['ultratears','bundle.json','build-inputs/build-record.json']:
 manifest=json.loads((bundle/'bundle.json').read_text())
 record=json.loads((bundle/'build-inputs/build-record.json').read_text())
 newsha=sha(candidate/'ultratears')
+selection=json.loads((candidate/'codegen-selection.json').read_text())
+require(selection['numeric_chunks']==1432, 'Incomplete V8 codegen selection')
+for path,expected in selection['immutable_object_hashes'].items():
+    require(sha(Path(path))==expected, 'Immutable V8/host input changed: '+path)
+for item in selection['patched_sources']:
+    require(sha(Path(item['candidate']))==item['candidate_sha256'], 'Patched input changed')
+record['compile_overrides_sha256']=selection['compile_overrides_sha256']
+record['compile_overrides_files']=selection['compile_overrides_files']
+record['native_codegen_recovery']={'selection_sha256':sha(candidate/'codegen-selection.json'),
+    'numeric_chunks':selection['numeric_chunks'],'baseline_elf_sha256':selection['baseline_elf_sha256']}
 record['binary_sha256']=newsha
 record['live_input_diagnostic_only']=False
 record['normal_launch_diagnostics_disabled']=True
