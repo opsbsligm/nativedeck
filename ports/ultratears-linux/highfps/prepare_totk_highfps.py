@@ -11,6 +11,10 @@ from pathlib import Path
 import re
 import sys
 
+def require(condition, message='High-fps validation failed'):
+    if not condition:
+        raise ValueError(message)
+
 root = Path.home() / 'native-recomp'
 task = root / 'work/totk-1.4.3-20261031'
 source = root / 'ports/ultratears-linux-20261030/source'
@@ -29,7 +33,7 @@ guard = {0x3e5658:0x1e210808,0x2daa54:0xbd425260,0x2daa58:0x52a84e08,
          0x246eac:0x1e200940,0x345904:0x1e210801,0x24944c:0x94015e7d,0x28bc98:0x9400546a}
 for off, (old, _) in fps.items(): guard[off] = old
 for off, old in guard.items():
-    assert m.word(base+off) == old, f'Unexpected v1.4.3 instruction at {off:#x}'
+    require(m.word(base+off) == old, f'Unexpected v1.4.3 instruction at {off:#x}')
 
 generated = task / 'data/generated/main'
 table = (generated / 'main_table.c').read_text()
@@ -51,13 +55,13 @@ for p in generated.glob('main_*.c'):
         stop=text.index('\n}\n',at)+3
         old=text[at:stop]
         regenerated='\n'.join(m.emit_function(start,end,labels,tables,{}))+'\n'
-        assert regenerated==old, f'Baseline re-emission drift: {p.name} {start:x}'
+        require(regenerated==old, f'Baseline re-emission drift: {p.name} {start:x}')
         chunks.setdefault(p,[]).append((start,end,labels,tables,old))
-assert sum(map(len,chunks.values()))==len(functions)
+require(sum(map(len,chunks.values()))==len(functions), 'High-fps validation failed')
 
 for off,(_,new) in fps.items():
     ins=m.lifter.lift(new,base+off)
-    assert ins.kind=='op'
+    require(ins.kind=='op', 'High-fps validation failed')
     PATCHES[base+off]=lambda gen,a,code=ins.code:code
 for off in [0x2daa58,0x2daa6c,0x2daa70,0x2daa74,0x2daa78]:
     PATCHES[base+off]=lambda gen,a:'; /* replaced by measured frame ratio */'
@@ -82,7 +86,7 @@ for p, rows in chunks.items():
     for start,end,labels,tables,old in rows:
         new='\n'.join(m.emit_function(start,end,labels,tables,{}))+'\n'
         declarations.update(m._refs)
-        assert text.count(old)==1
+        require(text.count(old)==1, 'High-fps validation failed')
         text=text.replace(old,new)
     header=f'#include "{out}/nd_totk_timing.h"\n'
     header+=''.join(f'void f_{a:x}(Cpu *c);\n' for a in sorted(declarations))

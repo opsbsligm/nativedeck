@@ -9,31 +9,35 @@ import subprocess
 import sys
 import time
 
+def require(condition, message='High-fps validation failed'):
+    if not condition:
+        raise ValueError(message)
+
 root=Path.home()/'native-recomp'
 bundle=root/'ultratears/releases/v143-20261031-first'
 report=root/'evidence/library-unlock-20261103'
 backup=report/'backup'
 candidate=root/'work/totk-1.4.3-20261031/highfps-20261103'
 sha=lambda p:hashlib.file_digest(p.open('rb'),'sha256').hexdigest()
-assert (candidate/'prepare.json').is_file() and (candidate/'ultratears').stat().st_size>500*1024**2
-assert shutil.disk_usage(root).free>2*1024**3
+require((candidate/'prepare.json').is_file() and (candidate/'ultratears').stat().st_size>500*1024**2, 'High-fps validation failed')
+require(shutil.disk_usage(root).free>2*1024**3, 'High-fps validation failed')
 sys.path.insert(0,str(root/'swr'))
 from botw_launch import save_inventory,backup_saves
 unit='nd-totk-v143-first-boot-20261031'
 pid=int(subprocess.check_output(['systemctl','--user','show',unit,'-p','MainPID','--value'],text=True))
-assert pid>0 and Path('/proc',str(pid),'exe').resolve()==bundle/'ultratears'
+require(pid>0 and Path('/proc',str(pid),'exe').resolve()==bundle/'ultratears', 'High-fps validation failed')
 env=dict(x.decode().split('=',1) for x in Path('/proc',str(pid),'environ').read_bytes().split(b'\0') if b'=' in x)
 profile=Path(env['XDG_DATA_HOME'])/'ultratears/userdata'
-assert profile==Path.home()/'.local/share/ultratears/test-profiles/v8-opening-20261102/ultratears/userdata'
-before=save_inventory(profile);time.sleep(2);assert save_inventory(profile)==before
+require(profile==Path.home()/'.local/share/ultratears/test-profiles/v8-opening-20261102/ultratears/userdata', 'High-fps validation failed')
+before=save_inventory(profile);time.sleep(2);require(save_inventory(profile)==before, 'High-fps validation failed')
 saves=backup_saves(profile,backup/'totk-saves')
 production=Path.home()/'.local/share/ultratears/userdata'
 production_before=save_inventory(production)
 subprocess.run(['systemctl','--user','stop',unit],check=True,timeout=25)
-assert not Path('/proc',str(pid)).exists() and save_inventory(profile)==before
+require(not Path('/proc',str(pid)).exists() and save_inventory(profile)==before, 'High-fps validation failed')
 for relative in ['ultratears','bundle.json','build-inputs/build-record.json']:
     p=bundle/relative;dest=backup/'totk-bundle'/relative;dest.parent.mkdir(parents=True,exist_ok=True)
-    assert not dest.exists();shutil.copy2(p,dest);assert sha(p)==sha(dest)
+    require(not dest.exists(), 'High-fps validation failed');shutil.copy2(p,dest);require(sha(p)==sha(dest), 'High-fps validation failed')
 manifest=json.loads((bundle/'bundle.json').read_text())
 record=json.loads((bundle/'build-inputs/build-record.json').read_text())
 newsha=sha(candidate/'ultratears')
@@ -63,8 +67,8 @@ except Exception:
         source=backup/'totk-bundle'/name
         if source.exists():shutil.copy2(source,bundle/name)
     raise
-assert sha(bundle/'ultratears')==newsha
-assert save_inventory(profile)==before and save_inventory(production)==production_before
+require(sha(bundle/'ultratears')==newsha, 'High-fps validation failed')
+require(save_inventory(profile)==before and save_inventory(production)==production_before, 'High-fps validation failed')
 result={'at':datetime.now().astimezone().isoformat(),'old_pid':pid,'elf_sha256':newsha,
         'saves_unchanged':True,'production_saves_unchanged':True,'save_backup':saves,
         'rollback':str(backup/'totk-bundle'),'native_build_installed':True,'playability_validated':False}

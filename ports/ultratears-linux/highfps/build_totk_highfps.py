@@ -2,6 +2,10 @@
 import json
 from pathlib import Path
 import re
+def require(condition, message='High-fps validation failed'):
+    if not condition:
+        raise ValueError(message)
+
 root=Path.home()/'native-recomp'
 task=root/'work/totk-1.4.3-20261031'
 out=task/'highfps-20261103'
@@ -10,7 +14,7 @@ text=(task/'build/build.ninja').read_text()
 replacements={}
 for item in record['chunks']:
     pattern=r'(?m)^build ([^\n:]+): (cc(?:_recovery)?) '+re.escape(item['original'])+r'$'
-    match=re.search(pattern,text);assert match,item['original']
+    match=re.search(pattern,text);require(match, item['original'])
     old=match.group(1);new=str(out/Path(old).name)
     replacements[old]=new
     text=text.replace(match.group(0),f'build {new}: {match.group(2)} {item["candidate"]}')
@@ -29,7 +33,7 @@ lines.append(f'build {clock}: cc {out}/nd_totk_timing.c')
 # candidate is safe to use the independent clock on those displays as well.
 gfx=root/'ports/ultratears-linux-20261030/source/src/gfx/nvn/hle_nvn.c'
 gfxtext=gfx.read_text(); needle=' && g_hz < UNCAPPED_HZ; }'
-assert gfxtext.count(needle)==1
+require(gfxtext.count(needle)==1, 'High-fps validation failed')
 gfxcandidate=out/'hle_nvn.c'
 # Relative headers stay relative to the original directory via -iquote below.
 gfxcandidate.write_text(gfxtext.replace(needle,'; }'))
@@ -57,7 +61,7 @@ text='\n'.join(kept)+'\n'
 for token in re.findall(r'\S+\.o',text):
     if token.startswith(str(task/'build/obj')) and not Path(token).exists():
         fallback=task/'build-cgp-all-v8/obj'/Path(token).name
-        assert fallback.is_file(),token
+        require(fallback.is_file(), token)
         text=text.replace(token,str(fallback))
 (out/'build.ninja').write_text(text)
 print('Candidate peak additional files <1.2GiB; one compile job, current deployment preserved.',flush=True)
