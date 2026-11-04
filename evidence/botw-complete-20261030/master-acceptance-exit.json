@@ -1,0 +1,12 @@
+{
+  "pid": 203262,
+  "master_played_saved_and_reloaded": true,
+  "normal_mode_data_unchanged": true,
+  "only_shared_options_changed": true,
+  "save_snapshot": {
+    "snapshot": "13efc514270e3dab9ea75bb2c61b89f9d260d7812d0050acfe5b8c79d305567b",
+    "files": 15,
+    "reused": false
+  },
+  "game_exited": true
+}

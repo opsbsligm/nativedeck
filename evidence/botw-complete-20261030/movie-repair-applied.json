@@ -1,0 +1,11 @@
+{
+  "exact_leaf_sha256": "8830302c83a91f89a9e93f4636ccfb36d8ea4419eab9b1a7f6bf2c83200cbb0b",
+  "installed_movie_sha256": "a87e9c75d39998557a1832eae85f8334e8e28bff0a62b675416a6af624bc1f06",
+  "changed_movie_bytes": 1,
+  "movie_backup_verified": true,
+  "source_nca_sha256": "861707001401bbce36c7e421efac76d44c843b7c9d9d6d04cdf47aec9127a511",
+  "source_nca_content_id_matches": true,
+  "source_full_backup_verified": true,
+  "source_archive_downloaded": false,
+  "key_values_exported": false
+}

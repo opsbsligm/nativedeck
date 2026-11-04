@@ -1,0 +1,288 @@
+[
+  {
+    "case": "A",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x2",
+    "observed_guest_masks": [
+      "0x2",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "B",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x1",
+    "observed_guest_masks": [
+      "0x1",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "X",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x8",
+    "observed_guest_masks": [
+      "0x8",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "Y",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x4",
+    "observed_guest_masks": [
+      "0x4",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LB",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x40",
+    "observed_guest_masks": [
+      "0x40",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RB",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x80",
+    "observed_guest_masks": [
+      "0x80",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LS",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x10",
+    "observed_guest_masks": [
+      "0x10",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RS",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x20",
+    "observed_guest_masks": [
+      "0x20",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "DLeft",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x1000",
+    "observed_guest_masks": [
+      "0x1000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "DRight",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x4000",
+    "observed_guest_masks": [
+      "0x4000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "DUp",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x2000",
+    "observed_guest_masks": [
+      "0x2000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "DDown",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x8000",
+    "observed_guest_masks": [
+      "0x8000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LT",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x100",
+    "observed_guest_masks": [
+      "0x100",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RT",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x200",
+    "observed_guest_masks": [
+      "0x200",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LX-",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x10000",
+    "observed_guest_masks": [
+      "0x10000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LX+",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x40000",
+    "observed_guest_masks": [
+      "0x40000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LY-",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x20000",
+    "observed_guest_masks": [
+      "0x20000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "LY+",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x80000",
+    "observed_guest_masks": [
+      "0x80000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RX-",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x100000",
+    "observed_guest_masks": [
+      "0x100000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RX+",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x400000",
+    "observed_guest_masks": [
+      "0x400000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RY-",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x200000",
+    "observed_guest_masks": [
+      "0x200000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  },
+  {
+    "case": "RY+",
+    "device": "/dev/input/event10",
+    "pid": 231767,
+    "expected_guest_mask": "0x800000",
+    "observed_guest_masks": [
+      "0x800000",
+      "0x0"
+    ],
+    "software_input_path_passed": true,
+    "physical_button_actuation_tested": false,
+    "restored_host_value": 0
+  }
+]

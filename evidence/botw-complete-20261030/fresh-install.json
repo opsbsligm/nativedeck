@@ -1,0 +1,25 @@
+{
+  "staged_and_selected": true,
+  "profile": {
+    "schema": 1,
+    "version": "1.6.0",
+    "release": "releases/sdk7-fresh-c7e6b36ee560a510",
+    "game": "games/botw-1.6.0-fresh-c7e6b36ee560a510",
+    "gamelib_id": "c7e6b36ee560a510",
+    "runtime_sha256": "a270098d2f243089c9575262a85cc97bc0cda0e6aae0e4db93f2dacd97c73b53",
+    "gamelib_sha256": "76a1f4e4564782368c1c6f2ac7697354da9993db067167b7bf9e2212f24fed84",
+    "dlc": {
+      "1": "3.0",
+      "2": "3.0"
+    }
+  },
+  "old_install_retained": true,
+  "game_function_counters": {
+    "main_fn_count": 83259,
+    "sdk_fn_count": 34472,
+    "subsdk0_fn_count": 13640
+  },
+  "steam_files_changed": false,
+  "game_started": false,
+  "gameplay_validated": false
+}

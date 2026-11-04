@@ -1,0 +1,52 @@
+{
+  "cache_before": {
+    "blocks": 880128,
+    "sha256": "2ff3680ef04d16cfc0bed306a5df56e1c1af1cd853c57f21380dbb5f649dd777",
+    "bad_blocks_count": 155574,
+    "first_bad_blocks": [
+      26296,
+      26297,
+      26298,
+      26299,
+      26300,
+      26301,
+      26302,
+      26303,
+      26304,
+      26305,
+      26306,
+      26307,
+      26308,
+      26309,
+      26310,
+      26311,
+      26312,
+      26313,
+      26314,
+      26315,
+      26316,
+      26317,
+      26318,
+      26319,
+      26320,
+      26321,
+      26322,
+      26323,
+      26324,
+      26325,
+      26326,
+      26327
+    ]
+  },
+  "cache_after": {
+    "blocks": 880128,
+    "bad_blocks": [],
+    "sha256": "b82eb7c1c90020ab76d39d685d5828085fdf2290789606bee30259662fd40fb3"
+  },
+  "cache_bad_blocks_remaining": 0,
+  "legacy_movie_sha256": "a87e9c75d39998557a1832eae85f8334e8e28bff0a62b675416a6af624bc1f06",
+  "strict_movie_decode_returncode": 0,
+  "reencoded": false,
+  "new_game_downloaded": false,
+  "key_values_exported": false
+}

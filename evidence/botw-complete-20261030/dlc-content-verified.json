@@ -1,0 +1,42 @@
+[
+  {
+    "dlc": 1,
+    "source_nca": "b201291d3e099872debd1c1870572cc3.nca",
+    "returncode": 0,
+    "aoc_version": "3.0",
+    "files": 7094,
+    "bytes": 1389929109,
+    "verification_good_lines": [
+      "Fixed-Key Index (GOOD):             0x0",
+      "Fixed-Key Signature (GOOD):         98A62B974DBACC4C38A90F733923374953CF667D4A3706124F3549789FB0F596",
+      "Superblock Hash (GOOD):     36EE77484B8F969953290B69206CB2B8C86B994E19DDFDDFFB20537A7FD52DF0",
+      "Level 0 (GOOD):",
+      "Level 1 (GOOD):",
+      "Level 2 (GOOD):",
+      "Level 3 (GOOD):",
+      "Level 4 (GOOD):",
+      "Level 5 (GOOD):"
+    ],
+    "key_values_exported": false
+  },
+  {
+    "dlc": 2,
+    "source_nca": "a6ee60de4f804ac979f18fb68ced5857.nca",
+    "returncode": 0,
+    "aoc_version": "3.0",
+    "files": 1,
+    "bytes": 3,
+    "verification_good_lines": [
+      "Fixed-Key Index (GOOD):             0x0",
+      "Fixed-Key Signature (GOOD):         9CF864D1ABEEDE8F69CB1CB2582A77F453F0E1AC5074F760C29A72C2ED31E453",
+      "Superblock Hash (GOOD):     EFE0CC2B8591AA1E813507A951932423BA8DD1BD284F98E25247874BDE7C3BA3",
+      "Level 0 (GOOD):",
+      "Level 1 (GOOD):",
+      "Level 2 (GOOD):",
+      "Level 3 (GOOD):",
+      "Level 4 (GOOD):",
+      "Level 5 (GOOD):"
+    ],
+    "key_values_exported": false
+  }
+]

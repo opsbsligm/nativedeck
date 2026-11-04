@@ -1,0 +1,281 @@
+{
+  "source_sha256": "8bf0fad6b6297a9357817b9628ad0989dad4f3989d9e08d6181bee50c888e443",
+  "output_sha256": "942a751142aee6b563a67f8ec700e3c9a26925dcee538825db367a14989a691b",
+  "output_bytes": 31693744,
+  "changed_members": [
+    "blyt/PaAllControllerTipsNN_00.bflyt"
+  ],
+  "callouts": [
+    {
+      "pane": "N_OpenRStickPress_00",
+      "before": [
+        136.0,
+        -125.0
+      ],
+      "after": [
+        104.50999999999999,
+        -82.12
+      ]
+    },
+    {
+      "pane": "N_CrossKey_00",
+      "before": [
+        -122.0,
+        -15.0
+      ],
+      "after": [
+        -135.4,
+        43.290000000000006
+      ]
+    },
+    {
+      "pane": "N_OpenPlusMinus_00",
+      "before": [
+        109.0,
+        -57.0
+      ],
+      "after": [
+        79.52,
+        -57.0
+      ]
+    },
+    {
+      "pane": "N_Minus_00",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        59.63,
+        0.0
+      ]
+    },
+    {
+      "pane": "N_Line_00",
+      "before": [
+        -143.0,
+        25.0
+      ],
+      "after": [
+        -122.9,
+        25.0
+      ]
+    },
+    {
+      "pane": "N_Line_08",
+      "before": [
+        -143.0,
+        29.0
+      ],
+      "after": [
+        -122.9,
+        29.0
+      ]
+    },
+    {
+      "pane": "N_OpenRStickPress_01",
+      "before": [
+        136.0,
+        -125.0
+      ],
+      "after": [
+        104.50999999999999,
+        -82.12
+      ]
+    },
+    {
+      "pane": "N_OpenPlusMinus_01",
+      "before": [
+        109.0,
+        -57.0
+      ],
+      "after": [
+        79.52,
+        -57.0
+      ]
+    },
+    {
+      "pane": "N_Minus_01",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        59.63,
+        0.0
+      ]
+    },
+    {
+      "pane": "N_CrossKey_01",
+      "before": [
+        -122.0,
+        -15.0
+      ],
+      "after": [
+        -135.4,
+        43.290000000000006
+      ]
+    },
+    {
+      "pane": "N_Line_10",
+      "before": [
+        -143.0,
+        29.0
+      ],
+      "after": [
+        -122.9,
+        29.0
+      ]
+    },
+    {
+      "pane": "N_CrossKey_02",
+      "before": [
+        -122.0,
+        -15.0
+      ],
+      "after": [
+        -135.4,
+        43.290000000000006
+      ]
+    },
+    {
+      "pane": "N_OpenPlusMinus_02",
+      "before": [
+        109.0,
+        -57.0
+      ],
+      "after": [
+        79.52,
+        -57.0
+      ]
+    },
+    {
+      "pane": "N_Minus_02",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        59.63,
+        0.0
+      ]
+    },
+    {
+      "pane": "N_OpenRStickPress_02",
+      "before": [
+        136.0,
+        -125.0
+      ],
+      "after": [
+        104.50999999999999,
+        -82.12
+      ]
+    },
+    {
+      "pane": "P_Line_03",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_04",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_05",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_06",
+      "property": "width",
+      "before": 31.0,
+      "after": 51.1
+    },
+    {
+      "pane": "P_Line_56",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_57",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_67",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_88",
+      "property": "width",
+      "before": 31.0,
+      "after": 51.1
+    },
+    {
+      "pane": "P_Line_52",
+      "property": "width",
+      "before": 31.0,
+      "after": 51.1
+    },
+    {
+      "pane": "P_Line_53",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_54",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    },
+    {
+      "pane": "P_Line_55",
+      "property": "x",
+      "before": -52.0,
+      "after": -72.1
+    }
+  ],
+  "other_members_unchanged": true,
+  "compression_roundtrip": true,
+  "control_locations": {
+    "left_stick": [
+      58,
+      88,
+      88,
+      88
+    ],
+    "right_stick": [
+      517,
+      152,
+      470,
+      88
+    ],
+    "dpad": [
+      58,
+      152,
+      38,
+      65
+    ],
+    "view": [
+      81,
+      54,
+      126,
+      54
+    ],
+    "menu": [
+      494,
+      54,
+      450,
+      54
+    ]
+  }
+}

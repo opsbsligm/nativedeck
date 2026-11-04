@@ -1,0 +1,209 @@
+{
+  "source_sha256": "8bf0fad6b6297a9357817b9628ad0989dad4f3989d9e08d6181bee50c888e443",
+  "output_sha256": "00c88ee3e8d6fbab703135c451c3fa7841c7b443c8983d37dbf57680358e1c1f",
+  "output_bytes": 31693724,
+  "changed_members": [
+    "blyt/PaAllControllerTipsNN_00.bflyt"
+  ],
+  "callouts": [
+    {
+      "pane": "N_OpenRStickPress_00",
+      "before": [
+        136.0,
+        -125.0
+      ],
+      "after": [
+        104.50999999999999,
+        -82.12
+      ]
+    },
+    {
+      "pane": "N_CrossKey_00",
+      "before": [
+        -122.0,
+        -15.0
+      ],
+      "after": [
+        -135.4,
+        43.290000000000006
+      ]
+    },
+    {
+      "pane": "N_OpenPlusMinus_00",
+      "before": [
+        109.0,
+        -57.0
+      ],
+      "after": [
+        79.52,
+        -57.0
+      ]
+    },
+    {
+      "pane": "N_Minus_00",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        59.63,
+        0.0
+      ]
+    },
+    {
+      "pane": "N_Line_00",
+      "before": [
+        -143.0,
+        25.0
+      ],
+      "after": [
+        -122.9,
+        25.0
+      ]
+    },
+    {
+      "pane": "N_Line_08",
+      "before": [
+        -143.0,
+        29.0
+      ],
+      "after": [
+        -122.9,
+        29.0
+      ]
+    },
+    {
+      "pane": "N_OpenRStickPress_01",
+      "before": [
+        136.0,
+        -125.0
+      ],
+      "after": [
+        104.50999999999999,
+        -82.12
+      ]
+    },
+    {
+      "pane": "N_OpenPlusMinus_01",
+      "before": [
+        109.0,
+        -57.0
+      ],
+      "after": [
+        79.52,
+        -57.0
+      ]
+    },
+    {
+      "pane": "N_Minus_01",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        59.63,
+        0.0
+      ]
+    },
+    {
+      "pane": "N_CrossKey_01",
+      "before": [
+        -122.0,
+        -15.0
+      ],
+      "after": [
+        -135.4,
+        43.290000000000006
+      ]
+    },
+    {
+      "pane": "N_Line_10",
+      "before": [
+        -143.0,
+        29.0
+      ],
+      "after": [
+        -122.9,
+        29.0
+      ]
+    },
+    {
+      "pane": "N_CrossKey_02",
+      "before": [
+        -122.0,
+        -15.0
+      ],
+      "after": [
+        -135.4,
+        43.290000000000006
+      ]
+    },
+    {
+      "pane": "N_OpenPlusMinus_02",
+      "before": [
+        109.0,
+        -57.0
+      ],
+      "after": [
+        79.52,
+        -57.0
+      ]
+    },
+    {
+      "pane": "N_Minus_02",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        59.63,
+        0.0
+      ]
+    },
+    {
+      "pane": "N_OpenRStickPress_02",
+      "before": [
+        136.0,
+        -125.0
+      ],
+      "after": [
+        104.50999999999999,
+        -82.12
+      ]
+    }
+  ],
+  "other_members_unchanged": true,
+  "compression_roundtrip": true,
+  "control_locations": {
+    "left_stick": [
+      58,
+      88,
+      88,
+      88
+    ],
+    "right_stick": [
+      517,
+      152,
+      470,
+      88
+    ],
+    "dpad": [
+      58,
+      152,
+      38,
+      65
+    ],
+    "view": [
+      81,
+      54,
+      126,
+      54
+    ],
+    "menu": [
+      494,
+      54,
+      450,
+      54
+    ]
+  }
+}
