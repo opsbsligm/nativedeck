@@ -5,8 +5,8 @@
 - **task_id**：`nativedeck-20261024` · **scene**：homelab
 - **当前阶段**：TOTK 1.4.3原生ELF已进入开场地下场景；移动、系统菜单、稳定画面的中文、读档和手动保存已实测，正在继续手柄/图标与完整游玩验收。
 - **hardware_validated**：`false`（整体交付尚未验收；3D首次启动通过不代表中文、全部手柄功能、动画和稳定性已通过）
-- **仓库**：<https://gitlab.example.com:8445/codex/nativedeck>（private · 默认分支 `main` 受保护）
-  克隆：`git clone https://gitlab.example.com:8445/codex/nativedeck.git`
+- **仓库**：<https://github.com/opsbsligm/nativedeck>（开源镜像 · 默认分支 `main`）
+  克隆：`git clone https://github.com/opsbsligm/nativedeck.git`
 
 ## 当前目标（2026-11-03）
 
