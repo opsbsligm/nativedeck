@@ -52,6 +52,7 @@
 
 - 任何构建过程**不嵌入游戏数据**；游戏包由用户自有 `.xci`/`.nsp` + `prod.keys` 提供
 - 本仓不存放 `prod.keys`、master key 或游戏镜像；`deckprobe/` 下有一份 TOTK 编译产物归档（deckprobe 遥操现场证据，x86-64 构建自用户自有 ExeFS），除此之外不含 Nintendo 版权内容
+- 本仓部分子目录（`ports/ultratears-linux/`）含上游 GPL-3.0-or-later 组件，以子目录各自 NOTICE/LICENSE 为准；官方素材与编译产物口径见 [NINTENDO-ART-NOTICE.md](docs/NINTENDO-ART-NOTICE.md)。
 - 对 Deck 的一切写操作需先解除挂账并逐项批准；部署遵循「纯新增、可回滚」
 
 ## 当前推进边界

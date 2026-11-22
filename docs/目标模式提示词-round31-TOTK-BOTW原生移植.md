@@ -10,7 +10,7 @@
 ## 目标
 
 将《塞尔达传说 王国之泪》(TOTK) 与《塞尔达传说 旷野之息》(BOTW) 以
-**原生 x86-64 二进制**形态安装到 Steam Deck（deck@192.168.1.105, SteamOS 3.9.5,
+**原生 x86-64 二进制**形态安装到 Steam Deck（deck@192.168.x.105, SteamOS 3.9.5,
 AMD VANGOGH Vulkan 1.4.350）并实机运行，安装形态为 SteamOS 原生可运行模式：
 不依赖 .deb 系统包、不经过任何兼容层（wine/proton/dxvk/box64/qemu/fex/binfmt），
 安装入口为 Steam non-steam game 自包含目录 + run.sh。

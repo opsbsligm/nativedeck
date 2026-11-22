@@ -3,7 +3,7 @@ test_existing_prelock_game_and_deleted_exe_detected (test_botw_launch.BotwLaunch
 test_input_audit_enables_existing_trace_without_disabling_real_controller (test_botw_launch.BotwLauncher) ... ok
 test_live_game_does_not_touch_settings_or_saves (test_botw_launch.BotwLauncher) ... ok
 test_lock_blocks_other_process_and_releases_on_close (test_botw_launch.BotwLauncher) ... ok
-test_missing_install_records_error_without_mutating_save (test_botw_launch.BotwLauncher) ... 旷野之息启动失败：[Errno 2] No such file or directory: '/Users/liguangming/reports/nativedeck-botw-complete-20261030/worktree/.native-review-test-tmp/tmp5ue362jf/absent/releases/sdk7-20261029/bin/savagewind'
+test_missing_install_records_error_without_mutating_save (test_botw_launch.BotwLauncher) ... 旷野之息启动失败：[Errno 2] No such file or directory: '/Users/<user>/reports/nativedeck-botw-complete-20261030/worktree/.native-review-test-tmp/tmp5ue362jf/absent/releases/sdk7-20261029/bin/savagewind'
 ok
 test_missing_second_dlc_refuses_full_profile (test_botw_launch.BotwLauncher) ... ok
 test_native_launch_uses_fixed_data_root_backups_and_reports_exit (test_botw_launch.BotwLauncher) ... ok

@@ -74,7 +74,7 @@ env20 §三写"5 帧 SHA256 全同"。本轮 Deck 本机现场复核（`sha256su
 
 ## 六、本轮 SSH 事实补记（反例）
 
-本轮出现 1 次 `ssh_dispatch_run_fatal: Connection to 192.168.1.105 port 22: Operation timed out`
+本轮出现 1 次 `ssh_dispatch_run_fatal: Connection to 192.168.x.105 port 22: Operation timed out`
 （会话内约 30 s 后中断，已执行完的部分输出丢失），改用 `/tmp/dk.sh`（3 次重试）后成功。
 与 10-25 记录的间歇超时根因一致（未闭合）。对策仍为「短命令 + 重试 + 证据落盘」。
 未触发《安全基线.md》§6.4 中止条件（要求连续 2 次掉线）。

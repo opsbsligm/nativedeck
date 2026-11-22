@@ -1,4 +1,4 @@
-Warning: Permanently added '192.168.1.105' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.x.105' (ED25519) to the list of known hosts.
 == os ==
 NAME="SteamOS"
 VERSION_ID=3.9.5

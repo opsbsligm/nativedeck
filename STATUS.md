@@ -1,7 +1,7 @@
 # nativedeck-20261024 挂账状态
 
 ## 挂账原因
-用户"正在执行游戏安装的任务"，Deck（deck@192.168.1.105）禁止一切 SSH/scp/写入操作。
+用户"正在执行游戏安装的任务"，Deck（deck@192.168.x.105）禁止一切 SSH/scp/写入操作。
 
 ## 挂账时间
 2026-10-25
@@ -119,7 +119,7 @@ GitLab 侧新增：`topics=aarch64,native-recompilation,steam-deck,static-rewrit
 
 ### 连接方式（本轮验证有效）
 
-`ssh deck@192.168.1.105`，**纯公钥认证**，`BatchMode=yes` 通过；即 2026-10-25 异环任务追加到 `~/.ssh/authorized_keys` 的 Mac 公钥仍有效（备份 `~/rescue/nte-cn-20261025/authorized_keys.before-nte`）。不使用密码认证。
+`ssh deck@192.168.x.105`，**纯公钥认证**，`BatchMode=yes` 通过；即 2026-10-25 异环任务追加到 `~/.ssh/authorized_keys` 的 Mac 公钥仍有效（备份 `~/rescue/nte-cn-20261025/authorized_keys.before-nte`）。不使用密码认证。
 
 ### 红线区实际位置（本轮只读确认，一律不改）
 
